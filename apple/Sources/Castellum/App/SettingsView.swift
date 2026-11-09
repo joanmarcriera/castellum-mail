@@ -446,7 +446,7 @@ private struct AiSettingsTab: View {
 
                 SettingsSection("Help") {
                     SettingsRow {
-                        Link("Learn more…", destination: URL(string: "https://github.com/joanmarcriera/castellum/blob/main/docs/help/ai.html")!)
+                        Link("Learn more…", destination: URL(string: "https://github.com/joanmarcriera/castellum-mail/blob/main/docs/help/ai.html")!)
                             .font(.caption)
                     }
                 }
