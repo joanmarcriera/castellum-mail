@@ -37,7 +37,7 @@ ureq = { version = "3", default-features = false, features = ["rustls"] }
 # Read-only XML parser for account auto-detect (MM-14): untrusted
 # config-v1.1.xml documents from a domain's web host / Mozilla ISPDB. No DTD or
 # entity support by design, so there is no entity-expansion attack surface.
-roxmltree = "0.20"
+roxmltree = "0.21"
 # Sync/replay/send failure + mutex-recovery breadcrumbs (observability slice).
 tracing = { workspace = true }
 
@@ -45,14 +45,14 @@ tracing = { workspace = true }
 castellum-testutil = { path = "../castellum-testutil" }
 tempfile = "3"
 # markdown_compose_greenmail.rs parses the delivered raw source (already in the lockfile).
-mail-parser = { version = "0.11", features = ["full_encoding"] }
+mail-parser = { version = "1.0", features = ["full_encoding"] }
 # examples/sync_bench.rs raw wire probe (same versions castellum-provider-imap
 # already pins, so no new crates enter the lockfile).
 imap-codec = { version = "=2.0.0-alpha.9", features = ["ext_namespace", "ext_condstore_qresync"] }
 native-tls = "0.2"
 # A second connection to a temp DB file lets a test inject a failure into the
 # display-name upsert (S31b finding d); same version castellum-db pins.
-rusqlite = { version = "0.40", features = ["bundled"] }
+rusqlite = { version = "0.41", features = ["bundled"] }
 # examples/perf_footprint.rs peak-RSS probe (getrusage); the version
 # castellum-db already depends on, so no new crate enters the lockfile.
 libc = "0.2"
