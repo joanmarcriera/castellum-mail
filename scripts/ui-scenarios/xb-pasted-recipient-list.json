@@ -1,0 +1,207 @@
+{
+ "schema": 1,
+ "name": "xb-pasted-recipient-list",
+ "covers": [
+  "compose",
+  "a recipient list pasted with newlines or spaces instead of commas is either accepted or named as invalid; nothing is sent to a partial list"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test\ncarol@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb paste {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Pasted list."
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1000"
+  },
+  {
+   "op": "capture",
+   "name": "newline-list"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test carol@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1000"
+  },
+  {
+   "op": "capture",
+   "name": "space-list"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "<bob@local.test>, carol@local.test,"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "carol@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "=xb paste {run}",
+   "timeoutMs": 120000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "loadSource",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:src.has:bob@local.test",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

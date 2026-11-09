@@ -1,0 +1,44 @@
+{
+ "schema": 1,
+ "name": "xa-defect-first-run-window-wider-than-1280",
+ "covers": [
+  "First run: the main window and its minimum size must fit a 1280-point-wide display"
+ ],
+ "requires": {
+  "greenmail": false,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-first-run-window",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

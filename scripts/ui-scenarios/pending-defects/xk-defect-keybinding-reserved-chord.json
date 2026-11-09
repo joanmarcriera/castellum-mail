@@ -1,0 +1,157 @@
+{
+ "schema": 1,
+ "name": "xk-defect-keybinding-reserved-chord",
+ "covers": [
+  "S45 custom key bindings",
+  "an override may not collide with another command"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    1100
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "440,856",
+   "label": "Reload Key Bindings (a SwiftUI button: no NSControl to press)"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "after-reload"
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+shift+9"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "control-outbox-by-custom-chord"
+  },
+  {
+   "op": "assert",
+   "label": "control: the file was read (shift-cmd-9 opens the Outbox)",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+,"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-cmd-comma-settings-not-status"
+  },
+  {
+   "op": "assert",
+   "label": "cmd-comma still opens Settings (3 windows: main, Outbox, Settings), so the accepted 'Status = cmd-comma' binding is dead",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ],
+   "window": "title:Outbox",
+   "rules": [
+    "movable"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "text": "showStatus"
+   },
+   "value": true,
+   "timeoutMs": 4000,
+   "label": "Reload refuses to bind Status to cmd-comma (Settings) and says so"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

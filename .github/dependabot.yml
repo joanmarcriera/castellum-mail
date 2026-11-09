@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+version: 2
+updates:
+  # Rust dependencies for the native core — weekly, grouped.
+  - package-ecosystem: cargo
+    directory: /native
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    groups:
+      cargo-dependencies:
+        patterns: ['*']
+
+  # GitHub Actions
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3

@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "name": "xj-defect-unsubscribe-refused-leaves-draft",
+ "covers": [
+  "S44 List-Unsubscribe mailto",
+  "evaluation mode",
+  "xj defect"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto only)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:unsub"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:unsub"
+  },
+  {
+   "op": "capture",
+   "name": "confirm-sheet"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:unsub",
+   "text": "310,117"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "capture",
+   "name": "refused"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "xj-org1@local.test",
+   "timeoutMs": 3000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "capture",
+   "name": "the-draft-left-behind"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "ext:composeWindows",
+     "equals": "0"
+    },
+    {
+     "model": "ext:drafts:xj-org1@local.test",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

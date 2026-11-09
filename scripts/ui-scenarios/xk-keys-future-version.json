@@ -1,0 +1,80 @@
+{
+ "schema": 1,
+ "name": "xk-keys-future-version",
+ "covers": [
+  "MM-12 slice 1",
+  "a version 3 file loads the defaults and says so"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "reading",
+   "id": "reloadKeyBindings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "the problem names version 3",
+   "expect": [
+    {
+     "model": "reading:keyProblems",
+     "equals": "unsupportedVersion"
+    },
+    {
+     "model": "reading:keyProblemText",
+     "equals": "keybindings.json has version 3, but this version of Castellum reads versions 1 to 2 — using the built-in key bindings."
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

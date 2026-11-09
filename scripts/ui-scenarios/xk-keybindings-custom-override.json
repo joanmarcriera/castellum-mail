@@ -1,0 +1,178 @@
+{
+ "schema": 1,
+ "name": "xk-keybindings-custom-override",
+ "covers": [
+  "S45 custom key bindings",
+  "valid override applies",
+  "colliding override refused with a message"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    1100
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "440,909",
+   "label": "Reload Key Bindings (a SwiftUI button: no NSControl to press)"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "after-reload"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "text": "showDiagnostics"
+   },
+   "value": true,
+   "timeoutMs": 4000,
+   "label": "the override that collides with the palette's shift-cmd-K is refused and named"
+  },
+  {
+   "op": "press",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "label": "OK"
+   }
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "only the main window",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+shift+9"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-by-custom-chord"
+  },
+  {
+   "op": "assert",
+   "label": "the custom chord shift-cmd-9 opens Status",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+shift+k"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-still-on-its-chord"
+  },
+  {
+   "op": "assert",
+   "label": "shift-cmd-K still opens the palette",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

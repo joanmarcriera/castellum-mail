@@ -1,0 +1,145 @@
+{
+ "schema": 1,
+ "name": "xh-walk-send-silent-smtp",
+ "covers": [
+  "send to an SMTP server that accepts the connection and never answers (undo-send off): what compose says at 5 s and after the 60 s transport timeout; the message must end up kept in the Outbox with a readable reason",
+  "NEEDS the helper first: python3 build/explore/xh/silent-server.py 39918 300 &"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000,
+   "smtp": "127.0.0.1:39918"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xh-one@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "xh-rcpt@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "subject",
+   "text": "XH silent smtp {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "compose",
+   "text": "The SMTP server never answers."
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "5000"
+  },
+  {
+   "op": "capture",
+   "name": "01-compose-5s-after-send"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "75000"
+  },
+  {
+   "op": "capture",
+   "name": "02-compose-80s-after-send"
+  },
+  {
+   "op": "assert",
+   "label": "after the transport timeout the message is kept, with a reason, no modal",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "1"
+    },
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "compose",
+   "find": {
+    "text": "Not sent"
+   },
+   "value": true,
+   "timeoutMs": 3000
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "schema": 1,
+ "name": "xe-defect-move-folder-of-other-account",
+ "covers": [
+  "MM-3",
+  "DEFECT: a rule scoped to account B with Move to a folder of account A is accepted (editor: change Apply to after Add Action > Move to)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r2@local.test",
+   "password": "xe-r2@local.test",
+   "as": "r2",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Cross account",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-news\"}], \"groups\": []}, \"actions\": [{\"move\": {\"mailbox_id\": \"xe-r1@local.test:Receipts\"}}], \"stop\": false, \"account\": \"r2\"}",
+   "value": false
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "saved-rule-looks-valid",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

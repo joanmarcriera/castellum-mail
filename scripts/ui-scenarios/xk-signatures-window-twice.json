@@ -1,0 +1,201 @@
+{
+ "schema": 1,
+ "name": "xk-signatures-window-twice",
+ "covers": [
+  "signatures window opened twice",
+  "large size",
+  "outlives Settings"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "bob"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "700,331",
+   "name": "signatures"
+  },
+  {
+   "op": "wait",
+   "until": "window:signatures"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "signatures-first"
+  },
+  {
+   "op": "assert",
+   "label": "signatures open",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ],
+   "window": "signatures",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "700,331"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "signatures-second-request"
+  },
+  {
+   "op": "assert",
+   "label": "Signatures\u2026 twice re-fronts the one window",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "signatures",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "signatures-large",
+   "windows": [
+    "signatures"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "large",
+   "expect": [],
+   "window": "signatures",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-closed-signatures-stays"
+  },
+  {
+   "op": "assert",
+   "label": "closing Settings leaves the Signatures window usable",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "signatures",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "signatures"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

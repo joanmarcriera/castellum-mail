@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Command palette</title>
+<meta name="description" content="Find and run any Castellum command by typing part of its name." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Command palette</h1>
+<p class="eff">View &gt; Command Palette · Castellum</p>
+
+<p>The command palette lets you run any command without remembering where it lives or what its shortcut is.</p>
+
+<h2>1. Open it</h2>
+<p>Press <code>⇧⌘K</code>, or choose <strong>View &gt; Command Palette…</strong>.</p>
+
+<h2>2. Find a command</h2>
+<p>Start typing. The matching is forgiving: the letters you type just have to appear in the command's name in that order, so <code>arc</code> finds <em>Archive</em> and <code>nwm</code> finds <em>New Message</em>. Matches at the start of a word rank higher. With nothing typed, the palette lists every command.</p>
+<p>Each row shows the command's name and, on the right, its keyboard shortcut if it has one. That makes the palette a good way to learn the <a href="/help/keyboard-shortcuts">shortcuts</a>.</p>
+
+<h2>3. Run it</h2>
+<p>Use the arrow keys to move through the results and press <code>Return</code> to run the highlighted command, or click it. Press <code>Esc</code> to close the palette without doing anything.</p>
+
+<h2>4. Greyed-out commands</h2>
+<p>A command that cannot run right now is shown dimmed and cannot be chosen. For example, Reply needs a message with its body loaded, Archive and Delete need a selected message, and Reply with AI also needs <a href="/help/ai">AI</a> switched on.</p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

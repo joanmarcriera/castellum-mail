@@ -1,0 +1,9 @@
+Hi all,
+
+Just confirming: the new checkout flow launches on March 3rd, pending final
+QA sign-off this week. Supplier X is providing the payment terminal
+firmware update we need for in-store card testing.
+
+Let's use this thread to flag anything that could put the date at risk.
+
+Dana

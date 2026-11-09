@@ -1,0 +1,211 @@
+{
+ "schema": 1,
+ "name": "xe-rules-two-accounts",
+ "covers": [
+  "MM-3",
+  "all-accounts rule with one read-only account; per-account scope; refusal counts"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r2@local.test",
+   "password": "xe-r2@local.test",
+   "as": "r2",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "r1",
+   "value": true
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Star all",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-\"}], \"groups\": []}, \"actions\": [{\"add_flag\": {}}], \"stop\": false}"
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "R2 read news",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-news\"}], \"groups\": []}, \"actions\": [\"mark_read\"], \"stop\": false, \"account\": \"r2\"}"
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "R2 read news",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:2 matched, 0 actions queued",
+     "equals": "true"
+    },
+    {
+     "model": "reading:noteHas:evaluation mode",
+     "equals": "true"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "Star all",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas: actions queued. Some messages could not be changed: evaluation mode",
+     "equals": "true"
+    },
+    {
+     "model": "reading:noteHas:3 of ",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "banner-names-only-r2",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "r2",
+   "value": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "R2 read news",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:note",
+     "equals": "2 matched, 2 actions queued."
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "banner-gone-after-enable",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "r1",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,26 @@
+{
+ "schema": 1,
+ "name": "f1-embeddings-chat-model",
+ "covers": ["F1", "A chat model chosen as the embedding model: Ollama answers HTTP 500; the AI Activity window shows the readable error and the backlog survives", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 200000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "ext", "id": "setPref", "name": "aiEmbeddingModel", "text": "qwen2.5-coder:1.5b"},
+  {"op": "ext", "id": "selectMailbox", "email": "alice@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "Invoice R0012345678", "timeoutMs": 30000},
+  {"op": "ext", "id": "waitExt", "name": "embed.state", "text": "failed:embed_unsupported", "timeoutMs": 120000},
+  {"op": "openWindow", "target": "aiActivity"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "ai-activity-chat-model-error"},
+  {"op": "assert", "expect": [
+    {"model": "ext:embed.error", "equals": "qwen2.5-coder:1.5b cannot produce embeddings; choose an embedding model"},
+    {"model": "ext:embed.done", "equals": "0"}
+  ]},
+  {"op": "quit"}
+ ]
+}

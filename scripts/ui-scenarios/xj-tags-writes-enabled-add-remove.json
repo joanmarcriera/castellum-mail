@@ -1,0 +1,181 @@
+{
+ "schema": 1,
+ "name": "xj-tags-writes-enabled-add-remove",
+ "covers": [
+  "S42 tags",
+  "writes enabled: keyword reaches the server and is removed again",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org2@local.test",
+   "password": "xj-org2@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xj-org2@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Casa",
+   "text": "red"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto only)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Casa"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Casa",
+   "timeoutMs": 8000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNotice",
+     "equals": "none"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tagged-with-writes"
+  },
+  {
+   "op": "search",
+   "text": "tag:Casa"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "XJ Club news (mailto only)"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto only)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Casa"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "tag:Casa"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": ""
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

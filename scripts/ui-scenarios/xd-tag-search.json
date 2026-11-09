@@ -1,0 +1,168 @@
+{
+ "schema": 1,
+ "name": "xd-tag-search",
+ "covers": [
+  "search: tag:"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xd phrase one"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "xd tag",
+   "text": "blue"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "xd tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "xd tag",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "tag:\"xd tag\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tag-search"
+  },
+  {
+   "op": "search",
+   "text": "-tag:\"xd tag\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "9"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:nosuchtag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

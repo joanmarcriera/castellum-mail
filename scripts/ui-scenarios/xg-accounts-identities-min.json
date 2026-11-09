@@ -1,0 +1,141 @@
+{
+ "schema": 1,
+ "name": "xg-accounts-identities-min",
+ "covers": [
+  "Settings > Accounts with three send-as identities (one with a long display name and address, one with Reply-To and Bcc) at 900x700 and at the minimum window size: rows, Edit…/Remove and the bottom button bar stay inside the window"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "createIdentity",
+   "email": "bob@local.test",
+   "text": "xg-sales@local.test",
+   "name": "Bob Sales",
+   "label": "xg-replies@local.test;xg-archive@local.test",
+   "value": true
+  },
+  {
+   "op": "ext",
+   "id": "createIdentity",
+   "email": "bob@local.test",
+   "text": "xg-a-long-alias-address-for-the-identities-list@local.test",
+   "name": "Roberto de la Santísima Trinidad Fernández-Villaverde",
+   "label": ";",
+   "value": false
+  },
+  {
+   "op": "ext",
+   "id": "createIdentity",
+   "email": "bob@local.test",
+   "text": "xg-third@local.test",
+   "name": "Third",
+   "label": ";",
+   "value": false
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "bob"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    900,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "01-identities-900x700",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "controlsReachable"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-identities-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "controlsReachable"
+   ],
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,161 @@
+{
+ "schema": 1,
+ "name": "xg-defect-ai-model-hidden-after-reopen",
+ "covers": [
+  "Settings > AI: a chosen model must still be shown when Settings is closed and reopened. Today the Model and Embedding model pickers exist only while a Test Connection result is held in view-local state, so after reopening (or any relaunch) the pane shows no model at all although prefs.aiModel is set. Needs a local Ollama on 127.0.0.1:11434"
+ ],
+ "requires": {
+  "greenmail": false,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "aiEnabled",
+   "text": "true"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "aiEndpoint",
+   "text": "http://127.0.0.1:11434"
+  },
+  {
+   "op": "ext",
+   "id": "aiUseFirstModel"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "ai"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "137,271"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "settings",
+   "find": {
+    "role": "popup"
+   },
+   "value": true,
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-tested-model-shown",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "expect": [
+    {
+     "find": {
+      "role": "popup"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "ai"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "02-reopened",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "popup"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

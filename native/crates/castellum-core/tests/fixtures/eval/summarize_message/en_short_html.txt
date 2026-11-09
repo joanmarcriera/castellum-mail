@@ -1,0 +1,5 @@
+<p>Hi Priya,</p>
+<p>This is a reminder that <strong>invoice #4471</strong> for &pound;850 is now
+<strong>12 days overdue</strong>. Could you let us know when payment is
+likely to go through?</p>
+<p>Thanks,<br/>Accounts, Meridian Supplies</p>

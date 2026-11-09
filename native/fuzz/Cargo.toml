@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+# Standalone cargo-fuzz crate. Deliberately outside the parent workspace (its own
+# [workspace] below): libfuzzer-sys needs a nightly toolchain and its own lockfile.
+# Run: cd native/fuzz && cargo +nightly fuzz run response_decode
+[package]
+name = "castellum-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+# MM-14: the autoconfig DNS/XML decoders live in castellum-core (fuzz entry
+# points `autoconfig::fuzz_*`).
+castellum-core = { path = "../crates/castellum-core" }
+imap-codec = { version = "=2.0.0-alpha.9", features = ["ext_namespace", "ext_condstore_qresync"] }
+
+[[bin]]
+name = "response_decode"
+path = "fuzz_targets/response_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dns_answer_decode"
+path = "fuzz_targets/dns_answer_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "autoconfig_xml_decode"
+path = "fuzz_targets/autoconfig_xml_decode.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]

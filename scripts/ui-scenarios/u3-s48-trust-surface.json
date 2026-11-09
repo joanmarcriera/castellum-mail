@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "name": "u3-s48-trust-surface",
+ "covers": [
+  "S48",
+  "trust surface"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "This Week in Rust"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "newsletter-trust-badge"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "This Week in Rust #612"
+    },
+    {
+     "model": "reading:trust",
+     "equals": "spf=none dkim=none dmarc=none"
+    },
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "ordinary-message-badge"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

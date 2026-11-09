@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "es",
+  "content_format": "plain",
+  "subject": "Confirmación de tu cita",
+  "from_name": "Recepción Dental Salut",
+  "from_address": "recepcion@dentalsalut.example.com",
+  "content_file": "es_short_plain.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["jueves"],
+      ["10:00", "10 de la mañana", "diez"]
+    ],
+    "forbidden_keywords": []
+  }
+}

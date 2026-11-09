@@ -1,0 +1,24 @@
+Hola a tothom,
+
+Us faig arribar l'estat de la migració de dades del projecte Riu abans de
+la reunió de demà.
+
+La migració de l'entorn de proves ha anat bé i s'ha validat sense
+incidències. Tanmateix, en preparar l'entorn de producció hem detectat un
+risc importat: dues taules antigues tenen claus duplicades que el nou
+esquema no permet, i caldrà netejar-les manualment abans del tall.
+
+Aquest risc introdueix un endarreriment d'uns quatre dies respecte al
+calendari original, ja que la neteja de dades s'ha de fer amb molta cura
+per no perdre històric. L'equip de dades ja ha començat a preparar
+l'script de neteja i espera tenir-lo llest dimecres.
+
+Si tot va bé amb la neteja, podríem fer el tall de producció el cap de
+setmana següent, tal com estava previst amb només uns dies de marge.
+Si algú detecta un altre risc semblant en altres taules, si us plau
+avisi'm abans de dimecres perquè ho puguem incloure en el mateix script.
+
+Ens veiem demà a la reunió per repassar-ho amb calma.
+
+Gràcies,
+Pol

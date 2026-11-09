@@ -1,0 +1,5 @@
+Flagging one: Supplier X just told us the firmware update is now two
+weeks late — their testing lab found a certification issue. Without it we
+can't finish in-store card testing, so March 3rd is at risk.
+
+Raj (Ops)

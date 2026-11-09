@@ -1,0 +1,38 @@
+{
+  "feature": "extract_thread_items",
+  "language": "en",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Planning review",
+      "from_name": "Dana Cole",
+      "from_address": "dana.cole@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@en-meeting",
+      "references": []
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "upload your slides",
+        "upload slides",
+        "slides"
+      ],
+      [
+        "book the small meeting room",
+        "meeting room"
+      ]
+    ],
+    "dates": [
+      "2026-11-03"
+    ],
+    "amounts": [
+      {
+        "amount": 40.0,
+        "currency": "EUR"
+      }
+    ]
+  }
+}

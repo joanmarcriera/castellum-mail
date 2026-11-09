@@ -1,0 +1,241 @@
+{
+ "schema": 1,
+ "name": "xf-quote-folding",
+ "covers": [
+  "plain text",
+  "quote folding",
+  "signature folding"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-f@local.test",
+   "password": "xf-f@local.test",
+   "as": "f",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "f",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "fold other"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailFolded",
+     "equals": "0"
+    }
+   ],
+   "label": "a message with nothing long to fold shows everything"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF fold"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "folded"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailBlocks",
+     "equals": "4"
+    },
+    {
+     "model": "reading:detailFolded",
+     "equals": "2"
+    }
+   ],
+   "label": "four blocks: prose, the 12-line quote, prose, the 6-line signature; quote and signature start folded"
+  },
+  {
+   "op": "reading",
+   "id": "detailToggleFold",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "capture",
+   "name": "quote-open"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailFolded",
+     "equals": "1"
+    }
+   ],
+   "label": "opening the quote leaves the signature folded"
+  },
+  {
+   "op": "reading",
+   "id": "detailToggleFold",
+   "text": "1"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailFolded",
+     "equals": "2"
+    }
+   ],
+   "label": "closing it again"
+  },
+  {
+   "op": "reading",
+   "id": "detailExpandAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailFolded",
+     "equals": "0"
+    }
+   ],
+   "label": "View > Expand All Quotes opens both"
+  },
+  {
+   "op": "reading",
+   "id": "detailSelect",
+   "text": "Thanks for the update"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:readingSelection",
+     "equals": "Thanks for the update"
+    }
+   ],
+   "label": "the selected text is published for Reply"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "fold other"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:readingSelection",
+     "equals": ""
+    }
+   ],
+   "label": "another message: no carried-over selection"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF fold"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailFolded",
+     "equals": "2"
+    }
+   ],
+   "label": "back on the first message the folds are back to the default"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

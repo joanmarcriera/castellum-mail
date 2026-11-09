@@ -1,0 +1,77 @@
+{
+ "schema": 1,
+ "name": "u5-s55-defect-ics-listed-twice",
+ "covers": [
+  "S55",
+  "DEFECT: the invite .ics is listed twice in the attachment strip",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "carol",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invitation: Castellum 0.3.3 planning (with ICS)",
+   "value": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "idle",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:hasInvite",
+     "equals": "true"
+    },
+    {
+     "model": "reading:attachmentCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "name": "u3-s73-sync-error",
+ "covers": [
+  "S73",
+  "PR-193",
+  "N/A",
+  "readable sync errors"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 120000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "breakPassword",
+   "accountRef": "alice"
+  },
+  {
+   "op": "wait",
+   "until": "sync:alice=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "sync-error-banner"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:bannerOverlapsHeader",
+     "equals": "false"
+    },
+    {
+     "model": "reading:bannerWithinWindow",
+     "equals": "true"
+    },
+    {
+     "model": "reading:windowMinHeightCompact",
+     "equals": "true"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "authenticationFailed: Sign-in failed for alice@local.test \u2014 check the username or password."
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "sync-error-banner-classic"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:layout",
+     "equals": "classic"
+    },
+    {
+     "model": "reading:bannerOverlapsHeader",
+     "equals": "false"
+    },
+    {
+     "model": "reading:bannerWithinWindow",
+     "equals": "true"
+    },
+    {
+     "model": "reading:windowMinHeightCompact",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutWidescreen"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

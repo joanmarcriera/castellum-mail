@@ -1,0 +1,46 @@
+{
+ "schema": 1,
+ "name": "u5-s25-undo-countdown",
+ "covers": ["S25", "the undo banner counts down (10s -> 6s) and the message is still held", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 120000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "enableWrites", "email": "alice@local.test"},
+  {"op": "assert", "expect": [{"model": "ext:pref.undoSendDelay", "equals": "10"}]},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "to", "text": "bob@local.test"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "U5 countdown undone"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "Undone at 6 seconds left."},
+  {"op": "ext", "id": "keyEquivalent", "window": "compose", "text": "cmd+return"},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "shown", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "undoBannerRemaining", "text": "6", "timeoutMs": 15000},
+  {"op": "capture", "name": "banner-at-6s", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:undoBanner", "equals": "shown"},
+    {"model": "ext:pendingCount", "equals": "1"}
+  ]},
+  {"op": "ext", "id": "keyEquivalent", "window": "main", "text": "cmd+z"},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "hidden", "timeoutMs": 10000},
+  {"op": "wait", "until": "window:title:U5 countdown undone", "timeoutMs": 10000},
+  {"op": "ext", "id": "waitExt", "name": "pendingCount", "text": "0", "timeoutMs": 10000},
+  {"op": "ext", "id": "pause", "text": "9000"},
+  {"op": "assert", "expect": [
+    {"model": "ext:composeWindows", "equals": "1"},
+    {"model": "ext:body", "equals": "Undone at 6 seconds left."},
+    {"model": "ext:pendingCount", "equals": "0"}
+  ]},
+  {"op": "closeWindow", "window": "title:U5 countdown undone"},
+  {"op": "addAccount", "persona": "bob", "as": "bob", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "selectMailbox", "email": "bob@local.test", "text": "inbox"},
+  {"op": "wait", "until": "idle"},
+  {"op": "assert", "expect": [
+    {"model": "ext:messageCount:U5 countdown undone", "equals": "0"}
+  ]},
+  {"op": "quit"}
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "schema": 1,
+ "name": "xi-defect-trust-forged-authserv-suffix",
+ "covers": [
+  "S48 trust surface",
+  "an attacker-authored Authentication-Results header whose authserv-id is only a trailing label of the IMAP host ('1' for 127.0.0.1, 'com' for imap.example.com) reads as Authenticated"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-tr1@local.test",
+   "password": "xi-tr1@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust forged suffix id"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "forged-suffix",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "authserv-id '1' is not the account's server: nothing may read as pass",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi trust forged suffix id"
+    },
+    {
+     "model": "reading:trust",
+     "equals": "spf=none dkim=none dmarc=none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

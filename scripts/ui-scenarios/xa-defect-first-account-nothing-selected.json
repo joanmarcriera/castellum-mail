@@ -1,0 +1,75 @@
+{
+ "schema": 1,
+ "name": "xa-defect-first-account-nothing-selected",
+ "covers": [
+  "First account added through the sheet: once the sheet closes the message list must show the new account's mail (Inbox or All Inboxes selected), not an empty list"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    690
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-main-after-first-account",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

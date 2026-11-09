@@ -1,0 +1,246 @@
+{
+ "schema": 1,
+ "name": "xi-unified-inbox-source-window",
+ "covers": [
+  "S34 unified inbox across two accounts",
+  "S18 account column",
+  "S49 raw source of a message with no From header",
+  "search inside the unified inbox"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-tr1@local.test",
+   "password": "xi-tr1@local.test",
+   "as": "tr",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "6000",
+   "timeoutMs": 26000
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "unified"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "45"
+    },
+    {
+     "model": "reading:columnVisible:account",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xi trust none"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:cell:account:0",
+     "equals": "xi-tr1@local.test"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xi no from header"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:cell:account:0",
+     "equals": "xi-r4@local.test"
+    },
+    {
+     "model": "reading:cell:from:0",
+     "equals": "(unknown)"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi no from header"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "showSource"
+  },
+  {
+   "op": "wait",
+   "until": "window:source",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "sourceHas:XI-NOFROM-BODY",
+   "text": "true",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "capture",
+   "name": "source-no-from",
+   "windows": [
+    "source"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "source",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "reading:sourceHas:Subject: xi no from header",
+     "equals": "true"
+    },
+    {
+     "model": "reading:sourceHas:From:",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "source"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "45"
+    },
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

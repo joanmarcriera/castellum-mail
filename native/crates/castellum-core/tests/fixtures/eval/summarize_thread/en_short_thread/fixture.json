@@ -1,0 +1,34 @@
+{
+  "feature": "summarize_thread",
+  "language": "en",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Vendor quote for the office chairs",
+      "from_name": "Priya Nair",
+      "from_address": "priya.nair@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@en-short-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Vendor quote for the office chairs",
+      "from_name": "Sam Doyle",
+      "from_address": "sam.doyle@example.com",
+      "sent_at_offset_secs": 3600,
+      "rfc822_message_id": "reply1@en-short-thread",
+      "references": ["root@en-short-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 500,
+    "required_keyword_groups": [
+      ["$6,200", "6,200", "6200"]
+    ],
+    "forbidden_keywords": []
+  }
+}

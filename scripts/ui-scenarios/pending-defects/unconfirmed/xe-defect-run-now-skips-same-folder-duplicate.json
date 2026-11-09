@@ -1,0 +1,118 @@
+{
+ "schema": 1,
+ "name": "xe-defect-run-now-skips-same-folder-duplicate",
+ "covers": [
+  "MM-3",
+  "R1",
+  "DEFECT: two Inbox messages sharing a Message-ID: preview and Run Now count and act on one only"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "r1",
+   "value": true
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Trash list",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-list\"}], \"groups\": []}, \"actions\": [\"trash\"], \"stop\": false, \"account\": \"r1\"}"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "r1",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "previewRule",
+   "name": "Trash list"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:note",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "Trash list",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "r1",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "one-copy-left-in-inbox",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XE Dup notice",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

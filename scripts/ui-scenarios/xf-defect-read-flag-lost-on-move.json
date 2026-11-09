@@ -1,0 +1,158 @@
+{
+ "schema": 1,
+ "name": "xf-defect-read-flag-lost-on-move",
+ "covers": [
+  "delete",
+  "archive",
+  "flag",
+  "read",
+  "replay"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-j@local.test",
+   "password": "xf-j@local.test",
+   "as": "j",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-j@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "j",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF j msg 3"
+  },
+  {
+   "op": "command",
+   "id": "toggleFlag",
+   "allowServerWrites": true
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "capture",
+   "name": "opened-flagged-deleted"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "j",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF j msg 3",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "capture",
+   "name": "trash-shows-it-unread-unflagged"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XF j msg 3",
+     "equals": "false"
+    }
+   ],
+   "label": "the message was opened (marked read) before Delete: it must not come back unread"
+  },
+  {
+   "op": "search",
+   "text": "is:flagged"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XF j msg 3",
+     "equals": "true"
+    }
+   ],
+   "label": "the message was flagged before Delete: the flag must survive the move"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

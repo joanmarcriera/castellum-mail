@@ -1,0 +1,119 @@
+{
+ "schema": 1,
+ "name": "xb-send-later-send-now",
+ "covers": [
+  "send later",
+  "Send Now on a scheduled send empties the Outbox and the message arrives (delivery count checked outside with imapcount.py: the subject is not per-run)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "scheduleSend",
+   "accountRef": "alice",
+   "text": "xb sendnow fixed"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:title:Outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "title:Outbox",
+   "text": "383,50"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-send-now"
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "alice@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "=xb sendnow fixed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "delivered",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

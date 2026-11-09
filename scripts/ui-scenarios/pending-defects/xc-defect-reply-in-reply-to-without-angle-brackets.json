@@ -1,0 +1,186 @@
+{
+ "schema": 1,
+ "name": "xc-defect-reply-in-reply-to-without-angle-brackets",
+ "covers": [
+  "DEFECT: a sent reply's In-Reply-To and References must be RFC 5322 msg-ids in angle brackets, or other clients cannot thread it"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xc-me@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "Re: XC plain note irt {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Threading check. {run}"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "as": "anna",
+   "waitFor": "synced",
+   "timeoutMs": 90000,
+   "email": "xc-anna@local.test",
+   "password": "xc-anna@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "anna",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "Re: XC plain note irt {run}"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "loadSource"
+  },
+  {
+   "op": "capture",
+   "name": "anna-received",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:src.has:In-Reply-To: ",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:In-Reply-To: <",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:References: <",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

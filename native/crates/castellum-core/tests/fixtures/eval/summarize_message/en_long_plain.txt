@@ -1,0 +1,27 @@
+Hi all,
+
+Quick update on Project Phoenix ahead of tomorrow's steering meeting.
+
+Backend migration: the read path cutover to the new schema is complete and
+has been stable in staging for five days. The write path cutover is behind
+schedule — we hit an unexpected foreign-key issue in the billing tables that
+cost us most of last week. Priya's team has a fix in review now and expects
+to merge it by Wednesday.
+
+Frontend: the new dashboard is feature-complete and in QA. Two accessibility
+issues were flagged (missing focus outlines on the filter chips, and a
+contrast ratio problem on the secondary buttons) — both are small fixes and
+should not affect the timeline.
+
+Overall we are now tracking about eight days behind the original schedule,
+almost entirely due to the billing table issue above. If the write-path fix
+lands Wednesday as expected, we can still hit the revised go-live date of the
+19th, but there is no more slack left in the plan — any further slip pushes
+us into next month.
+
+Ask: I'd like sign-off tomorrow on the revised 19th date, and a decision on
+whether we freeze scope now or allow the two accessibility fixes in as
+planned (I'd recommend allowing them — they're small and already scoped).
+
+Thanks,
+Dana

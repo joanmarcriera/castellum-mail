@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-db"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+castellum-models = { path = "../castellum-models" }
+# Bundled SQLite: compiles a vendored sqlite3 so we don't depend on the system
+# library (portable, reproducible across dev/CI/distribution).
+rusqlite = { version = "0.40", features = ["bundled", "functions"] }
+# Building operation payloads (JSON) safely, without hand-rolled escaping.
+serde_json = "1"
+# Derive macros for enrichment row serialization.
+serde = { version = "1", features = ["derive"] }
+# Encoding raw RFC822 bytes into `sent_copy` operation payloads.
+base64 = "0.23"
+# UUID v4 generation for project ids.
+uuid = { version = "1", features = ["v4"] }
+# WARN-level breadcrumb when `lock_conn` recovers a poisoned mutex (see its
+# doc comment) — otherwise a panic-then-recover is invisible after the fact.
+tracing = { workspace = true }
+# statvfs(2) for the pre-migration-backup free-space precheck (macOS only,
+# matching the rest of this app) — already in the lockfile transitively.
+libc = "0.2"
+
+[dev-dependencies]
+# Per-process scratch dir removed at exit (tests leaked castellum-* dirs in $TMPDIR).
+castellum-testutil = { path = "../castellum-testutil" }

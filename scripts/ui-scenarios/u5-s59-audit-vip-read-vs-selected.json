@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "name": "u5-s59-audit-vip-read-vs-selected",
+ "covers": [
+  "S59",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "toggleVipSender",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "vip-marked"
+  },
+  {
+   "op": "search",
+   "text": "is:vip"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "a-search-carried-selection"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "b-first-row-selected"
+  },
+  {
+   "op": "reading",
+   "id": "clearMessage"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "c-cleared"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

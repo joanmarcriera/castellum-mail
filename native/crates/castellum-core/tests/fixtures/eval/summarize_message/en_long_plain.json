@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "en",
+  "content_format": "plain",
+  "subject": "Project Phoenix — status ahead of steering meeting",
+  "from_name": "Dana Okafor",
+  "from_address": "dana.okafor@example.com",
+  "content_file": "en_long_plain.txt",
+  "rubric": {
+    "min_chars": 60,
+    "max_chars": 900,
+    "required_keyword_groups": [
+      ["Phoenix"],
+      ["behind schedule", "delay", "delayed", "slipped", "eight days"]
+    ],
+    "forbidden_keywords": []
+  }
+}

@@ -1,0 +1,216 @@
+{
+ "schema": 1,
+ "name": "xj-tag-smart-mailbox-conditions",
+ "covers": [
+  "MM1b tag conditions",
+  "MM1c hidden server keywords",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina urgent",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina_urgent"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Any tag",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": true}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "No tag",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": false}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Feina by name",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": \"Feina urgent\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Server tag",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": \"xjServerTag\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Hidden kw",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": \"$Forwarded\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Any tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "XJ Plain note | XJ Server keywords"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "any-tag"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "No tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Feina by name"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "XJ Plain note"
+    },
+    {
+     "model": "reading:tagDots:0",
+     "equals": "\u25cf"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Server tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "XJ Server keywords"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Server keywords"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "xjServerTag"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "server-keyword-without-hidden-ones"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "name": "xa-add-sheet-on-smallest-window",
+ "covers": [
+  "Add-account sheet opened on the main window at its minimum size: the sheet stays on screen with Cancel, Test Connection and Sync reachable"
+ ],
+ "requires": {
+  "greenmail": false,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-sheet-on-min-window"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "primaryButtonsVisible",
+    "noZeroSizeTextFields"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "cancel"
+     },
+     "visible": true
+    },
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,177 @@
+{
+ "schema": 1,
+ "name": "xe-rules-editor-cancel",
+ "covers": [
+  "MM-3",
+  "rule editor: empty state, validation hints, very long name, cancel half-way leaves no rule"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r2@local.test",
+   "password": "xe-r2@local.test",
+   "as": "r2",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "rules-empty-state",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "45,422",
+   "name": "sheet:ruleEditor"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:ruleEditor"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "editor-empty",
+   "windows": [
+    "sheet:ruleEditor"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [],
+   "window": "sheet:ruleEditor",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:ruleEditor",
+   "name": "0",
+   "text": "A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident"
+  },
+  {
+   "op": "accounts",
+   "id": "popupSelect",
+   "window": "sheet:ruleEditor",
+   "find": {
+    "role": "popup",
+    "label": "All accounts"
+   },
+   "text": "xe-r1@local.test"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:ruleEditor",
+   "name": "1",
+   "text": "XE Weekly"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "editor-half-filled-long-name",
+   "windows": [
+    "sheet:ruleEditor"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [],
+   "window": "sheet:ruleEditor",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:ruleEditor",
+   "text": "524,379"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:ruleEditor"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-cancel",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

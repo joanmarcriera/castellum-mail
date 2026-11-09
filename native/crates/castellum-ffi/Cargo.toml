@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[lib]
+name = "castellum_ffi"
+# staticlib -> libcastellum_ffi.a linked by the Swift/Xcode app.
+# cdylib    -> libcastellum_ffi.dylib (available for dynamic consumers).
+# rlib      -> lets the integration test in tests/ffi.rs call the ABI directly.
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+castellum-core = { path = "../castellum-core" }
+castellum-mail = { path = "../castellum-mail" }
+castellum-models = { path = "../castellum-models" }
+serde_json = "1"
+tracing = { workspace = true }
+# The one process-wide subscriber lives here (src/logging.rs), initialized
+# from castellum_open_profile since that's the single entry point every
+# Swift call goes through. env-filter powers the RUST_LOG override.
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# Daily-rotating file writer, capped at max_log_files so logs can't fill the
+# disk (see the castellum-batch-runs-fill-the-disk lesson).
+tracing-appender = "0.2"
+
+[features]
+# Off by default: apple/scripts/build-rust.sh builds without it, so the
+# staticlib's arm64 slice does not link mlx-rs/mlx-sys. Turn on only in the
+# same change that also wires a Swift backend picker (which can then select
+# AiBackendKind::Mlx) and bundles MLX's Metal runtime library. See
+# DECISIONS.md 2026-09-25 and castellum-core's own `mlx` feature.
+mlx = ["castellum-core/mlx"]
+
+[dev-dependencies]
+castellum-testutil = { path = "../castellum-testutil" }
+# Only for examples/logging_demo.rs, which proves the tracing pipeline writes
+# a real log line by driving PanicGuardedProvider directly.
+castellum-providers = { path = "../castellum-providers" }
+# Only for tests/ffi.rs to seed account/mailbox/message + embedding rows
+# directly at the same <profile>/castellum.db path castellum_open_profile
+# creates: the C ABI itself exposes no "insert a message" call (real data
+# arrives via IMAP sync), so both S40's FFI round-trip test and S53-UI's
+# "message already has a stored embedding" find-similar test seed through
+# the DB layer instead of the ABI.
+castellum-db = { path = "../castellum-db" }

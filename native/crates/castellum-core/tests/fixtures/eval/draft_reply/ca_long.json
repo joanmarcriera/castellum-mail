@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "ca",
+  "content_format": "plain",
+  "subject": "Possible canvi de proveïdor de neteja",
+  "from_name": "Gestió d'Edificis",
+  "from_address": "gestio@example.com",
+  "content_file": "ca_long.txt",
+  "instruction": "Explica educadament que cal més temps abans de decidir i demana una reunió la setmana vinent.",
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["setmana vinent", "propera setmana"],
+      ["reunió"]
+    ],
+    "forbidden_keywords": []
+  }
+}

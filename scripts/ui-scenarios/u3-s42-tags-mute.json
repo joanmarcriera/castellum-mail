@@ -1,0 +1,247 @@
+{
+ "schema": 1,
+ "name": "u3-s42-tags-mute",
+ "covers": [
+  "S42",
+  "PR-173",
+  "tags and mute",
+  "N/A (tag dot on the row: Tags column, or leading the Subject while it is hidden)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Work",
+   "text": "blue"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "Work"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Work",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNotice",
+     "equals": "Tag kept on this Mac only: this account is in evaluation mode."
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tagged-evaluation-mode"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "Work"
+    },
+    {
+     "model": "reading:tagDots:selected",
+     "equals": "●"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:Work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tag-search"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Sync window"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleMute"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedMuted",
+   "text": "true",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "capture",
+   "name": "muted-conversation"
+  },
+  {
+   "op": "reading",
+   "id": "toggleMute"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedMuted",
+   "text": "false",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "tags"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-tags-tab",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "Work"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

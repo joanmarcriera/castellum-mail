@@ -1,0 +1,224 @@
+{
+ "schema": 1,
+ "name": "list-received-visible-all-inboxes",
+ "covers": [
+  "N/A (All Inboxes, selection squeeze, Fit Columns)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1920,
+  "height": 1080,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "all-inboxes-nothing-selected",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "All Inboxes at the default window: Received inside, Account forced on",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:account",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "all-inboxes-selected-pane-squeezed",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "All Inboxes, a message open (list squeezed to 420 pt)",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    },
+    {
+     "model": "reading:paneWidth",
+     "equals": "420"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "fitColumns"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "capture",
+   "name": "all-inboxes-after-fit-columns",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "View > Fit Columns keeps Received inside and Account on",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:account",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "single-mailbox-selected",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "single mailbox, a message open",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1800,
+    900
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "capture",
+   "name": "wide-window",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "wider window, message still open",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

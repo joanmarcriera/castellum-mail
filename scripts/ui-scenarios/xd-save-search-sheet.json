@@ -1,0 +1,261 @@
+{
+ "schema": 1,
+ "name": "xd-save-search-sheet",
+ "covers": [
+  "saving a search as a smart mailbox",
+  "duplicate name",
+  "very long name"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openSheet",
+   "target": "saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "prefilled"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:segment:sheet:saveSearch",
+     "equals": "Search"
+    }
+   ],
+   "window": "sheet:saveSearch",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noZeroSizeTextFields",
+    "noClippedText"
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:saveSearch",
+   "find": {
+    "role": "textField",
+    "label": "Name"
+   },
+   "text": "xd saved"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "sheet:saveSearch",
+   "text": "return"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNames",
+     "equals": "xd saved"
+    },
+    {
+     "model": "reading:smartTotal:xd saved",
+     "equals": "2"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "quick"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "openSheet",
+   "target": "saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:saveSearch",
+   "find": {
+    "role": "textField",
+    "label": "Name"
+   },
+   "text": "xd saved"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "sheet:saveSearch",
+   "text": "return"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "duplicate-name-error"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:saveSearch",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "sheetAttached": true
+    },
+    {
+     "model": "reading:smartCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:saveSearch",
+   "find": {
+    "role": "textField",
+    "label": "Name"
+   },
+   "text": "xd verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname verylongname "
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "sheet:saveSearch",
+   "text": "return"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-long-name"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartCount",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "xd saved"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "xd saved"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

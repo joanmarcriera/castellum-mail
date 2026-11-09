@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "name": "xj-probe-untag",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org2@local.test",
+   "password": "xj-org2@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xj-org2@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Roadmap thread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "server-tagged-row"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

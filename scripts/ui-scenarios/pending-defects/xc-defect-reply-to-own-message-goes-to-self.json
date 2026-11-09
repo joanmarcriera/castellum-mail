@@ -1,0 +1,168 @@
+{
+ "schema": 1,
+ "name": "xc-defect-reply-to-own-message-goes-to-self",
+ "covers": [
+  "DEFECT: Reply on a message I sent must address its original recipients (Bob), not myself"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xc-me@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC from myself"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reply-to-own"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "Re: XC from myself {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Following up on my own note. {run}"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000,
+   "persona": "bob"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "bob",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "bob-inbox",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:messageCount:Re: XC from myself {run}",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

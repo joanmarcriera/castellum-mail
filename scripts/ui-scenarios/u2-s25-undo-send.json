@@ -1,0 +1,73 @@
+{
+ "schema": 1,
+ "name": "u2-s25-undo-send",
+ "covers": ["S25", "undo send (#270)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 150000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "enableWrites", "email": "alice@local.test"},
+  {"op": "wait", "until": "settingsOpenerReady"},
+  {"op": "openWindow", "target": "settings", "tab": "general"},
+  {"op": "wait", "until": "window:settings"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "expectPopupItems", "window": "settings", "find": {"role": "popup", "label": "10 seconds"}, "text": "Off|5 seconds|10 seconds|20 seconds|30 seconds"},
+  {"op": "capture", "name": "settings-undo-picker"},
+  {"op": "assert", "expect": [{"model": "ext:pref.undoSendDelay", "equals": "10"}]},
+  {"op": "closeWindow", "window": "settings"},
+
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "to", "text": "bob@local.test"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "U2 undone message"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "This one should be undone."},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "compose-filled"},
+  {"op": "ext", "id": "keyEquivalent", "window": "compose", "text": "cmd+return"},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "shown", "timeoutMs": 15000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "banner-countdown", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:undoBanner", "equals": "shown"},
+    {"model": "ext:composeWindows", "equals": "0"}
+  ]},
+  {"op": "ext", "id": "keyEquivalent", "window": "main", "text": "cmd+z"},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "hidden", "timeoutMs": 10000},
+  {"op": "wait", "until": "window:title:U2 undone message", "timeoutMs": 10000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "draft-reopened"},
+  {"op": "assert", "expect": [
+    {"model": "ext:composeWindows", "equals": "1"},
+    {"model": "ext:body", "equals": "This one should be undone."}
+  ]},
+  {"op": "closeWindow", "window": "title:U2 undone message"},
+
+  {"op": "ext", "id": "setPref", "name": "undoSendDelay", "text": "5"},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "to", "text": "bob@local.test"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "U2 sent once {run}"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "This one should be delivered once."},
+  {"op": "ext", "id": "keyEquivalent", "window": "compose", "text": "cmd+return"},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "shown", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "hidden", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pendingCount", "text": "0", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "after-countdown", "windows": ["main"]},
+
+  {"op": "addAccount", "persona": "bob", "as": "bob", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "selectMailbox", "email": "bob@local.test", "text": "inbox"},
+  {"op": "ext", "id": "waitExt", "name": "messageCount:U2 sent once {run}", "text": "1", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "bob-inbox", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:messageCount:U2 sent once {run}", "equals": "1"},
+    {"model": "ext:messageCount:U2 undone message", "equals": "0"}
+  ]},
+  {"op": "quit"}
+ ]
+}

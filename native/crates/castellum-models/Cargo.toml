@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-models"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+# JSON round-trip tests for the filter/rule schema (S40).
+serde_json = "1"

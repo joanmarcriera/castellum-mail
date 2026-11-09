@@ -1,0 +1,81 @@
+{
+ "schema": 1,
+ "name": "u4-reader-body-spanish-thread",
+ "covers": [
+  "UIT-1 reader-pane body capture",
+  "Spanish plain body decoded and rendered in the reading pane"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "carol",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Factura pendiente marzo"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reader-body",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Factura pendiente marzo — recordatorio"
+    },
+    {
+     "model": "reading:detailTextHas:Estimada Carol",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:factura 2026-031 (450 EUR)",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:Un saludo",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

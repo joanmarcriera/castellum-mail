@@ -1,0 +1,409 @@
+{
+ "schema": 1,
+ "name": "xc-reply-prefill",
+ "covers": [
+  "reply/reply-all prefill: Re: prefix never doubled, RE: kept, quote + attribution for plain, Catalan and Spanish mail"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "plain"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "Re: XC plain note"
+    },
+    {
+     "model": "ext:bodyPrefix:\n\nOn ",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:Anna Puig wrote:\n> Hi,",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:> Can you confirm the meeting on Friday?",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyCount:> ",
+     "equals": "5"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:Re: XC plain note"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "RE: XC upper prefix"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "upper-re"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "RE: XC upper prefix"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:RE: XC upper prefix"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Re: Re: XC doubled"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "doubled-re"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "Re: Re: XC doubled prefix"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:Re: Re: XC doubled prefix"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Fwd: XC already forwarded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "re-fwd"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "Re: Fwd: XC already forwarded"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:Re: Fwd: XC already forwarded"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC pressupost amb adjunt"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "catalan"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "Re: XC pressupost amb adjunt"
+    },
+    {
+     "model": "ext:bodyHas:> T'adjunto el pressupost revisat. Ja em diràs què et sembla.",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:> Salutacions,",
+     "equals": "true"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:Re: XC pressupost amb adjunt"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC factura con adjunto"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "replyAll"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "spanish"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:subject",
+     "equals": "Re: XC factura con adjunto"
+    },
+    {
+     "model": "ext:bodyHas:Luis Gómez wrote:",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:> Adjunto la factura de marzo.",
+     "equals": "true"
+    }
+   ],
+   "rules": [
+    "fitsScreen",
+    "noZeroSizeTextFields"
+   ],
+   "window": "title:Re: XC factura con adjunto"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "schema": 1,
+ "name": "xj-probe-oneclick",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Weekly digest (one-click)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:oc"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:oc"
+  },
+  {
+   "op": "capture",
+   "name": "one-click-sheet"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "schema": 1,
+ "name": "u5-s14-send-error-names-smtp-endpoint",
+ "covers": [
+  "S14",
+  "N/A",
+  "A real send to an unreachable SMTP endpoint: the compose window names host:port and a classified reason; the Outbox row shows Failed"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "smtp": "127.0.0.1:3999",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "subject",
+   "text": "U5 smtp down {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "compose",
+   "text": "This cannot be delivered: the SMTP port is closed."
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "compose",
+   "find": {
+    "text": "Couldn\u2019t reach 127.0.0.1:3999"
+   },
+   "value": true,
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-compose-names-smtp-endpoint",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "rules": [
+    "nonBlank",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "find": {
+      "text": "Not sent \u2014 kept in Outbox."
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "text": "127.0.0.1:3999"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-outbox-row-failed",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

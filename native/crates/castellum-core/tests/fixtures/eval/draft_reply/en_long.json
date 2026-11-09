@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "en",
+  "content_format": "plain",
+  "subject": "Studio Marlow — Q4 platform redesign proposal",
+  "from_name": "Sofia Marlow",
+  "from_address": "sofia@studiomarlow.example.com",
+  "content_file": "en_long.txt",
+  "instruction": "Politely decline citing budget constraints and propose revisiting in Q3 next year.",
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["budget"],
+      ["Q3", "third quarter"]
+    ],
+    "forbidden_keywords": []
+  }
+}

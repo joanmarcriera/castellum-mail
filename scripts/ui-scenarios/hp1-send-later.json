@@ -1,0 +1,25 @@
+{
+ "schema": 1,
+ "name": "hp1-send-later",
+ "covers": ["HP1", "send-later"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 240000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "reading", "id": "setWrite", "accountRef": "alice", "value": true},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "compose-send-later-control"},
+  {"op": "assert", "window": "compose", "rules": ["nonBlank", "onScreen", "noClippedText"]},
+  {"op": "closeWindow", "window": "compose"},
+  {"op": "reading", "id": "scheduleSend", "accountRef": "alice", "text": "HP1 scheduled message"},
+  {"op": "wait", "until": "idle"},
+  {"op": "openWindow", "target": "outbox"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "outbox-scheduled-row"},
+  {"op": "assert", "window": "outbox", "rules": ["nonBlank", "onScreen", "noClippedText"]},
+  {"op": "quit"}
+ ]
+}

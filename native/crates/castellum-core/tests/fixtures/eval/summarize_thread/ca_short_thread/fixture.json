@@ -1,0 +1,35 @@
+{
+  "feature": "summarize_thread",
+  "language": "ca",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Projector per dimecres?",
+      "from_name": "Jan Roca",
+      "from_address": "jan.roca@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@ca-short-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Projector per dimecres?",
+      "from_name": "Clara Vives",
+      "from_address": "clara.vives@example.com",
+      "sent_at_offset_secs": 1800,
+      "rfc822_message_id": "reply1@ca-short-thread",
+      "references": ["root@ca-short-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 500,
+    "required_keyword_groups": [
+      ["dimecres"],
+      ["projector"]
+    ],
+    "forbidden_keywords": []
+  }
+}

@@ -1,0 +1,168 @@
+{
+ "schema": 1,
+ "name": "xk-defect-main-window-min-width",
+ "covers": [
+  "main window minimum size",
+  "RootView: min 180 + 480 + 360 must fit any supported screen"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "launch",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutWidescreen"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "empty-layoutWidescreen-min",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "empty layoutWidescreen at min: fits a 1280x768 screen",
+   "expect": [],
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "empty-layoutWidescreen-large",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "empty layoutWidescreen large",
+   "expect": [
+    {
+     "model": "reading:tableFound",
+     "equals": "true"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "empty-layoutClassic-min",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "empty layoutClassic at min: fits a 1280x768 screen",
+   "expect": [],
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "empty-layoutClassic-large",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "empty layoutClassic large",
+   "expect": [
+    {
+     "model": "reading:tableFound",
+     "equals": "true"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

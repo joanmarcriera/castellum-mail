@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "name": "u3-s49-raw-source",
+ "covers": [
+  "S49",
+  "raw source"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "showSource"
+  },
+  {
+   "op": "wait",
+   "until": "window:source",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "sourceHas:Message-ID",
+   "text": "true",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "capture",
+   "name": "source-window",
+   "windows": [
+    "source"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "source",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "reading:sourceHas:Subject: Invoice R0012345678",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

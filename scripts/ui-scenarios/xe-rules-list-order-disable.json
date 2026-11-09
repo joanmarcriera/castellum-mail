@@ -1,0 +1,189 @@
+{
+ "schema": 1,
+ "name": "xe-rules-list-order-disable",
+ "covers": [
+  "MM-3",
+  "rules list: create, reorder, disable, long name, duplicate name, smallest window"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Alpha",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-news\"}], \"groups\": []}, \"actions\": [\"mark_read\"], \"stop\": false, \"account\": \"r1\"}"
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Beta",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"XE Invoice\"}], \"groups\": []}, \"actions\": [{\"add_flag\": {}}], \"stop\": true, \"account\": \"r1\"}"
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Gamma",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-list\"}], \"groups\": []}, \"actions\": [\"trash\"], \"stop\": false}"
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-news\"}], \"groups\": []}, \"actions\": [\"mark_read\", {\"add_flag\": {}}, \"archive\"], \"stop\": false, \"account\": \"r1\"}"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleCount",
+     "equals": "4"
+    },
+    {
+     "model": "reading:ruleNames",
+     "equals": "Alpha,Beta,Gamma,A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "moveRuleToTop",
+   "name": "Gamma"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleRule",
+   "name": "Beta",
+   "value": false
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleNames",
+     "equals": "Gamma,Alpha,Beta,A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident A very long rule name that a person might paste by accident"
+    },
+    {
+     "model": "reading:ruleEnabled:Beta",
+     "equals": "false"
+    },
+    {
+     "model": "reading:ruleEnabled:Gamma",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "list-reordered",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "resizable"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "list-smallest-window",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "toggleRule",
+   "name": "Beta",
+   "value": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleEnabled:Beta",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

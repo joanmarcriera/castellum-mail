@@ -1,0 +1,182 @@
+{
+ "schema": 1,
+ "name": "u1-s9-accounts-tab",
+ "covers": [
+  "S9",
+  "N/A",
+  "Settings > Accounts tab: per-account rows, Re-authenticate opens for the selected account, Open Accounts landing"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-settings-on-general"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "bob"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-open-accounts-lands-on-bob"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "2"
+    },
+    {
+     "model": "accounts:dotState:alice",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:dotState:bob",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:endpoint:bob",
+     "equals": "127.0.0.1:3143"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {"label": "Re-authenticate…"},
+   "name": "sheet:reauth"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-reauth-opened-for-selected-account"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "primaryButtonsVisible"
+   ],
+   "expect": [
+    {
+     "model": "accounts:field:sheet:reauth|#0",
+     "equals": "bob@local.test"
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04-after-cancel"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "2"
+    },
+    {
+     "model": "accounts:endpoint:bob",
+     "equals": "127.0.0.1:3143"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "schema": 1,
+ "name": "u2-s26-signatures",
+ "covers": ["S26", "per-account plain-text signatures (#270)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 150000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "addAccount", "persona": "bob", "as": "bob", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "setPref", "name": "signature:bob@local.test", "text": "Bob"},
+  {"op": "wait", "until": "settingsOpenerReady"},
+  {"op": "openWindow", "target": "settings", "tab": "accounts", "accountRef": "bob"},
+  {"op": "wait", "until": "window:settings"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "settings-bob-signature", "windows": ["settings"]},
+  {"op": "closeWindow", "window": "settings"},
+
+  {"op": "ext", "id": "selectMailbox", "email": "bob@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "=Sync window: 7 days or 30?", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "command", "id": "reply"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "1", "timeoutMs": 10000},
+  {"op": "wait", "until": "window:title:Re: Sync window: 7 days or 30?"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "reply-with-signature"},
+  {"op": "assert", "expect": [
+    {"model": "ext:bodyHas:-- \nBob", "equals": "true"},
+    {"model": "ext:bodyBefore:-- \nBob|>", "equals": "true"},
+    {"model": "ext:bodyCount:-- \nBob", "equals": "1"}
+  ]},
+  {"op": "closeWindow", "window": "title:Re: Sync window: 7 days or 30?"},
+
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "new-from-bob", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:fromPopup", "equals": "bob@local.test"},
+    {"model": "ext:bodyHas:-- \nBob", "equals": "true"}
+  ]},
+  {"op": "ext", "id": "setPopup", "window": "compose", "find": {"role": "popup", "label": "bob@local.test"}, "text": "alice@local.test"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "from-switched-to-alice", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:fromPopup", "equals": "alice@local.test"},
+    {"model": "ext:bodyHas:Bob", "equals": "false"}
+  ]},
+  {"op": "ext", "id": "setPopup", "window": "compose", "find": {"role": "popup", "label": "alice@local.test"}, "text": "bob@local.test"},
+  {"op": "wait", "until": "idle"},
+  {"op": "assert", "expect": [
+    {"model": "ext:bodyCount:-- \nBob", "equals": "1"}
+  ]},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "\n\n-- \nBob (edited by hand)"},
+  {"op": "ext", "id": "setPopup", "window": "compose", "find": {"role": "popup", "label": "bob@local.test"}, "text": "alice@local.test"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "edited-signature-left-alone", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:bodyHas:(edited by hand)", "equals": "true"},
+    {"model": "ext:bodyCount:Bob", "equals": "1"}
+  ]},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "U2 signature draft"},
+  {"op": "closeWindow", "window": "compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "0", "timeoutMs": 5000},
+  {"op": "ext", "id": "openFirstDraft", "email": "alice@local.test", "timeoutMs": 20000},
+  {"op": "wait", "until": "window:title:U2 signature draft", "timeoutMs": 15000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "draft-reopened"},
+  {"op": "assert", "expect": [
+    {"model": "ext:bodyCount:Bob", "equals": "1"},
+    {"model": "ext:bodyHas:(edited by hand)", "equals": "true"}
+  ]},
+  {"op": "quit"}
+ ]
+}

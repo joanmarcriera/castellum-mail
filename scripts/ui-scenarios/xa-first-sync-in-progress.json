@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "name": "xa-first-sync-in-progress",
+ "covers": [
+  "While a first sync runs (account added, not finished): no error text or failure banner appears, and the account ends ok"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "none"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "capture",
+   "name": "01-during-first-sync",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "sync:alice=ok",
+   "timeoutMs": 120000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-after-first-sync",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:alice",
+     "equals": "ok"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

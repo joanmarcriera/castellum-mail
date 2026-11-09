@@ -1,0 +1,181 @@
+{
+ "schema": 1,
+ "name": "u5-mm1c-no-tag-row-visible",
+ "covers": [
+  "MM1c",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "$Forwarded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "$Forwarded",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Invoice any",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"Invoice R0012345678\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Invoice any"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Invoice any"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "invoice-all"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Invoice no tag",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": false}, {\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"Invoice R0012345678\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Invoice no tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Invoice no tag"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "invoice-no-tag-shows-hidden-only"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Invoice tagged",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": true}, {\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"Invoice R0012345678\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Invoice tagged"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Invoice tagged"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "invoice-has-any-tag-empty"
+  }
+ ]
+}

@@ -1,0 +1,141 @@
+{
+ "schema": 1,
+ "name": "xg-accounts-folders-sheet-cancel",
+ "covers": [
+  "Settings > Accounts > Folders… sheet: layout on a 900x700 Settings window, Cancel closes it and leaves the account synced and in place"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "carol"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    900,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "571,678",
+   "name": "sheet:folders"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:folders",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-folders-sheet"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:folders",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen",
+    "noClippedText",
+    "primaryButtonsVisible"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:folders",
+   "text": "53,186"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:folders",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-after-cancel",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accountSync:carol",
+     "equals": "ok"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

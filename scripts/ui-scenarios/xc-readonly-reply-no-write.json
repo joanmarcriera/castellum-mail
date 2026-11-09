@@ -1,0 +1,117 @@
+{
+ "schema": 1,
+ "name": "xc-readonly-reply-no-write",
+ "covers": [
+  "write safety: reply typed + Send on a read-only (evaluation mode) account queues nothing and keeps the draft open"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "XC-NOWRITE-{run} see you Friday"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "12000"
+  },
+  {
+   "op": "capture",
+   "name": "typed"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "capture",
+   "name": "send-refused"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "ext:bodyHas:XC-NOWRITE",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

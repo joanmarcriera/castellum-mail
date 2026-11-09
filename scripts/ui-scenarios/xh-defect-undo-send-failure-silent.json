@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "name": "xh-defect-undo-send-failure-silent",
+ "covers": [
+  "send fails after the undo window (default send path): the UI said 'Message sent', the compose window is gone; the main window must then say the message was NOT sent (AppModel.drainSendPending swallows the error with try?)",
+  "asserts a visible node in the main window containing 'Not sent'; a fix must expose its notice to the NSView walk (uiProbe)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000,
+   "smtp": "127.0.0.1:3998"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xh-one@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "5"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "xh-two@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "subject",
+   "text": "XH unsendable {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "compose",
+   "text": "This cannot leave: SMTP is on a closed port."
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "undoBanner",
+   "text": "shown",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "capture",
+   "name": "01-says-message-sent",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "undoBanner",
+   "text": "hidden",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "6000"
+  },
+  {
+   "op": "capture",
+   "name": "02-after-failed-delivery",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "label": "the user is told the message was not sent",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "0"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "1"
+    },
+    {
+     "find": {
+      "text": "Not sent"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

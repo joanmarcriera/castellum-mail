@@ -1,0 +1,129 @@
+{
+ "schema": 1,
+ "name": "xb-defect-erased-compose-leaves-draft",
+ "covers": [
+  "compose",
+  "a new message typed then erased and closed must not leave a draft behind"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb changed my mind {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Half a thought."
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "capture",
+   "name": "typed"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": ""
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": ""
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "200"
+  },
+  {
+   "op": "capture",
+   "name": "erased"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-close",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:drafts:alice@local.test",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

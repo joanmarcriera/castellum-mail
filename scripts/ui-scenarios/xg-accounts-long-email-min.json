@@ -1,0 +1,18 @@
+{ "schema": 1, "name": "xg-accounts-long-email-min",
+  "covers": ["Settings > Accounts with an 87-character account address selected, at the minimum size and at 900x700: row, detail area (signatures, Markdown toggle, identities) and button bar"],
+  "requires": {"greenmail": true, "personas": true}, "screen": {"width": 1280, "height": 768, "menuBar": 25}, "timeoutMs": 150000,
+  "steps": [
+    {"op": "wait", "until": "accountsLoaded"},
+    {"op": "addAccount", "email": "xg-a-very-long-mailbox-name-for-settings-layout-checks.department-of-testing@local.test", "password": "xg-a-very-long-mailbox-name-for-settings-layout-checks.department-of-testing@local.test", "as": "long", "waitFor": "synced", "timeoutMs": 90000},
+    {"op": "wait", "until": "settingsOpenerReady", "timeoutMs": 15000},
+    {"op": "openWindow", "target": "settings", "tab": "accounts", "accountRef": "long"},
+    {"op": "wait", "until": "window:settings"},
+    {"op": "resizeWindow", "window": "settings", "contentSize": "min"},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "01-accounts-selected-min", "windows": ["settings"]},
+    {"op": "assert", "window": "settings", "rules": ["nonBlank", "fitsScreen", "noClippedText", "controlsReachable"]},
+    {"op": "resizeWindow", "window": "settings", "contentSize": [900, 700]},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "02-accounts-selected-large", "windows": ["settings"]},
+    {"op": "assert", "window": "settings", "rules": ["nonBlank", "fitsScreen", "noClippedText", "controlsReachable"]},
+    {"op": "quit"} ] }

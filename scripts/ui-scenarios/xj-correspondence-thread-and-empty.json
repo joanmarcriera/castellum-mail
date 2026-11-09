@@ -1,0 +1,148 @@
+{
+ "schema": 1,
+ "name": "xj-correspondence-thread-and-empty",
+ "covers": [
+  "MM-4 correspondence",
+  "empty state",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Roadmap thread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "correspondence",
+   "text": "pau@partner.example.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "pau@partner.example.test"
+    },
+    {
+     "model": "reading:corrTotal",
+     "equals": "4"
+    },
+    {
+     "model": "reading:corrReceived",
+     "equals": "4"
+    },
+    {
+     "model": "reading:corrSent",
+     "equals": "0"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-with-pau"
+  },
+  {
+   "op": "reading",
+   "id": "correspondence",
+   "text": "nobody at all"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:corrTotal",
+     "equals": "0"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-empty-state"
+  },
+  {
+   "op": "reading",
+   "id": "closeCorrespondence"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

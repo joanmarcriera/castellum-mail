@@ -1,0 +1,161 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+# XcodeGen spec for the native macOS Castellum app.
+# The notable part is linking the Rust static library (libcastellum_ffi.a)
+# built from ../native.
+# Regenerate the project with:  xcodegen generate --spec apple/project.yml
+name: Castellum
+options:
+  bundleIdPrefix: uk.co.riera
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.4.0-rc1"
+    CURRENT_PROJECT_VERSION: "1"
+    # Project-wide so the test target (which @testable-imports the app and thus
+    # pulls in its bridging header) can also resolve castellum.h.
+    HEADER_SEARCH_PATHS:
+      - $(SRCROOT)/../native/crates/castellum-ffi/include
+
+targets:
+  Castellum:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Sources/Castellum
+      - path: Assets.xcassets
+    configFiles:
+      # Debug: ad-hoc signed, so a local build and the unsigned CI job need no
+      # certificate. Release: real Developer ID + hardened runtime.
+      # Set here rather than passed to xcodebuild as `-xcconfig`, because a
+      # target's configFiles outrank a project-level command-line override.
+      Debug: configs/Direct.xcconfig
+      Release: configs/DirectRelease.xcconfig
+    settings:
+      base:
+        # uk.co.riera.castellum (Release) / uk.co.riera.castellum.dev (Debug):
+        # the suffix and display name come from the per-configuration
+        # xcconfig (configs/Direct*.xcconfig) — the dev/prod TCC split.
+        PRODUCT_BUNDLE_IDENTIFIER: uk.co.riera.castellum$(CASTELLUM_BUNDLE_ID_SUFFIX)
+        GENERATE_INFOPLIST_FILE: YES
+        # Complex Info.plist keys (arrays of dicts) aren't expressible as flat
+        # INFOPLIST_KEY_* build settings — Xcode 13+ merges a real file at
+        # INFOPLIST_FILE in alongside them (S57: CFBundleURLTypes, NSServices).
+        INFOPLIST_FILE: $(SRCROOT)/Info-Extras.plist
+        INFOPLIST_KEY_CFBundleDisplayName: $(CASTELLUM_DISPLAY_NAME)
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        INFOPLIST_KEY_NSContactsUsageDescription: "Castellum can suggest recipients from your Contacts while composing a message. Contacts data never leaves this Mac."
+        # S55 calendar invites: "Add to Calendar" and Accept/Decline/Tentative
+        # write one event via EventKit. NSCalendarsUsageDescription covers
+        # `EKEventStore.requestAccess(to:)` (macOS <14); the write-only key
+        # covers `requestWriteOnlyAccessToEvents` (macOS 14+) — Castellum
+        # never reads existing events, only ever creates one.
+        INFOPLIST_KEY_NSCalendarsUsageDescription: "Castellum can add an accepted meeting invite to your Calendar. Nothing is read from your existing calendars."
+        INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription: "Castellum can add an accepted meeting invite to your Calendar. Nothing is read from your existing calendars."
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Bridge the Rust C ABI header into Swift.
+        SWIFT_OBJC_BRIDGING_HEADER: $(SRCROOT)/Castellum-Bridging-Header.h
+        HEADER_SEARCH_PATHS:
+          - $(SRCROOT)/../native/crates/castellum-ffi/include
+        # Search universal build first (for distribution), then host-arch builds.
+        LIBRARY_SEARCH_PATHS:
+          - $(SRCROOT)/../native/target/universal/release
+          - $(SRCROOT)/../native/target/release
+          - $(SRCROOT)/../native/target/debug
+        # Link the Rust staticlib + the system frameworks its std depends on.
+        OTHER_LDFLAGS:
+          - -lcastellum_ffi
+          # MM-14 account auto-detect: castellum-core's DNS SRV/MX lookups call
+          # res_query (libresolv); a staticlib does not carry its own -l flags.
+          - -lresolv
+          - -framework
+          - CoreFoundation
+          - -framework
+          - Security
+          - -framework
+          - Contacts
+          # CoreSpotlight indexing (S58, opt-in): message subject/sender
+          # metadata only. UniformTypeIdentifiers backs the
+          # CSSearchableItemAttributeSet(contentType:) initializer.
+          - -framework
+          - CoreSpotlight
+          - -framework
+          - UniformTypeIdentifiers
+          # S59: new-mail banners (UNUserNotificationCenter) and the Focus filter
+          # (SetFocusFilterIntent). The App Intents metadata processor runs
+          # for any target that imports AppIntents.
+          - -framework
+          - UserNotifications
+          - -framework
+          - AppIntents
+          # S56-impl (2026-09-25 batch merge) statically linked MLX
+          # (mlx-rs/mlx-sys) into the arm64 slice unconditionally, which
+          # needed -lc++ (MLX's C++ core) + Accelerate (its BNNS-backed
+          # layers). build(ffi) (2026-09-25) moved MLX behind the
+          # castellum-ffi `mlx` cargo feature, off by default —
+          # apple/scripts/build-rust.sh never passes --features mlx, so the
+          # staticlib no longer links MLX and neither flag is needed.
+          # Verified by a real build: no "Undefined symbols" without them.
+          # Re-add both (and bundle MLX's Metal runtime library) in the same
+          # change that turns the feature on. See DECISIONS.md 2026-09-25.
+    dependencies:
+      # Embeds the Share Extension in the app bundle (S57) so it builds as
+      # part of the Castellum scheme/target and ships inside the app — a
+      # Share Extension is only discoverable by macOS when embedded this way.
+      - target: CastellumShareExtension
+        embed: true
+
+  # S57: accepts shared text/URLs/files from any Mac app's Share Sheet. Must
+  # be sandboxed (Apple requirement for extensions); hands content to the
+  # main (non-sandboxed) app via the App Group container rather than linking
+  # the Rust FFI itself — see SharePendingCompose.swift.
+  CastellumShareExtension:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: ShareExtension/ShareViewController.swift
+      - path: Sources/Castellum/Core/SharePendingCompose.swift
+    configFiles:
+      Debug: configs/Direct.xcconfig
+      Release: configs/DirectRelease.xcconfig
+    settings:
+      base:
+        # Must stay prefixed by the host app's id (embedding validation), so it
+        # follows the same Debug ".dev" suffix.
+        PRODUCT_BUNDLE_IDENTIFIER: uk.co.riera.castellum$(CASTELLUM_BUNDLE_ID_SUFFIX).ShareExtension
+        PRODUCT_NAME: "Castellum Share"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: $(SRCROOT)/ShareExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
+        SKIP_INSTALL: YES
+
+  CastellumTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources:
+      - path: Tests/CastellumCoreTests
+    dependencies:
+      - target: Castellum
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Castellum:
+    build:
+      targets:
+        Castellum: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - CastellumTests

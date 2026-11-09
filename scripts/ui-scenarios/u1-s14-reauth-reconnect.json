@@ -1,0 +1,395 @@
+{
+ "schema": 1,
+ "name": "u1-s14-reauth-reconnect",
+ "covers": [
+  "S14",
+  "N/A",
+  "GUI-5",
+  "N/A",
+  "S70",
+  "N/A",
+  "Re-authenticate: Reconnect failure keeps the sheet open, Save anyway, Reconnect success closes it, edit Display name"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "dave",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "carol"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {
+    "label": "Re-authenticate…"
+   },
+   "name": "sheet:reauth1"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "wrong-password"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-reconnect-wrong-password"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth1",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "primaryButtonsVisible"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": true
+    },
+    {
+     "model": "accounts:field:sheet:reauth1|#5",
+     "equals": "wrong-password"
+    },
+    {
+     "find": {
+      "identifier": "save"
+     },
+     "enabled": true
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "save"
+   },
+   "name": "sheet:confirm"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:confirm"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "sheet:confirm",
+   "find": {
+    "label": "Save anyway"
+   },
+   "value": true,
+   "timeoutMs": 5000
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm",
+   "find": {
+    "label": "Save anyway"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth1",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "sync:carol=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "settings",
+   "find": {
+    "identifier": "accountSyncLine",
+    "text": "Sign-in failed for"
+   },
+   "value": true,
+   "timeoutMs": 10000
+  },
+  {
+   "op": "capture",
+   "name": "02-saved-anyway-account-failed"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accounts:dotState:carol",
+     "equals": "authenticationFailed"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {
+    "label": "Re-authenticate…"
+   },
+   "name": "sheet:reauth2"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth2",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "carol-pass"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth2",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth2",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "sync:carol=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-reconnected-account-ok"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accounts:dotState:carol",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:sidebarLabel:carol",
+     "equals": "carol@local.test"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {
+    "label": "Re-authenticate…"
+   },
+   "name": "sheet:reauth3"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:reauth3",
+   "name": "1",
+   "text": "Carol Client"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04-display-name-typed"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth3",
+   "find": {
+    "identifier": "save"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth3",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "05-saved-without-test"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accounts:displayName:carol",
+     "equals": "Carol Client"
+    },
+    {
+     "model": "accounts:sidebarLabel:carol",
+     "equals": "Carol Client"
+    },
+    {
+     "model": "accounts:fromHeader:carol",
+     "equals": "Carol Client <carol@local.test>"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "06-compose-from-edited-name"
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "find": {
+      "text": "Carol Client"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

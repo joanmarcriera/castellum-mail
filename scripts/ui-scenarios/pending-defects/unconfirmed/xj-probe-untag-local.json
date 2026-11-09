@@ -1,0 +1,117 @@
+{
+ "schema": 1,
+ "name": "xj-probe-untag-local",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "tag:xjServerTag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Server keywords"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "xjServerTag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "after-local-removal"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "reading:tagNotice",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "tag:xjServerTag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

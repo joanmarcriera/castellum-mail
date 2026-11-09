@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-providers"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+# ERROR-level breadcrumb when a provider panic is caught (panic_guard.rs) —
+# never the panic payload itself, see that file's doc comment.
+tracing = { workspace = true }

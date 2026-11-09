@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "name": "u5-s59-vip-sender-and-sidebar",
+ "covers": [
+  "S59",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "toggleVipSender",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "vip-marked"
+  },
+  {
+   "op": "search",
+   "text": "is:vip"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "vip-search"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "23"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

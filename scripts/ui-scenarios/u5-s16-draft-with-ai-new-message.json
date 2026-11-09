@@ -1,0 +1,183 @@
+{
+ "schema": 1,
+ "name": "u5-s16-draft-with-ai-new-message",
+ "covers": [
+  "S16",
+  "N/A",
+  "Blank compose: click Draft with AI, type a prompt, click Draft, Drafting then AI draft ready, click Insert puts the text in the body"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "aiProbeFirstLaunch",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pref.aiEnabled",
+   "text": "true",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "ext",
+   "id": "aiUseFirstModel",
+   "text": "llama3.1:8b|qwen2.5:7b|largest"
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "alice@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-compose",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "compose",
+   "text": "501,400",
+   "name": "sheet:draftprompt"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:draftprompt",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-prompt-sheet"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "sheet:draftprompt",
+   "text": "decline the meeting politely"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-prompt-typed"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:draftprompt",
+   "text": "428,191"
+  },
+  {
+   "op": "ext",
+   "id": "waitAiJob",
+   "name": "draft_message",
+   "text": "any",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04-after-draft",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "waitAiJob",
+   "name": "draft_message",
+   "text": "succeeded",
+   "timeoutMs": 120000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "05-done",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "compose",
+   "text": "41,398"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "06-after-insert",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:bodyPrefix:Dear",
+     "equals": "true"
+    },
+    {
+     "model": "ext:aiRunning:draft_message",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

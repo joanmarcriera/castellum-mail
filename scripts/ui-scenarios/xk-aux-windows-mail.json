@@ -1,0 +1,415 @@
+{
+ "schema": 1,
+ "name": "xk-aux-windows-mail",
+ "covers": [
+  "aux windows with mail",
+  "min size",
+  "close"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-mail",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-mail-min",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "status",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "contacts"
+  },
+  {
+   "op": "wait",
+   "until": "window:contacts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "contacts-mail",
+   "windows": [
+    "contacts"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "contacts",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "contacts-mail-min",
+   "windows": [
+    "contacts"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "contacts",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "contacts",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "contacts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "window:projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-mail",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "projects",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-mail-min",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "projects",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "projects",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "window:diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-mail",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "diagnostics",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-mail-min",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "diagnostics",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-mail",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "outbox",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-mail-min",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "outbox",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "outbox",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "window:aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "aiActivity-mail",
+   "windows": [
+    "aiActivity"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "aiActivity",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "aiActivity-mail-min",
+   "windows": [
+    "aiActivity"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "aiActivity",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "all closed",
+   "expect": [
+    {
+     "windowCount": 1
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Invoice R0012345678 for August 2026"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

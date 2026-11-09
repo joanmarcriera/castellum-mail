@@ -1,0 +1,104 @@
+{
+ "schema": 1,
+ "name": "xg-defect-identity-sheet-unlabelled-fields",
+ "covers": [
+  "Settings > Accounts > Add Identity: every field must say what it is. Today the Reply-To and Always Bcc fields show only an example address (replies@example.com / archive@example.com); their titles 'Reply-To (optional)' and 'Always Bcc (optional)' are never drawn, so nothing tells the user which field silently Bccs every message"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "dave",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "dave"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    900,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "63,515",
+   "name": "sheet:identity"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:identity",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-identity-sheet",
+   "windows": [
+    "sheet:identity"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "sheet:identity",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "find": {
+      "text": "archive@example.com"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "text": "Display Name"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

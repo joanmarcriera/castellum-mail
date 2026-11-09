@@ -1,0 +1,177 @@
+{
+ "schema": 1,
+ "name": "u3-mm4-correspondence",
+ "covers": [
+  "MM-4 Correspondence",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "bob",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Sync window: 7 days or 30?"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "alice-message-open"
+  },
+  {
+   "op": "reading",
+   "id": "correspondence",
+   "text": "alice@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-with-alice"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "alice@local.test"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    },
+    {
+     "model": "reading:corrTotalPositive",
+     "equals": "true"
+    },
+    {
+     "model": "reading:corrMonthsPositive",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "wait",
+   "until": "idle",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "alice@local.test"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-manual-sync-still-in-correspondence"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "bob",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "correspondence",
+   "text": "alice@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "closeCorrespondence"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:correspondence",
+     "equals": "none"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "left-correspondence"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

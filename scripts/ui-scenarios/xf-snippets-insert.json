@@ -1,0 +1,175 @@
+{
+ "schema": 1,
+ "name": "xf-snippets-insert",
+ "covers": [
+  "snippets",
+  "compose",
+  "placeholders"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-s@local.test",
+   "password": "xf-s@local.test",
+   "as": "s",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "snippetAdd",
+   "name": "Greeting",
+   "text": "Hi ${recipient.first|there},${cursor} bye",
+   "tab": "hi"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:snippetCount",
+     "equals": "1"
+    }
+   ],
+   "label": "the snippet is stored"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "Grace Hopper <grace@x.test>"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "insertSnippet",
+   "text": "Greeting"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:body",
+     "equals": "Hi Grace, bye"
+    }
+   ],
+   "label": "placeholders are filled from the first To address"
+  },
+  {
+   "op": "capture",
+   "name": "compose-after-insert",
+   "windows": [
+    "compose"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "openSnippetPicker"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:snippetPicker",
+     "equals": "shown"
+    }
+   ],
+   "label": "the Insert Snippet command opens the picker on the compose window"
+  },
+  {
+   "op": "capture",
+   "name": "picker",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "showSnippets"
+  },
+  {
+   "op": "wait",
+   "until": "window:title:Snippets",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "capture",
+   "name": "snippets-window",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:snippetsWindow",
+     "equals": "open"
+    }
+   ],
+   "label": "the Snippets window is open"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

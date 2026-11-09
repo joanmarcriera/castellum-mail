@@ -1,0 +1,256 @@
+{
+ "schema": 1,
+ "name": "xb-invalid-recipients",
+ "covers": [
+  "compose",
+  "invalid / missing recipients are reported inline and nothing is queued"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test, not-an-address"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb invalid {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Body."
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "invalid-to"
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "expect": [
+    {
+     "find": {
+      "text": "Not a valid address: not-an-address"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": ""
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "cc",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "cc-only"
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "expect": [
+    {
+     "find": {
+      "text": "Add at least one To recipient."
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test; Carol Vidal <carol@local.test>;"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "cc",
+   "text": ""
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "carol@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "=xb invalid {run}",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "carol-got-it",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "loadSource",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:src.has:bob@local.test",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:Carol Vidal",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

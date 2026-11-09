@@ -1,0 +1,205 @@
+{
+ "schema": 1,
+ "name": "xb-defect-draft-opened-twice-dead-end",
+ "covers": [
+  "drafts",
+  "opening a draft that is already open must bring its window forward, not open a second editor on the same draft: after the first window sends, the second can neither send nor save and shows an internal error"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb twice {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Original text."
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1000"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "drafts:alice@local.test",
+   "text": "xb twice {run}",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "two-windows"
+  },
+  {
+   "op": "assert",
+   "label": "one editor per draft",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "appendBody",
+   "window": "@compose",
+   "text": " Sent from window one."
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-first-send"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "assert",
+   "label": "no internal error",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

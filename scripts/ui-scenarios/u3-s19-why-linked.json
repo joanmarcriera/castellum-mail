@@ -1,0 +1,105 @@
+{
+ "schema": 1,
+ "name": "u3-s19-why-linked",
+ "covers": [
+  "S19",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createProjectAssign",
+   "name": "Hetzner billing"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "projectLinks"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:derived|message:",
+     "equals": "true"
+    },
+    {
+     "model": "reading:projectCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "window:projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-board",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "projects",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

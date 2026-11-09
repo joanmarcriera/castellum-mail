@@ -1,0 +1,55 @@
+{
+  "feature": "summarize_thread",
+  "language": "es",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Ventana de mantenimiento — migración de servidores",
+      "from_name": "Carlos Nuñez",
+      "from_address": "carlos.nunez@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@es-long-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Ventana de mantenimiento — migración de servidores",
+      "from_name": "Elena Ruiz",
+      "from_address": "elena.ruiz@example.com",
+      "sent_at_offset_secs": 3600,
+      "rfc822_message_id": "reply1@es-long-thread",
+      "references": ["root@es-long-thread"]
+    },
+    {
+      "content_file": "msg2.txt",
+      "content_format": "plain",
+      "subject": "Re: Ventana de mantenimiento — migración de servidores",
+      "from_name": "Carlos Nuñez",
+      "from_address": "carlos.nunez@example.com",
+      "sent_at_offset_secs": 7200,
+      "rfc822_message_id": "reply2@es-long-thread",
+      "references": ["root@es-long-thread", "reply1@es-long-thread"]
+    },
+    {
+      "content_file": "msg3.txt",
+      "content_format": "plain",
+      "subject": "Re: Ventana de mantenimiento — migración de servidores",
+      "from_name": "Elena Ruiz",
+      "from_address": "elena.ruiz@example.com",
+      "sent_at_offset_secs": 10800,
+      "rfc822_message_id": "reply3@es-long-thread",
+      "references": ["root@es-long-thread", "reply1@es-long-thread", "reply2@es-long-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 40,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["domingo"],
+      ["6:00", "6 de la mañana", "06:00"]
+    ],
+    "forbidden_keywords": []
+  }
+}

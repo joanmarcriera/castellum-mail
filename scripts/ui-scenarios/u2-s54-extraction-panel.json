@@ -1,0 +1,43 @@
+{
+ "schema": 1,
+ "name": "u2-s54-extraction-panel",
+ "covers": ["S54", "Extraction: action items, dates and amounts into a thread panel (#2256)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 300000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "carol", "as": "carol", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "ext", "id": "aiUseFirstModel", "text": "qwen2.5:7b|llama3.1:8b|largest"},
+
+  {"op": "ext", "id": "setPref", "name": "aiEndpoint", "text": "http://127.0.0.1:1"},
+  {"op": "ext", "id": "selectMailbox", "email": "carol@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "Scheduled maintenance", "timeoutMs": 30000},
+  {"op": "ext", "id": "waitExt", "name": "aiJob.extract_thread_items", "text": "failed", "timeoutMs": 60000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "unreachable-endpoint-caption", "windows": ["main"]},
+  {"op": "assert", "expect": [{"model": "ext:aiRunning:extract_thread_items", "equals": "0"}]},
+
+  {"op": "ext", "id": "setPref", "name": "aiEndpoint", "text": "http://127.0.0.1:11434"},
+  {"op": "ext", "id": "selectMessage", "text": "Factura pendiente", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "invoice-thread-finding-items", "windows": ["main"]},
+  {"op": "ext", "id": "waitExt", "name": "extractionsAny", "text": "true", "timeoutMs": 120000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "invoice-thread-chips", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:extractionsAny", "equals": "true"},
+    {"model": "ext:aiRunning:extract_thread_items", "equals": "0"}
+  ]},
+
+  {"op": "ext", "id": "selectMailbox", "email": "alice@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "This Week in Rust", "timeoutMs": 20000},
+  {"op": "ext", "id": "waitExt", "name": "aiRunning:extract_thread_items", "text": "0", "timeoutMs": 120000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "plain-thread-no-panel", "windows": ["main"]},
+  {"op": "quit"}
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "schema": 1,
+ "name": "xe-defect-run-now-actions-not-sent",
+ "covers": [
+  "MM-3",
+  "DEFECT: Run Now queues actions but never starts the replay; they wait for the next sync (5-15 min)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "r1",
+   "value": true
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Read news",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-news\"}], \"groups\": []}, \"actions\": [\"mark_read\"], \"stop\": false, \"account\": \"r1\"}"
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "Read news",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:note",
+     "equals": "3 matched, 3 actions queued."
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "20000"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "r1",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "twenty-seconds-after-run-now",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

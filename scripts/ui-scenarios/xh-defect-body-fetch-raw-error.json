@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "name": "xh-defect-body-fetch-raw-error",
+ "covers": [
+  "offline: opening a message whose body is not local while IMAP is unreachable must give a human-readable reason like the sync banner does (S73 readable errors), not the raw Rust text 'network error: Connection refused (os error 61)' (AppModel.hydrateSelectedBody: String(describing: error))",
+  "needs xh-body@local.test seeded with >25 messages newer than 'XH big body' (build/explore/xh/seed.py)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-body@local.test",
+   "password": "xh-body@local.test",
+   "as": "body",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "body",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "body",
+   "text": "127.0.0.1:3999",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH big body"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "capture",
+   "name": "01-body-error-while-unreachable",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "label": "positive control: the placeholder is up and the fetch failed",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "XH big body"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "label": "no raw OS/Rust error text in the reading pane",
+   "expect": [
+    {
+     "find": {
+      "text": "os error"
+     },
+     "exists": false
+    },
+    {
+     "find": {
+      "text": "network error:"
+     },
+     "exists": false
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

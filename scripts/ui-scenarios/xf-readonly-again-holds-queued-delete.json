@@ -1,0 +1,301 @@
+{
+ "schema": 1,
+ "name": "xf-readonly-again-holds-queued-delete",
+ "covers": [
+  "evaluation-mode",
+  "delete",
+  "offline",
+  "replay",
+  "write-safety"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-s@local.test",
+   "password": "xf-s@local.test",
+   "as": "s",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-s@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF s msg 1"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "s",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF s msg 4"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "deleted while the server is down: queued"
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "s",
+   "value": false
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "s",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "7000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "trash-while-read-only-again"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:XF s msg 4",
+     "equals": "false"
+    }
+   ],
+   "label": "server is back but the account is read-only again: the queued delete was NOT sent (Trash still holds only the first one)"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "Inbox unchanged, no error"
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "s",
+   "value": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF s msg 4",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    }
+   ],
+   "label": "writes enabled again: the held delete goes through"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "Inbox still 3"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

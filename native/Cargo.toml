@@ -1,0 +1,37 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+# Castellum native core — Cargo workspace (Rust side of the Swift/Rust migration).
+# Was built isolated from the Electron/TS app that used to live under ../src;
+# that app was removed at tag `electron-final`. See native/README.md.
+[workspace]
+resolver = "2"
+members = [
+    "crates/castellum-models",
+    "crates/castellum-db",
+    "crates/castellum-mail",
+    "crates/castellum-providers",
+    "crates/castellum-provider-imap",
+    "crates/castellum-provider-smtp",
+    "crates/castellum-provider-ollama",
+    "crates/castellum-provider-mlx",
+    "crates/castellum-core",
+    "crates/castellum-ffi",
+    "crates/castellum-testutil",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+authors = ["Joan Marc Riera Duocastella"]
+publish = false
+
+[workspace.dependencies]
+# Structured logging (observability slice). Facade crate only — level
+# filtering means a call is ~free when nothing is listening (nothing is, in
+# every crate except castellum-ffi, which installs the one process-wide
+# subscriber). See native/crates/castellum-ffi/src/logging.rs.
+tracing = "0.1"
+
+[profile.release]
+# Keep default codegen; slice 1 has no perf-sensitive code yet.

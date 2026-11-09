@@ -1,0 +1,262 @@
+{
+ "schema": 1,
+ "name": "xc-reply-draft-reopen-send",
+ "covers": [
+  "Reply with nothing selected opens nothing; a reply closed half-way is saved, reopens with its text and quote, and still carries In-Reply-To when sent"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xc-me@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "reading",
+   "id": "clearMessage"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "Re: XC plain note draft {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Half-written reply {run}\n\nOn 5 Oct 2026 at 13:48, Anna Puig wrote:\n> Hi,"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "xc-me@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reopened"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:bodyHas:Half-written reply",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:> Hi,",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "as": "anna",
+   "waitFor": "synced",
+   "timeoutMs": 90000,
+   "email": "xc-anna@local.test",
+   "password": "xc-anna@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "anna",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "Re: XC plain note draft {run}"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "loadSource"
+  },
+  {
+   "op": "capture",
+   "name": "anna-received",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:messageCount:Re: XC plain note draft {run}",
+     "equals": "1"
+    },
+    {
+     "model": "ext:src.has:In-Reply-To: ",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:> Hi,",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

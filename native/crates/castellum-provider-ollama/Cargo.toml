@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-provider-ollama"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+castellum-providers = { path = "../castellum-providers" }
+# Blocking HTTP client (no Tokio). We drop TLS (Ollama is HTTP-only in v1)
+# but keep serde_json for .into_json() / .send_json() on responses/requests.
+# Blocking HTTP client. We use ureq for TCP only — JSON is handled by
+# serde_json directly (send / into_reader), so no ureq JSON feature needed.
+# `default-features = false` drops TLS; Ollama is HTTP-only in v1.
+ureq = { version = "3", default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

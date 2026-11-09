@@ -1,0 +1,43 @@
+// Castellum - Direct channel, DISTRIBUTION build settings (Developer ID).
+//
+// Used for the Release configuration only; Debug stays on Direct.xcconfig with
+// ad-hoc signing so local builds and the unsigned CI job need no certificate.
+//
+// This is wired through project.yml's per-configuration `configFiles`, NOT via
+// a command-line `-xcconfig`. That is deliberate: a target's own configFiles
+// outrank a project-level `-xcconfig` passed to xcodebuild, so the override
+// silently does nothing, which can ship a build with the wrong bundle id.
+
+// The production identity. Debug builds are uk.co.riera.castellum.dev
+// ("Castellum Dev", see Direct.xcconfig) so they never touch this one's TCC
+// rows. Never change these without a migration plan: TCC grants, Launch
+// Services' mailto: default and UserDefaults all key on the bundle id.
+CASTELLUM_BUNDLE_ID_SUFFIX =
+CASTELLUM_DISPLAY_NAME = Castellum
+
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = Developer ID Application
+CODE_SIGN_ENTITLEMENTS = Castellum.entitlements
+
+// Required for notarization. Also means anything the hardened runtime blocks
+// must be granted explicitly in Castellum.entitlements — today Contacts
+// (com.apple.security.personal-information.addressbook), for S47's address
+// autocomplete. The app is not sandboxed and WKWebView's JIT runs out of
+// process, so nothing else is needed yet. Anything TCC-protected added later
+// (Calendar for S55's invites, say) needs its own entitlement here or the
+// signed build is denied silently while the ad-hoc Debug build still works.
+ENABLE_HARDENED_RUNTIME = YES
+
+// Secure timestamp: notarization rejects signatures without one.
+OTHER_CODE_SIGN_FLAGS = --timestamp
+
+// Left EMPTY on purpose so the repo carries no account identity; the release
+// workflow injects it on the xcodebuild line as DEVELOPMENT_TEAM=...
+DEVELOPMENT_TEAM =
+
+// Ship both architectures. The Rust staticlib is lipo'd to match by
+// `build-rust.sh --universal`; a mismatch fails at link time rather than
+// producing a half-universal app.
+ARCHS = arm64 x86_64
+ONLY_ACTIVE_ARCH = NO
+

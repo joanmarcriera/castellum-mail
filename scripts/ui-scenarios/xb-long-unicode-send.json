@@ -1,0 +1,169 @@
+{
+ "schema": 1,
+ "name": "xb-long-unicode-send",
+ "covers": [
+  "compose",
+  "a long non-ASCII subject and a 30 kB body with a 1500-character line arrive intact"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb llarg — àéíòú ç ñ ü 日本語 🙂 una línia d'assumpte molt llarga que continua i continua fins més enllà de setanta-vuit caràcters {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Paràgraf 0: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/0?q=1&r=2 que ha de sobreviure. Paràgraf 0: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/0?q=1&r=2 que ha de sobreviure. Paràgraf 0: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/0?q=1&r=2 que ha de sobreviure. Paràgraf 0: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/0?q=1&r=2 que ha de sobreviure. \n\nParàgraf 1: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/1?q=1&r=2 que ha de sobreviure. Paràgraf 1: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/1?q=1&r=2 que ha de sobreviure. Paràgraf 1: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/1?q=1&r=2 que ha de sobreviure. Paràgraf 1: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/1?q=1&r=2 que ha de sobreviure. \n\nParàgraf 2: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/2?q=1&r=2 que ha de sobreviure. Paràgraf 2: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/2?q=1&r=2 que ha de sobreviure. Paràgraf 2: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/2?q=1&r=2 que ha de sobreviure. Paràgraf 2: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/2?q=1&r=2 que ha de sobreviure. \n\nParàgraf 3: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/3?q=1&r=2 que ha de sobreviure. Paràgraf 3: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/3?q=1&r=2 que ha de sobreviure. Paràgraf 3: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/3?q=1&r=2 que ha de sobreviure. Paràgraf 3: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/3?q=1&r=2 que ha de sobreviure. \n\nParàgraf 4: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/4?q=1&r=2 que ha de sobreviure. Paràgraf 4: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/4?q=1&r=2 que ha de sobreviure. Paràgraf 4: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/4?q=1&r=2 que ha de sobreviure. Paràgraf 4: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/4?q=1&r=2 que ha de sobreviure. \n\nParàgraf 5: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/5?q=1&r=2 que ha de sobreviure. Paràgraf 5: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/5?q=1&r=2 que ha de sobreviure. Paràgraf 5: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/5?q=1&r=2 que ha de sobreviure. Paràgraf 5: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/5?q=1&r=2 que ha de sobreviure. \n\nParàgraf 6: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/6?q=1&r=2 que ha de sobreviure. Paràgraf 6: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/6?q=1&r=2 que ha de sobreviure. Paràgraf 6: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/6?q=1&r=2 que ha de sobreviure. Paràgraf 6: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/6?q=1&r=2 que ha de sobreviure. \n\nParàgraf 7: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/7?q=1&r=2 que ha de sobreviure. Paràgraf 7: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/7?q=1&r=2 que ha de sobreviure. Paràgraf 7: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/7?q=1&r=2 que ha de sobreviure. Paràgraf 7: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/7?q=1&r=2 que ha de sobreviure. \n\nParàgraf 8: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/8?q=1&r=2 que ha de sobreviure. Paràgraf 8: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/8?q=1&r=2 que ha de sobreviure. Paràgraf 8: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/8?q=1&r=2 que ha de sobreviure. Paràgraf 8: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/8?q=1&r=2 que ha de sobreviure. \n\nParàgraf 9: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/9?q=1&r=2 que ha de sobreviure. Paràgraf 9: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/9?q=1&r=2 que ha de sobreviure. Paràgraf 9: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/9?q=1&r=2 que ha de sobreviure. Paràgraf 9: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/9?q=1&r=2 que ha de sobreviure. \n\nParàgraf 10: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/10?q=1&r=2 que ha de sobreviure. Paràgraf 10: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/10?q=1&r=2 que ha de sobreviure. Paràgraf 10: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/10?q=1&r=2 que ha de sobreviure. Paràgraf 10: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/10?q=1&r=2 que ha de sobreviure. \n\nParàgraf 11: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/11?q=1&r=2 que ha de sobreviure. Paràgraf 11: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/11?q=1&r=2 que ha de sobreviure. Paràgraf 11: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/11?q=1&r=2 que ha de sobreviure. Paràgraf 11: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/11?q=1&r=2 que ha de sobreviure. \n\nParàgraf 12: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/12?q=1&r=2 que ha de sobreviure. Paràgraf 12: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/12?q=1&r=2 que ha de sobreviure. Paràgraf 12: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/12?q=1&r=2 que ha de sobreviure. Paràgraf 12: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/12?q=1&r=2 que ha de sobreviure. \n\nParàgraf 13: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/13?q=1&r=2 que ha de sobreviure. Paràgraf 13: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/13?q=1&r=2 que ha de sobreviure. Paràgraf 13: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/13?q=1&r=2 que ha de sobreviure. Paràgraf 13: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/13?q=1&r=2 que ha de sobreviure. \n\nParàgraf 14: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/14?q=1&r=2 que ha de sobreviure. Paràgraf 14: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/14?q=1&r=2 que ha de sobreviure. Paràgraf 14: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/14?q=1&r=2 que ha de sobreviure. Paràgraf 14: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/14?q=1&r=2 que ha de sobreviure. \n\nParàgraf 15: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/15?q=1&r=2 que ha de sobreviure. Paràgraf 15: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/15?q=1&r=2 que ha de sobreviure. Paràgraf 15: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/15?q=1&r=2 que ha de sobreviure. Paràgraf 15: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/15?q=1&r=2 que ha de sobreviure. \n\nParàgraf 16: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/16?q=1&r=2 que ha de sobreviure. Paràgraf 16: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/16?q=1&r=2 que ha de sobreviure. Paràgraf 16: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/16?q=1&r=2 que ha de sobreviure. Paràgraf 16: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/16?q=1&r=2 que ha de sobreviure. \n\nParàgraf 17: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/17?q=1&r=2 que ha de sobreviure. Paràgraf 17: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/17?q=1&r=2 que ha de sobreviure. Paràgraf 17: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/17?q=1&r=2 que ha de sobreviure. Paràgraf 17: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/17?q=1&r=2 que ha de sobreviure. \n\nParàgraf 18: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/18?q=1&r=2 que ha de sobreviure. Paràgraf 18: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/18?q=1&r=2 que ha de sobreviure. Paràgraf 18: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/18?q=1&r=2 que ha de sobreviure. Paràgraf 18: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/18?q=1&r=2 que ha de sobreviure. \n\nParàgraf 19: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/19?q=1&r=2 que ha de sobreviure. Paràgraf 19: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/19?q=1&r=2 que ha de sobreviure. Paràgraf 19: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/19?q=1&r=2 que ha de sobreviure. Paràgraf 19: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/19?q=1&r=2 que ha de sobreviure. \n\nParàgraf 20: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/20?q=1&r=2 que ha de sobreviure. Paràgraf 20: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/20?q=1&r=2 que ha de sobreviure. Paràgraf 20: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/20?q=1&r=2 que ha de sobreviure. Paràgraf 20: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/20?q=1&r=2 que ha de sobreviure. \n\nParàgraf 21: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/21?q=1&r=2 que ha de sobreviure. Paràgraf 21: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/21?q=1&r=2 que ha de sobreviure. Paràgraf 21: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/21?q=1&r=2 que ha de sobreviure. Paràgraf 21: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/21?q=1&r=2 que ha de sobreviure. \n\nParàgraf 22: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/22?q=1&r=2 que ha de sobreviure. Paràgraf 22: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/22?q=1&r=2 que ha de sobreviure. Paràgraf 22: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/22?q=1&r=2 que ha de sobreviure. Paràgraf 22: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/22?q=1&r=2 que ha de sobreviure. \n\nParàgraf 23: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/23?q=1&r=2 que ha de sobreviure. Paràgraf 23: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/23?q=1&r=2 que ha de sobreviure. Paràgraf 23: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/23?q=1&r=2 que ha de sobreviure. Paràgraf 23: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/23?q=1&r=2 que ha de sobreviure. \n\nParàgraf 24: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/24?q=1&r=2 que ha de sobreviure. Paràgraf 24: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/24?q=1&r=2 que ha de sobreviure. Paràgraf 24: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/24?q=1&r=2 que ha de sobreviure. Paràgraf 24: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/24?q=1&r=2 que ha de sobreviure. \n\nParàgraf 25: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/25?q=1&r=2 que ha de sobreviure. Paràgraf 25: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/25?q=1&r=2 que ha de sobreviure. Paràgraf 25: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/25?q=1&r=2 que ha de sobreviure. Paràgraf 25: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/25?q=1&r=2 que ha de sobreviure. \n\nParàgraf 26: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/26?q=1&r=2 que ha de sobreviure. Paràgraf 26: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/26?q=1&r=2 que ha de sobreviure. Paràgraf 26: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/26?q=1&r=2 que ha de sobreviure. Paràgraf 26: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/26?q=1&r=2 que ha de sobreviure. \n\nParàgraf 27: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/27?q=1&r=2 que ha de sobreviure. Paràgraf 27: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/27?q=1&r=2 que ha de sobreviure. Paràgraf 27: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/27?q=1&r=2 que ha de sobreviure. Paràgraf 27: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/27?q=1&r=2 que ha de sobreviure. \n\nParàgraf 28: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/28?q=1&r=2 que ha de sobreviure. Paràgraf 28: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/28?q=1&r=2 que ha de sobreviure. Paràgraf 28: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/28?q=1&r=2 que ha de sobreviure. Paràgraf 28: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/28?q=1&r=2 que ha de sobreviure. \n\nParàgraf 29: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/29?q=1&r=2 que ha de sobreviure. Paràgraf 29: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/29?q=1&r=2 que ha de sobreviure. Paràgraf 29: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/29?q=1&r=2 que ha de sobreviure. Paràgraf 29: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/29?q=1&r=2 que ha de sobreviure. \n\nParàgraf 30: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/30?q=1&r=2 que ha de sobreviure. Paràgraf 30: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/30?q=1&r=2 que ha de sobreviure. Paràgraf 30: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/30?q=1&r=2 que ha de sobreviure. Paràgraf 30: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/30?q=1&r=2 que ha de sobreviure. \n\nParàgraf 31: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/31?q=1&r=2 que ha de sobreviure. Paràgraf 31: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/31?q=1&r=2 que ha de sobreviure. Paràgraf 31: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/31?q=1&r=2 que ha de sobreviure. Paràgraf 31: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/31?q=1&r=2 que ha de sobreviure. \n\nParàgraf 32: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/32?q=1&r=2 que ha de sobreviure. Paràgraf 32: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/32?q=1&r=2 que ha de sobreviure. Paràgraf 32: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/32?q=1&r=2 que ha de sobreviure. Paràgraf 32: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/32?q=1&r=2 que ha de sobreviure. \n\nParàgraf 33: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/33?q=1&r=2 que ha de sobreviure. Paràgraf 33: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/33?q=1&r=2 que ha de sobreviure. Paràgraf 33: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/33?q=1&r=2 que ha de sobreviure. Paràgraf 33: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/33?q=1&r=2 que ha de sobreviure. \n\nParàgraf 34: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/34?q=1&r=2 que ha de sobreviure. Paràgraf 34: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/34?q=1&r=2 que ha de sobreviure. Paràgraf 34: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/34?q=1&r=2 que ha de sobreviure. Paràgraf 34: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/34?q=1&r=2 que ha de sobreviure. \n\nParàgraf 35: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/35?q=1&r=2 que ha de sobreviure. Paràgraf 35: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/35?q=1&r=2 que ha de sobreviure. Paràgraf 35: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/35?q=1&r=2 que ha de sobreviure. Paràgraf 35: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/35?q=1&r=2 que ha de sobreviure. \n\nParàgraf 36: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/36?q=1&r=2 que ha de sobreviure. Paràgraf 36: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/36?q=1&r=2 que ha de sobreviure. Paràgraf 36: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/36?q=1&r=2 que ha de sobreviure. Paràgraf 36: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/36?q=1&r=2 que ha de sobreviure. \n\nParàgraf 37: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/37?q=1&r=2 que ha de sobreviure. Paràgraf 37: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/37?q=1&r=2 que ha de sobreviure. Paràgraf 37: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/37?q=1&r=2 que ha de sobreviure. Paràgraf 37: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/37?q=1&r=2 que ha de sobreviure. \n\nParàgraf 38: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/38?q=1&r=2 que ha de sobreviure. Paràgraf 38: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/38?q=1&r=2 que ha de sobreviure. Paràgraf 38: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/38?q=1&r=2 que ha de sobreviure. Paràgraf 38: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/38?q=1&r=2 que ha de sobreviure. \n\nParàgraf 39: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/39?q=1&r=2 que ha de sobreviure. Paràgraf 39: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/39?q=1&r=2 que ha de sobreviure. Paràgraf 39: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/39?q=1&r=2 que ha de sobreviure. Paràgraf 39: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/39?q=1&r=2 que ha de sobreviure. \n\nParàgraf 40: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/40?q=1&r=2 que ha de sobreviure. Paràgraf 40: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/40?q=1&r=2 que ha de sobreviure. Paràgraf 40: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/40?q=1&r=2 que ha de sobreviure. Paràgraf 40: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/40?q=1&r=2 que ha de sobreviure. \n\nParàgraf 41: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/41?q=1&r=2 que ha de sobreviure. Paràgraf 41: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/41?q=1&r=2 que ha de sobreviure. Paràgraf 41: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/41?q=1&r=2 que ha de sobreviure. Paràgraf 41: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/41?q=1&r=2 que ha de sobreviure. \n\nParàgraf 42: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/42?q=1&r=2 que ha de sobreviure. Paràgraf 42: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/42?q=1&r=2 que ha de sobreviure. Paràgraf 42: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/42?q=1&r=2 que ha de sobreviure. Paràgraf 42: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/42?q=1&r=2 que ha de sobreviure. \n\nParàgraf 43: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/43?q=1&r=2 que ha de sobreviure. Paràgraf 43: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/43?q=1&r=2 que ha de sobreviure. Paràgraf 43: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/43?q=1&r=2 que ha de sobreviure. Paràgraf 43: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/43?q=1&r=2 que ha de sobreviure. \n\nParàgraf 44: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/44?q=1&r=2 que ha de sobreviure. Paràgraf 44: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/44?q=1&r=2 que ha de sobreviure. Paràgraf 44: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/44?q=1&r=2 que ha de sobreviure. Paràgraf 44: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/44?q=1&r=2 que ha de sobreviure. \n\nParàgraf 45: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/45?q=1&r=2 que ha de sobreviure. Paràgraf 45: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/45?q=1&r=2 que ha de sobreviure. Paràgraf 45: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/45?q=1&r=2 que ha de sobreviure. Paràgraf 45: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/45?q=1&r=2 que ha de sobreviure. \n\nParàgraf 46: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/46?q=1&r=2 que ha de sobreviure. Paràgraf 46: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/46?q=1&r=2 que ha de sobreviure. Paràgraf 46: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/46?q=1&r=2 que ha de sobreviure. Paràgraf 46: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/46?q=1&r=2 que ha de sobreviure. \n\nParàgraf 47: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/47?q=1&r=2 que ha de sobreviure. Paràgraf 47: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/47?q=1&r=2 que ha de sobreviure. Paràgraf 47: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/47?q=1&r=2 que ha de sobreviure. Paràgraf 47: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/47?q=1&r=2 que ha de sobreviure. \n\nParàgraf 48: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/48?q=1&r=2 que ha de sobreviure. Paràgraf 48: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/48?q=1&r=2 que ha de sobreviure. Paràgraf 48: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/48?q=1&r=2 que ha de sobreviure. Paràgraf 48: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/48?q=1&r=2 que ha de sobreviure. \n\nParàgraf 49: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/49?q=1&r=2 que ha de sobreviure. Paràgraf 49: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/49?q=1&r=2 que ha de sobreviure. Paràgraf 49: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/49?q=1&r=2 que ha de sobreviure. Paràgraf 49: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/49?q=1&r=2 que ha de sobreviure. \n\nParàgraf 50: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/50?q=1&r=2 que ha de sobreviure. Paràgraf 50: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/50?q=1&r=2 que ha de sobreviure. Paràgraf 50: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/50?q=1&r=2 que ha de sobreviure. Paràgraf 50: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/50?q=1&r=2 que ha de sobreviure. \n\nParàgraf 51: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/51?q=1&r=2 que ha de sobreviure. Paràgraf 51: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/51?q=1&r=2 que ha de sobreviure. Paràgraf 51: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/51?q=1&r=2 que ha de sobreviure. Paràgraf 51: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/51?q=1&r=2 que ha de sobreviure. \n\nParàgraf 52: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/52?q=1&r=2 que ha de sobreviure. Paràgraf 52: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/52?q=1&r=2 que ha de sobreviure. Paràgraf 52: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/52?q=1&r=2 que ha de sobreviure. Paràgraf 52: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/52?q=1&r=2 que ha de sobreviure. \n\nParàgraf 53: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/53?q=1&r=2 que ha de sobreviure. Paràgraf 53: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/53?q=1&r=2 que ha de sobreviure. Paràgraf 53: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/53?q=1&r=2 que ha de sobreviure. Paràgraf 53: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/53?q=1&r=2 que ha de sobreviure. \n\nParàgraf 54: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/54?q=1&r=2 que ha de sobreviure. Paràgraf 54: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/54?q=1&r=2 que ha de sobreviure. Paràgraf 54: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/54?q=1&r=2 que ha de sobreviure. Paràgraf 54: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/54?q=1&r=2 que ha de sobreviure. \n\nParàgraf 55: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/55?q=1&r=2 que ha de sobreviure. Paràgraf 55: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/55?q=1&r=2 que ha de sobreviure. Paràgraf 55: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/55?q=1&r=2 que ha de sobreviure. Paràgraf 55: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/55?q=1&r=2 que ha de sobreviure. \n\nParàgraf 56: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/56?q=1&r=2 que ha de sobreviure. Paràgraf 56: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/56?q=1&r=2 que ha de sobreviure. Paràgraf 56: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/56?q=1&r=2 que ha de sobreviure. Paràgraf 56: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/56?q=1&r=2 que ha de sobreviure. \n\nParàgraf 57: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/57?q=1&r=2 que ha de sobreviure. Paràgraf 57: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/57?q=1&r=2 que ha de sobreviure. Paràgraf 57: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/57?q=1&r=2 que ha de sobreviure. Paràgraf 57: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/57?q=1&r=2 que ha de sobreviure. \n\nParàgraf 58: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/58?q=1&r=2 que ha de sobreviure. Paràgraf 58: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/58?q=1&r=2 que ha de sobreviure. Paràgraf 58: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/58?q=1&r=2 que ha de sobreviure. Paràgraf 58: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/58?q=1&r=2 que ha de sobreviure. \n\nParàgraf 59: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/59?q=1&r=2 que ha de sobreviure. Paràgraf 59: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/59?q=1&r=2 que ha de sobreviure. Paràgraf 59: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/59?q=1&r=2 que ha de sobreviure. Paràgraf 59: text llarg amb accents àéíòú, un emoji 🙂 i una URL https://example.org/path/59?q=1&r=2 que ha de sobreviure. \n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nEND-OF-LONG-BODY"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "long-typed"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "bob@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "xb llarg",
+   "timeoutMs": 120000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "detail.subject",
+   "text": "xb llarg — àéíòú ç ñ ü 日本語 🙂 una línia d'assumpte molt llarga que continua i continua fins més enllà de setanta-vuit caràcters {run}",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "bob-reads-long",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "loadSource",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:src.count:END-OF-LONG-BODY",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

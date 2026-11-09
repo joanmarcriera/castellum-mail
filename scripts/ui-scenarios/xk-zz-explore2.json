@@ -1,0 +1,393 @@
+{
+ "schema": 1,
+ "name": "xk-zz-explore2",
+ "covers": [
+  "explore"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showCorrespondence"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-widescreen",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-classic",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "correspondence-classic-min",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "closeCorrespondence"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "go to trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-go-to-trash"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-go-to-trash",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "fit columns"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-fit-columns",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "go to inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-go-to-inbox",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+n"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "compose-open"
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-with-composer-open"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "send in one hour"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-send-in-one-hour-empty-composer"
+  },
+  {
+   "op": "assert",
+   "label": "nothing queued",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "send"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-send"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-send-empty-composer"
+  },
+  {
+   "op": "assert",
+   "label": "nothing queued",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

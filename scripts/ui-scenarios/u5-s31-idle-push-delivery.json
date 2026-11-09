@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "name": "u5-s31-idle-push-delivery",
+ "covers": [
+  "S31",
+  "IDLE push: delivered message appears in open inbox without manual refresh (#2235)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "5"
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "bob@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "bob-inbox-before",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:messageCount:S31 push {run}",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setPopup",
+   "window": "compose",
+   "find": {
+    "role": "popup",
+    "label": "bob@local.test"
+   },
+   "text": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "subject",
+   "text": "S31 push {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "compose",
+   "text": "Delivered while bob's inbox is open; no manual refresh."
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "undoBanner",
+   "text": "shown",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "undoBanner",
+   "text": "hidden",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "messageCount:S31 push {run}",
+   "text": "1",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "bob-inbox-pushed",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:messageCount:S31 push {run}",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

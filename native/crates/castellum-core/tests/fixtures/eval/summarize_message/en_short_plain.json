@@ -1,0 +1,17 @@
+{
+  "feature": "summarize_message",
+  "language": "en",
+  "content_format": "plain",
+  "subject": "Re: Tomorrow's sync",
+  "from_name": "Jordan Lee",
+  "from_address": "jordan.lee@example.com",
+  "content_file": "en_short_plain.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["4pm", "4 pm", "16:00", "four"]
+    ],
+    "forbidden_keywords": []
+  }
+}

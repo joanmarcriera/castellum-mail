@@ -1,0 +1,445 @@
+{
+ "schema": 1,
+ "name": "xk-palette-with-mail",
+ "covers": [
+  "S45 command palette with mail",
+  "layout switch keeps selection",
+  "windows from the palette",
+  "empty composer never sends"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "classic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Classic Layout from the palette",
+   "expect": [
+    {
+     "model": "reading:layout",
+     "equals": "classic"
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Invoice R0012345678 for August 2026"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "widescreen"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Widescreen Layout from the palette keeps the open message",
+   "expect": [
+    {
+     "model": "reading:layout",
+     "equals": "widescreen"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Invoice R0012345678 for August 2026"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "fit columns"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-fit-columns",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "Fit Columns",
+   "expect": [
+    {
+     "model": "reading:tableFound",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-from-palette"
+  },
+  {
+   "op": "assert",
+   "label": "Outbox window from the palette",
+   "expect": [
+    {
+     "windowCount": 2
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Status window from the palette",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "new message"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "compose-from-palette"
+  },
+  {
+   "op": "assert",
+   "label": "New Message from the palette opens a composer",
+   "expect": [
+    {
+     "windowCount": 4
+    },
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-over-main-with-composer-open"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "send"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "send-on-empty-composer"
+  },
+  {
+   "op": "assert",
+   "label": "Send on an empty composer sends nothing",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

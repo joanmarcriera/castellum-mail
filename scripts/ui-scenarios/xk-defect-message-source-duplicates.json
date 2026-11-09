@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "name": "xk-defect-message-source-duplicates",
+ "covers": [
+  "message source opened twice",
+  "window minimum size"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "showSource"
+  },
+  {
+   "op": "wait",
+   "until": "window:source",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "source",
+   "windows": [
+    "source"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "source window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "source",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "viewSource"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "source-twice"
+  },
+  {
+   "op": "assert",
+   "label": "Message Source twice for the same message re-fronts the one window (every other auxiliary window does)",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "source",
+   "contentSize": "min",
+   "label": "the source window declares a minimum size"
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

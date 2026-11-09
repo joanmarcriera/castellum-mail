@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "es",
+  "content_format": "plain",
+  "subject": "¿Comemos esta semana?",
+  "from_name": "Laura Vidal",
+  "from_address": "laura.vidal@example.com",
+  "content_file": "es_short.txt",
+  "instruction": "Acepta y propone el jueves al mediodía.",
+  "rubric": {
+    "min_chars": 15,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["jueves"],
+      ["mediodía", "12:00", "14:00"]
+    ],
+    "forbidden_keywords": []
+  }
+}

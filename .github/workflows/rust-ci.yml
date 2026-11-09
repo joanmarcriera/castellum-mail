@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+name: Rust CI
+
+# Isolated CI for the native migration (Rust core + Swift app). Path-filtered to
+# native/** and apple/** so it never runs on JS-only changes and never collides
+# with the existing Electron `ci.yml` / `release.yml`.
+on:
+  push:
+    branches: [main, 'claude/**', 'feat/**']
+    paths:
+      - 'native/**'
+      - 'apple/**'
+      - '.github/workflows/rust-ci.yml'
+  pull_request:
+    paths:
+      - 'native/**'
+      - 'apple/**'
+      - '.github/workflows/rust-ci.yml'
+
+jobs:
+  rust:
+    name: Rust core (fmt / clippy / build / test)
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: native
+    steps:
+      - uses: actions/checkout@v7
+      - name: Ensure toolchain + components
+        run: rustup show && rustup component add rustfmt clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: native
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Build
+        run: cargo build --release --all-targets
+      - name: Test
+        run: cargo test
+
+  apple-build:
+    name: macOS app links Rust staticlib (unsigned)
+    runs-on: macos-14
+    needs: rust
+    steps:
+      - uses: actions/checkout@v7
+      # XcodeGen emits the Xcode 16+ project format (objectVersion 77); the image
+      # default can be older Xcode, so select the newest stable Xcode available.
+      - name: Select latest stable Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Show selected Xcode
+        run: xcodebuild -version
+      - name: Ensure toolchain
+        run: rustup show
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: native
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Build Rust static library
+        run: bash apple/scripts/build-rust.sh
+      - name: Generate Xcode project
+        run: xcodegen generate --spec apple/project.yml
+      - name: Build & test app (unsigned)
+        run: |
+          xcodebuild -project apple/Castellum.xcodeproj \
+            -scheme Castellum -configuration Debug \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO test

@@ -1,0 +1,283 @@
+{
+ "schema": 1,
+ "name": "xi-encoded-and-long-headers",
+ "covers": [
+  "RFC 2047 subjects and names (B, Q, split words, mixed charsets)",
+  "quoted display name with comma",
+  "very long subject and sender",
+  "RTL override in subject"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000",
+   "timeoutMs": 28000
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "xi enc Reunió"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi enc Reunió d'equip — demà 🚀"
+    },
+    {
+     "model": "reading:cell:from:0",
+     "equals": "José María Núñez"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xi enc split"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi enc split Informació del pressupost d'estiu à la carta"
+    },
+    {
+     "model": "reading:cell:from:0",
+     "equals": "Riera, Joan Marc"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:=?",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:?=",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi enc Reunió"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "encoded-open",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi enc Reunió d'equip — demà 🚀"
+    },
+    {
+     "model": "reading:detailTextHas:XI-ENC-BODY",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi very long subject"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "long-subject-and-sender",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "controlsReachable"
+   ],
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi very long subject Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur ENDMARK"
+    },
+    {
+     "model": "reading:detailTextHas:XI-LONG-BODY",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi nospace"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "unbroken-600-char-subject",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "controlsReachable"
+   ],
+   "expect": [
+    {
+     "model": "reading:detailTextHas:XI-LONG2-BODY",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi two from addresses"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "two-from",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:XI-MULTIFROM-BODY",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

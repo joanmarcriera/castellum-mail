@@ -1,0 +1,206 @@
+{
+ "schema": 1,
+ "name": "xc-replyall-send-roundtrip",
+ "covers": [
+  "reply-all end to end on GreenMail: Cc'd recipient receives it, own address not a recipient (only From), In-Reply-To/References set, quote delivered"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xc-me@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "replyAll"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "replyall-compose"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "Re: XC plain note {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Confirmed for Friday. {run}\n\nOn 5 Oct 2026 at 13:48, Anna Puig wrote:\n> Can you confirm the meeting on Friday?"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "as": "carl",
+   "waitFor": "synced",
+   "timeoutMs": 90000,
+   "email": "xc-carl@local.test",
+   "password": "xc-carl@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "carl",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "Re: XC plain note {run}"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "loadSource"
+  },
+  {
+   "op": "capture",
+   "name": "carl-received",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:messageCount:Re: XC plain note {run}",
+     "equals": "1"
+    },
+    {
+     "model": "ext:src.has:In-Reply-To: ",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:References: ",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:To: \"Anna Puig\" <xc-anna@local.test>, \"Carl Roca\" <xc-carl@local.test>",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:From: xc-me@local.test",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:Cc:",
+     "equals": "false"
+    },
+    {
+     "model": "reading:detailTextHas:> Can you confirm the meeting on Friday?",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

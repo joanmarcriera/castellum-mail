@@ -1,0 +1,251 @@
+{
+ "schema": 1,
+ "name": "xh-unreachable-first-account",
+ "covers": [
+  "offline: the ONLY account becomes unreachable and every account is re-synced (the launch path); no modal, banner + diagnostics + accounts row say unreachable, smallest main window keeps the banner on screen"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3999",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-failed",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    },
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "accounts:dotMessage:one",
+     "equals": "Can’t reach 127.0.0.1:3999 — the connection failed."
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "unreachable: Can’t reach 127.0.0.1:3999 — the connection failed."
+    },
+    {
+     "model": "reading:bannerWithinWindow",
+     "equals": "true"
+    },
+    {
+     "model": "reading:bannerOverlapsHeader",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "window:diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-diagnostics",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "diagnostics",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "diagnostics"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-main-min",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "reading:bannerWithinWindow",
+     "equals": "true"
+    },
+    {
+     "model": "reading:bannerOverlapsHeader",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "one"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04-settings-accounts",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "settings",
+   "find": {
+    "identifier": "accountSyncLine",
+    "text": "Can’t reach 127.0.0.1:3999"
+   },
+   "value": true,
+   "timeoutMs": 5000
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

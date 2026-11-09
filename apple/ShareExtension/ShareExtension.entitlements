@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- App extensions must be sandboxed. The extension itself only reads the
+	     Share Sheet's items and writes one small JSON descriptor into the
+	     App Group container below (SharePendingCompose, S57) — it never
+	     touches the network, IMAP/SMTP, or the main app's SQLite profile. -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Must match Castellum.entitlements and SharePendingCompose.appGroupId
+	     exactly — this is the handoff channel to the (non-sandboxed) main
+	     app, since the extension cannot link the Rust FFI staticlib itself.
+	     Team-ID-prefixed on purpose: see Castellum.entitlements. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>$(TeamIdentifierPrefix)uk.co.riera.castellum</string>
+	</array>
+</dict>
+</plist>

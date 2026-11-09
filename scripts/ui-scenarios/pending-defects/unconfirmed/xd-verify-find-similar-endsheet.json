@@ -1,0 +1,160 @@
+{
+ "schema": 1,
+ "name": "xd-verify-find-similar-endsheet",
+ "covers": [
+  "Find Similar"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xd phrase one"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "findSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:findSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:similar.anchor",
+     "equals": "?"
+    },
+    {
+     "model": "ext:similar.error",
+     "equals": "?"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "dismissSheet",
+   "window": "sheet:findSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:findSimilar"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:similar.anchor",
+     "equals": "?"
+    },
+    {
+     "model": "ext:similar.error",
+     "equals": "?"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "findSimilar"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "100"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:similar.anchor",
+     "equals": "?"
+    },
+    {
+     "model": "ext:similar.error",
+     "equals": "?"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:similar.anchor",
+     "equals": "?"
+    },
+    {
+     "model": "ext:similar.error",
+     "equals": "?"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "second-open"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

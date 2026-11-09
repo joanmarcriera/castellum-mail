@@ -1,0 +1,71 @@
+{
+ "schema": 1,
+ "name": "settings-general-clipping",
+ "covers": [
+  "#2646"
+ ],
+ "requires": {
+  "greenmail": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "general-default"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "general-min"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "controlsReachable",
+    "noZeroSizeTextFields"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

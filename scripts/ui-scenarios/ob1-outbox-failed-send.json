@@ -1,0 +1,21 @@
+{
+ "schema": 1,
+ "name": "ob1-outbox-failed-send",
+ "covers": ["OB1", "outbox"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 240000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "reading", "id": "setWrite", "accountRef": "alice", "value": true},
+  {"op": "reading", "id": "seedFailedSend", "accountRef": "alice", "text": "OB1 quarterly figures"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "sidebar-outbox-count"},
+  {"op": "openWindow", "target": "outbox"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "outbox-failed-send-row"},
+  {"op": "assert", "window": "outbox", "rules": ["nonBlank", "onScreen", "noClippedText"]},
+  {"op": "quit"}
+ ]
+}

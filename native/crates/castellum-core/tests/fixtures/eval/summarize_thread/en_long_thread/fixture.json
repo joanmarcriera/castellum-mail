@@ -1,0 +1,54 @@
+{
+  "feature": "summarize_thread",
+  "language": "en",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Checkout launch — March 3rd",
+      "from_name": "Dana Okafor",
+      "from_address": "dana.okafor@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@en-long-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Checkout launch — March 3rd",
+      "from_name": "Raj Mehta",
+      "from_address": "raj.mehta@example.com",
+      "sent_at_offset_secs": 3600,
+      "rfc822_message_id": "reply1@en-long-thread",
+      "references": ["root@en-long-thread"]
+    },
+    {
+      "content_file": "msg2.txt",
+      "content_format": "plain",
+      "subject": "Re: Checkout launch — March 3rd",
+      "from_name": "Dana Okafor",
+      "from_address": "dana.okafor@example.com",
+      "sent_at_offset_secs": 7200,
+      "rfc822_message_id": "reply2@en-long-thread",
+      "references": ["root@en-long-thread", "reply1@en-long-thread"]
+    },
+    {
+      "content_file": "msg3.txt",
+      "content_format": "plain",
+      "subject": "Re: Checkout launch — March 3rd",
+      "from_name": "Ines Costa",
+      "from_address": "ines.costa@example.com",
+      "sent_at_offset_secs": 10800,
+      "rfc822_message_id": "reply3@en-long-thread",
+      "references": ["root@en-long-thread", "reply1@en-long-thread", "reply2@en-long-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 40,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["March 20", "20th of March", "20 March"]
+    ],
+    "forbidden_keywords": []
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "feature": "extract_thread_items",
+  "language": "es",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Revision del proyecto",
+      "from_name": "Pablo Ortega",
+      "from_address": "pablo.ortega@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@es-reunion",
+      "references": []
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "informe de avance",
+        "preparar el informe",
+        "informe"
+      ],
+      [
+        "confirmar",
+        "asistencia"
+      ]
+    ],
+    "dates": [
+      "2026-11-12"
+    ],
+    "amounts": [
+      {
+        "amount": 25.0,
+        "currency": "EUR"
+      }
+    ]
+  }
+}

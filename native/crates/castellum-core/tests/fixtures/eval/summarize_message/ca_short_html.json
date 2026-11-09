@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "ca",
+  "content_format": "html",
+  "subject": "Tancament per vacances d'estiu",
+  "from_name": "Administració",
+  "from_address": "admin@example.com",
+  "content_file": "ca_short_html.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["vacances"],
+      ["agost", "tancament", "tancada"]
+    ],
+    "forbidden_keywords": []
+  }
+}

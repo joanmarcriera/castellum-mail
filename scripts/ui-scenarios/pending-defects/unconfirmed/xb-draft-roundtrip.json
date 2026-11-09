@@ -1,0 +1,244 @@
+{
+ "schema": 1,
+ "name": "xb-draft-roundtrip",
+ "covers": [
+  "drafts",
+  "close with unsent text saves; reopen restores every field; no duplicate draft on re-close"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test, Carol Vidal <carol@local.test>"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "cc",
+   "text": "\"Soler, Dave\" <dave@local.test>"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "bcc",
+   "text": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb roundtrip \u2014 c\u00e0rrega llarga with a fairly long subject line that goes on and on to the edge {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "Bon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nSalutacions,\nAlice"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "filled"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reopened"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "body",
+   "text": "Bon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nSalutacions,\nAlice",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "subject",
+   "text": "xb roundtrip \u2014 c\u00e0rrega llarga with a fairly long subject line that goes on and on to the edge {run}",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "appendBody",
+   "window": "@compose",
+   "text": "\nPS: edited."
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "200"
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "drafts:alice@local.test",
+   "text": "xb roundtrip \u2014 c\u00e0rrega llarga with a fairly long subject line that goes on and on to the edge {run}",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "body",
+   "text": "Bon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nBon dia Bob,\n\nThis is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. This is a long paragraph with accents (\u00e0\u00e9\u00ed\u00f2\u00fa \u00e7 \u00f1 \u00fc), an emoji \ud83d\ude42 and a URL https://example.org/a?b=c&d=e that should survive a save. \n\nSalutacions,\nAlice\nPS: edited.",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "capture",
+   "name": "reopened-after-edit"
+  },
+  {
+   "op": "ext",
+   "id": "describe",
+   "window": "@compose"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,236 @@
+{
+ "schema": 1,
+ "name": "xa-explore-wrongpw",
+ "covers": [
+  "exploration: wrong password then right password through the sheet at a comfortable window size"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    690
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-blank-sheet",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "xa-one@local.test"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "imapHost"
+   },
+   "text": "127.0.0.1"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:addAccount",
+   "name": "3",
+   "text": "3143"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "wrong-password"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:addAccount",
+   "name": "7",
+   "text": "3025"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:addAccount",
+   "text": "179,270"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:addAccount",
+   "text": "179,442"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-filled",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "capture",
+   "name": "03-probing",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "5000"
+  },
+  {
+   "op": "capture",
+   "name": "04-wrong-password",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "xa-one@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "05-password-fixed",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "700"
+  },
+  {
+   "op": "capture",
+   "name": "06-syncing"
+  },
+  {
+   "op": "wait",
+   "until": "sync:xa-one@local.test=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "capture",
+   "name": "07-synced-sheet-still-up"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "08-main-after-first-sync"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

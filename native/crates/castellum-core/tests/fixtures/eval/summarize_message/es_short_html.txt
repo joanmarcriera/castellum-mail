@@ -1,0 +1,6 @@
+<p>Hola a todos,</p>
+<p>Recordad que este <strong>viernes a las 11:00</strong> tenemos el
+<strong>webinar de formación</strong> sobre la nueva herramienta de
+tickets. La asistencia es opcional pero recomendada para el equipo de
+soporte.</p>
+<p>Un saludo,<br/>RRHH</p>

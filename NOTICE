@@ -1,0 +1,32 @@
+Castellum
+Copyright 2026 Joan Marc Riera Duocastella
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+Source files carry an "SPDX-License-Identifier: Apache-2.0" header.
+
+Swift / macOS app
+-----------------
+The macOS app (apple/) has no Swift Package Manager or CocoaPods dependencies:
+it links only Apple system frameworks (AppKit, SwiftUI, Security, Network,
+WebKit, CoreSpotlight and similar) and the project's own Rust static library.
+There is no Package.resolved. Apple's frameworks are used under the Xcode and
+Apple SDK licence terms and are not redistributed here.
+
+Rust core
+---------
+Third-party Rust crates (native/) are used under their own licences, almost
+all MIT or Apache-2.0 (many dual-licensed). Where a crate offers a choice,
+this project takes the permissive option:
+
+- mach-sys (GPL-3.0 OR Apache-2.0): used under Apache-2.0.
+- r-efi (MIT OR Apache-2.0 OR LGPL-2.1-or-later): used under MIT or Apache-2.0.
+- cssparser and dtoa-short (MPL-2.0): used unmodified as dependencies; their
+  source remains available from their upstream projects under MPL-2.0.
+
+Run `cargo metadata --manifest-path native/Cargo.toml` (or `cargo license`) for
+the full dependency list.
+
+Third-party services
+--------------------
+Castellum does not ship OAuth client credentials. Users who sign in to Google
+or Microsoft mail register their own application (see README.md).

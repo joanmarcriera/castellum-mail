@@ -1,0 +1,43 @@
+{
+ "schema": 1,
+ "name": "u2-s53-find-similar",
+ "covers": ["S53", "Find Similar sheet (S53 engine + S53-UI gesture)", "F1: background embeddings drain (AI Activity counts), no blind pause", "N/A", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 400000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "ext", "id": "aiUseFirstModel", "text": "smallest"},
+  {"op": "ext", "id": "setPref", "name": "aiEmbeddingModel", "text": "mxbai-embed-large:latest"},
+  {"op": "ext", "id": "selectMailbox", "email": "alice@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "Invoice R0012345678", "timeoutMs": 30000},
+  {"op": "ext", "id": "waitExt", "name": "embed.drained", "text": "true", "timeoutMs": 240000},
+  {"op": "openWindow", "target": "aiActivity"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "ai-activity-embeddings"},
+  {"op": "assert", "expect": [
+    {"model": "ext:embed.queued", "equals": "0"},
+    {"model": "ext:embed.error", "equals": "none"}
+  ]},
+  {"op": "ext", "id": "findSimilar"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "similar-progress"},
+  {"op": "ext", "id": "waitExt", "name": "similar.inFlight", "text": "false", "timeoutMs": 90000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "similar-results"},
+  {"op": "assert", "expect": [
+    {"model": "ext:similar.anchor", "equals": "Invoice R0012345678 for August 2026"},
+    {"model": "ext:similar.error", "equals": "none"},
+    {"model": "ext:similar.hasResults", "equals": "true"}
+  ]},
+  {"op": "ext", "id": "setPref", "name": "aiEndpoint", "text": "http://127.0.0.1:1"},
+  {"op": "ext", "id": "findSimilar"},
+  {"op": "ext", "id": "waitExt", "name": "similar.inFlight", "text": "false", "timeoutMs": 60000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "similar-ollama-down"},
+  {"op": "quit"}
+ ]
+}

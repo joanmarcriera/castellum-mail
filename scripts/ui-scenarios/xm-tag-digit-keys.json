@@ -1,0 +1,220 @@
+{
+ "schema": 1,
+ "name": "xm-tag-digit-keys",
+ "covers": [
+  "MM-8 slice 2",
+  "N/A (digit keys 1-9 tag the selection; g l go-to-tag)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Work",
+   "text": "blue"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Later",
+   "text": "orange"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Work",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:bareKeyOutcome",
+     "equals": "consumed"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Work,Later",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "capture",
+   "name": "tagged-by-digits"
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Later",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:bareKeyOutcome",
+     "equals": "passthrough"
+    },
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "Later"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "g"
+  },
+  {
+   "op": "reading",
+   "id": "bareKey",
+   "text": "l"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:bareKeyOutcome",
+     "equals": "consumed"
+    },
+    {
+     "model": "reading:goToTagPicker",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "goToTagReturn",
+   "text": "la"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedTag",
+   "text": "Later",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:goToTagPicker",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "go-to-tag-list"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

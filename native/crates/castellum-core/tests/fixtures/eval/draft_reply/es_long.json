@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "es",
+  "content_format": "plain",
+  "subject": "Actualización de condiciones del contrato de mantenimiento",
+  "from_name": "Departamento Comercial",
+  "from_address": "comercial@suministrosiberica.example.com",
+  "content_file": "es_long.txt",
+  "instruction": "Rechaza cortésmente los nuevos términos y pide mantener el precio actual.",
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["precio actual", "mismo precio", "precio"],
+      ["términos", "condiciones"]
+    ],
+    "forbidden_keywords": []
+  }
+}

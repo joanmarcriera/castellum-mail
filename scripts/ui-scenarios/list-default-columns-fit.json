@@ -1,0 +1,115 @@
+{
+ "schema": 1,
+ "name": "list-default-columns-fit",
+ "covers": [
+  "N/A",
+  "list-sort slice 1"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1920,
+  "height": 1080,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "widescreen-default-columns"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:tableFound",
+     "equals": "true"
+    },
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:from",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:subject",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "classic-default-columns"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "fitColumns"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "classic-after-fit-columns"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:dateColumnVisible",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

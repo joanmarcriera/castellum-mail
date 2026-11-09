@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Searching mail and Smart Mailboxes</title>
+<meta name="description" content="Castellum search operators, saving a search as a Smart Mailbox, and building a Smart Mailbox from conditions." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Searching mail and Smart Mailboxes</h1>
+<p class="eff">Search · Smart Mailboxes · Castellum</p>
+
+<p>Castellum searches your synced mail on your Mac, so results are instant and need no connection. Plain words search the subject and text. Add operators to narrow the search.</p>
+
+<h2>1. Search</h2>
+<p>Press <code>⌘K</code> (or choose <strong>Search &gt; Search Mail</strong>), type, and press <code>Return</code>. Clear the field to go back to the mailbox. Hover over the search field for a reminder of the operators.</p>
+
+<h2>2. Operators</h2>
+<p>Combine as many as you like, separated by spaces: <code>from:anna has:attachment after:2026-01-01</code>.</p>
+<table><tr><th>Type this</th><th>To find</th></tr><tr><td><code>from:anna</code></td><td>Messages from a sender (name or address)</td></tr><tr><td><code>to:</code> <code>cc:</code> <code>bcc:</code></td><td>Messages sent to, copied to or blind-copied to someone</td></tr><tr><td><code>subject:invoice</code></td><td>Words in the subject</td></tr><tr><td><code>body:refund</code></td><td>Words in the message text</td></tr><tr><td><code>has:attachment</code></td><td>Messages with an attachment</td></tr><tr><td><code>attachment:report.pdf</code></td><td>An attachment whose file name contains the text</td></tr><tr><td><code>after:2026-01-01</code> <code>before:2026-03-31</code></td><td>Sent on or after / before a date (year-month-day)</td></tr><tr><td><code>within:7d</code></td><td>Sent in the last 7 days (<code>d</code> days, <code>w</code> weeks, <code>m</code> months, <code>y</code> years)</td></tr><tr><td><code>in:inbox</code></td><td>A mailbox type: <code>inbox</code>, <code>drafts</code>, <code>sent</code>, <code>archive</code>, <code>junk</code> or <code>trash</code></td></tr><tr><td><code>is:unread</code> <code>is:read</code> <code>is:flagged</code></td><td>Read state or flag. Also <code>is:answered</code>, <code>is:draft</code>, <code>is:muted</code> and <code>is:vip</code></td></tr><tr><td><code>tag:work</code></td><td>Messages with a <a href="/help/tags">tag</a></td></tr><tr><td><code>"exact phrase"</code></td><td>That phrase, word for word</td></tr><tr><td><code>-newsletter</code></td><td>Put <code>-</code> in front of anything to exclude it</td></tr></table>
+<p>An operator Castellum does not recognise, or one with a value it cannot read (such as a date that is not a date), is searched for as ordinary text, never rejected.</p>
+
+<h2>3. Save a search</h2>
+<p>If you run the same search often, save it. Type your search, then click the save-search button in the toolbar (the magnifying glass with a plus). Give it a name and click save. It appears under <strong>Smart Mailboxes</strong> in the sidebar, with an unread count, and always shows the current matches. A search saved this way looks across all your accounts.</p>
+
+<h2>4. Smart Mailboxes from conditions</h2>
+<p>For more control, open the <strong>Conditions</strong> tab in the same sheet. Choose <strong>Match all / any / none</strong> of the following, then add conditions such as From, Subject, Has attachments, Date, Size, Account or Tag. Use the second plus button to add a nested group. Under <strong>Look in</strong> you can limit it to certain accounts or mailboxes.</p>
+<p>Right-click a Smart Mailbox in the sidebar and choose <strong>Edit…</strong> to change it, or <strong>Delete</strong> to remove it. Deleting a Smart Mailbox never deletes any mail. You can drag Smart Mailboxes to reorder them.</p>
+<p>The same conditions editor is used for <a href="/help/rules">rules</a>. A Smart Mailbox can also be shown as a tab at the top of your Inbox: see <a href="/help/split-inbox">Split Inbox</a>.</p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

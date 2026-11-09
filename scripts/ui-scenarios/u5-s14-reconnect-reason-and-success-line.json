@@ -1,0 +1,176 @@
+{
+ "schema": 1,
+ "name": "u5-s14-reconnect-reason-and-success-line",
+ "covers": [
+  "S14",
+  "N/A",
+  "Reconnect with a wrong password: what the sheet says; right password: the green Connected line is on screen before the sheet closes"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "carol"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {"label": "Re-authenticate…"},
+   "name": "sheet:reauth1"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "still-wrong"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-wrong-password-failed-in-sheet"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth1",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "primaryButtonsVisible"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": true
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "carol-pass"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth1",
+   "find": {
+    "identifier": "sync"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "350"
+  },
+  {
+   "op": "capture",
+   "name": "02-right-password-connected-line"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth1",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "sync:carol=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accounts:dotState:carol",
+     "equals": "ok"
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

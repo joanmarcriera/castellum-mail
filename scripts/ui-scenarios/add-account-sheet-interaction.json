@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "name": "add-account-sheet-interaction",
+ "covers": [
+  "UIT-1 phase 2: setText/press"
+ ],
+ "requires": {
+  "greenmail": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 45000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": false
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "ui-check@local.test"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "imapHost"
+   },
+   "text": "127.0.0.1"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "secret"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "filled"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": false
+    },
+    {
+     "model": "accountCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

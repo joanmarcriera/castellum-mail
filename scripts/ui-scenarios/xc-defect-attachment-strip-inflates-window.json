@@ -1,0 +1,109 @@
+{
+ "schema": 1,
+ "name": "xc-defect-attachment-strip-inflates-window",
+ "covers": [
+  "DEFECT: the reader attachment strip must scroll or collapse; 12 attachments must not raise the main window's minimum height above the screen"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1366,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "baseline"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:windowMinHeightCompact",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC twelve attachments"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "twelve-attachments"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:attachmentCount",
+     "equals": "12"
+    },
+    {
+     "model": "reading:windowMinHeightCompact",
+     "equals": "true"
+    }
+   ],
+   "rules": [
+    "fitsScreen"
+   ],
+   "window": "main"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

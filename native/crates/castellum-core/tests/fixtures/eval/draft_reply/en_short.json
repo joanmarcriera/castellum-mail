@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "en",
+  "content_format": "plain",
+  "subject": "Coffee this week?",
+  "from_name": "Alex Rowe",
+  "from_address": "alex.rowe@example.com",
+  "content_file": "en_short.txt",
+  "instruction": "Accept and suggest Thursday at 2pm instead.",
+  "rubric": {
+    "min_chars": 15,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["Thursday", "Thurs"],
+      ["2pm", "2 pm", "14:00"]
+    ],
+    "forbidden_keywords": []
+  }
+}

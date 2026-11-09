@@ -1,0 +1,143 @@
+{
+ "schema": 1,
+ "name": "xf-move-to-folder-undo",
+ "covers": [
+  "undo",
+  "move to folder"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-u@local.test",
+   "password": "xf-u@local.test",
+   "as": "u",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-u@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "u",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF u msg 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "ext",
+   "id": "moveSelectedTo",
+   "text": "Trash",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    },
+    {
+     "model": "reading:undoDepth",
+     "equals": "1"
+    },
+    {
+     "model": "ext:removalBannerText",
+     "equals": "Moved 1 message"
+    }
+   ],
+   "label": "moved: the row left and a Move undo entry exists"
+  },
+  {
+   "op": "command",
+   "id": "undoRemoval",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "after-undo"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    },
+    {
+     "model": "reading:hasSubject:XF u msg 3",
+     "equals": "true"
+    }
+   ],
+   "label": "Undo after Move brings the message back to the Inbox"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

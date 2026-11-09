@@ -1,0 +1,230 @@
+{
+ "schema": 1,
+ "name": "xk-keys-sequence-override",
+ "covers": [
+  "MM-12 slice 1",
+  "a user sequence ⌃x s selects Sent",
+  "nextMessage rebound to n",
+  "g i still selects Inbox"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "reading",
+   "id": "reloadKeyBindings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "the file loaded without problems",
+   "expect": [
+    {
+     "model": "reading:keyProblems",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "⌃x s"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "mailboxRole",
+   "text": "sent",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "g i"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "mailboxRole",
+   "text": "inbox",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "g s"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "assert",
+   "label": "g s no longer jumps to Sent (keys replaced the chord)",
+   "expect": [
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "selectRows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "row 0 selected",
+   "expect": [
+    {
+     "model": "reading:selectedIndex",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "n"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "n (nextMessage rebound by keys) moved the selection",
+   "expect": [
+    {
+     "model": "reading:selectedIndex",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-n"
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "j"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "assert",
+   "label": "j no longer moves (keys replaced the bare key)",
+   "expect": [
+    {
+     "model": "reading:selectedIndex",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

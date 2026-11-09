@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "name": "xf-defect-permanent-prompt-for-inbox-message",
+ "covers": [
+  "delete",
+  "trash",
+  "search",
+  "permanent-delete"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-i@local.test",
+   "password": "xf-i@local.test",
+   "as": "i",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-i@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "i",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF i msg 1"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "i",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "account"
+  },
+  {
+   "op": "search",
+   "text": "XF i"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XF i msg 5",
+     "equals": "true"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "trash"
+    }
+   ],
+   "label": "Trash selected, account-scope search lists Inbox mail"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF i msg 5"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "capture",
+   "name": "prompt-for-inbox-message",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:pendingDelete",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:XF i msg 5",
+     "equals": "false"
+    }
+   ],
+   "label": "an Inbox message is moved to Trash: no 'Permanently delete this message?' prompt (confirming it only ends in an error)"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

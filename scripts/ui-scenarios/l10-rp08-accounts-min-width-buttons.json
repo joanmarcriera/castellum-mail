@@ -1,0 +1,15 @@
+{ "schema": 1, "name": "l10-rp08-accounts-min-width-buttons",
+  "covers": ["RP08", "GUI-3", "N/A", "Settings > Accounts at the minimum width: the six toolbar button labels are not truncated (read the capture; SwiftUI buttons are not in the harness tree)"],
+  "requires": {"greenmail": true, "personas": true}, "screen": {"width": 1280, "height": 768, "menuBar": 25},
+  "timeoutMs": 150000,
+  "steps": [
+    {"op": "wait", "until": "accountsLoaded"},
+    {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+    {"op": "wait", "until": "settingsOpenerReady"},
+    {"op": "openWindow", "target": "settings", "tab": "accounts", "accountRef": "alice"},
+    {"op": "wait", "until": "window:settings"},
+    {"op": "resizeWindow", "window": "settings", "contentSize": "min"},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "01-accounts-at-min-width"},
+    {"op": "assert", "window": "settings", "rules": ["nonBlank", "fitsScreen", "noClippedText"]},
+    {"op": "quit"} ] }

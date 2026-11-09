@@ -1,0 +1,599 @@
+{
+ "schema": 1,
+ "name": "xd-search-hostile-input",
+ "covers": [
+  "search: wrong input, very long text, never errors"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "\"unterminated quote"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "\"unterminated quote"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "'"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "'"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "\"\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "\"\""
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "*"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "*"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "NOT"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "NOT"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "OR quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "OR quick"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "before:garbage"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "before:garbage"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "before:15/01/2020"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "before:15/01/2020"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "has:attachments"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "has:attachments"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "tag:"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "from:"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "-"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "-"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ":"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": ":"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka "
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka quokka "
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "subject:yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "💥 emoji"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "💥 emoji"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "%_%"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "%_%"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "\\"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "\\"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "a\tb"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "a\tb"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "DROP TABLE messages; --"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "DROP TABLE messages; --"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "hostile-last"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

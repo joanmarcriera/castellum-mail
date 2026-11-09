@@ -1,0 +1,17 @@
+{
+  "feature": "summarize_message",
+  "language": "ca",
+  "content_format": "plain",
+  "subject": "Canvi d'horari de la reunió de demà",
+  "from_name": "Núria Camps",
+  "from_address": "nuria.camps@example.com",
+  "content_file": "ca_short_plain.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["10h", "10 del matí", "deu"]
+    ],
+    "forbidden_keywords": []
+  }
+}

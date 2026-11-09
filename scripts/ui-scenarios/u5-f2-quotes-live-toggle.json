@@ -1,0 +1,50 @@
+{
+ "schema": 1,
+ "name": "u5-f2-quotes-live-toggle",
+ "covers": ["F2", "N/A", "Markdown source typed as-is, live toggle on an open compose window"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 120000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "reading", "id": "setWrite", "accountRef": "alice", "value": true},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "composeSet", "window": "compose", "name": "markdown", "value": true},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "He said \"hi\" and it's fine --- really\n\n| a | b |\n|---|---|\n| 1 | 2 |\n\n---\n"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "markdown-on-typed", "windows": ["compose"]},
+  {"op": "assert", "window": "compose", "expect": [
+    {"model": "ext:session.markdown", "equals": "true"},
+    {"model": "ext:bodyHas:\"hi\"", "equals": "true"},
+    {"model": "ext:bodyHas:it's", "equals": "true"},
+    {"model": "ext:bodyHas:|---|---|", "equals": "true"},
+    {"model": "ext:bodyHas:fine --- really", "equals": "true"},
+    {"model": "ext:bodyHas:—", "equals": "false"},
+    {"model": "ext:bodyHas:“", "equals": "false"},
+    {"model": "ext:bodyHas:’", "equals": "false"}
+  ]},
+  {"op": "ext", "id": "composeSet", "window": "compose", "name": "markdown", "value": false},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "off: \"hi\" it's a --- b"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "markdown-off-typed", "windows": ["compose"]},
+  {"op": "assert", "window": "compose", "expect": [
+    {"model": "ext:session.markdown", "equals": "false"},
+    {"model": "ext:bodyHas:a \u2014 b", "equals": "true"}
+  ]},
+  {"op": "ext", "id": "composeSet", "window": "compose", "name": "markdown", "value": true},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "on again: \"hi\" it's a --- b"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "markdown-on-again", "windows": ["compose"]},
+  {"op": "assert", "window": "compose", "expect": [
+    {"model": "ext:session.markdown", "equals": "true"},
+    {"model": "ext:bodyHas:\"hi\" it's a --- b", "equals": "true"}
+  ]},
+  {"op": "quit"}
+ ]
+}

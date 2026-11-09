@@ -1,0 +1,177 @@
+{
+ "schema": 1,
+ "name": "xa-defect-duplicate-warning-clips-sheet",
+ "covers": [
+  "Add sheet with an account already present: typing an address that already exists shows a warning; the form must still fit the 420-point sheet (labels, fields, Cancel and Sync inside it)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    690
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "xa-two@local.test"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "imapHost"
+   },
+   "text": "127.0.0.1"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "xa-two@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-new-address-control",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "control: a new address lays out inside the sheet",
+   "window": "sheet:addAccount",
+   "rules": [
+    "fitsScreen",
+    "primaryButtonsVisible",
+    "noClippedText",
+    "noZeroSizeTextFields"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "cancel"
+     },
+     "visible": true
+    },
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "xa-one@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-existing-address-warning",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "the 'already exists' warning must not push the form outside the sheet",
+   "window": "sheet:addAccount",
+   "rules": [
+    "fitsScreen",
+    "primaryButtonsVisible",
+    "noClippedText",
+    "noZeroSizeTextFields"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "cancel"
+     },
+     "visible": true
+    },
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

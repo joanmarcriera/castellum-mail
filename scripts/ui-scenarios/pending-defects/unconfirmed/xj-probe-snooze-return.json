@@ -1,0 +1,232 @@
+{
+ "schema": 1,
+ "name": "xj-probe-snooze-return",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "snooze",
+   "text": "3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "snoozedCount",
+   "text": "1",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "45000"
+  },
+  {
+   "op": "capture",
+   "name": "after-due-in-inbox"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:snoozedCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "?"
+    },
+    {
+     "model": "reading:rememberedSnoozed",
+     "equals": "?"
+    },
+    {
+     "model": "reading:subjects",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Server keywords"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "snooze",
+   "text": "3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "snoozedCount",
+   "text": "1",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "reading",
+   "id": "selectSnoozed"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:snoozedCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Server keywords"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "40000"
+  },
+  {
+   "op": "capture",
+   "name": "after-due-in-snoozed-view"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:snoozedCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "?"
+    },
+    {
+     "model": "reading:isSnoozedList",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

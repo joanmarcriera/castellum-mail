@@ -1,0 +1,467 @@
+{
+ "schema": 1,
+ "name": "xf-readonly-never-half-applies",
+ "covers": [
+  "evaluation-mode",
+  "archive",
+  "delete",
+  "flag",
+  "read",
+  "unified"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-a@local.test",
+   "password": "xf-a@local.test",
+   "as": "a",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-b@local.test",
+   "password": "xf-b@local.test",
+   "as": "b",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF a msg 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "baseline"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "archive refused, row kept, nothing queued"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "delete refused"
+  },
+  {
+   "op": "command",
+   "id": "toggleFlag",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "flag refused"
+  },
+  {
+   "op": "command",
+   "id": "toggleRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "mark unread refused"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedUnread",
+     "equals": "false"
+    }
+   ],
+   "label": "unread flip reverted"
+  },
+  {
+   "op": "command",
+   "id": "markAllRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "mark all read refused"
+  },
+  {
+   "op": "capture",
+   "name": "single-after-all"
+  },
+  {
+   "op": "reading",
+   "id": "clearMessage"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF a msg 3",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "no selection: no-op"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "11"
+    }
+   ],
+   "label": "unified"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF b msg 2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "11"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF b msg 2",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "unified archive refused"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "11"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF b msg 2",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "unified delete refused"
+  },
+  {
+   "op": "command",
+   "id": "toggleFlag",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "11"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasSubject:XF b msg 2",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "unified flag refused"
+  },
+  {
+   "op": "capture",
+   "name": "unified-after-all"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

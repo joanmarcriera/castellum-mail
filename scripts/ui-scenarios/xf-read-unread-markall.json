@@ -1,0 +1,337 @@
+{
+ "schema": 1,
+ "name": "xf-read-unread-markall",
+ "covers": [
+  "read",
+  "unread",
+  "mark-all-read",
+  "counts"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-m@local.test",
+   "password": "xf-m@local.test",
+   "as": "m",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-m@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "m",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "5 unread to start"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF m msg 5"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedUnread",
+     "equals": "false"
+    }
+   ],
+   "label": "opening marks it read"
+  },
+  {
+   "op": "command",
+   "id": "toggleRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedUnread",
+     "equals": "true"
+    }
+   ],
+   "label": "Mark as Unread"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedUnread",
+     "equals": "true"
+    }
+   ],
+   "label": "it stays unread while it is still open"
+  },
+  {
+   "op": "reading",
+   "id": "clearMessage"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    },
+    {
+     "model": "reading:hasSubject:XF m msg 5",
+     "equals": "true"
+    }
+   ],
+   "label": "unread again after replay + re-sync"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "m",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "markAllRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "capture",
+   "name": "after-mark-all"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ],
+   "label": "Mark All as Read: none unread"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "still none after re-sync"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

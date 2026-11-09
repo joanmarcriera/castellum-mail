@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Read-only (evaluation) mode</title>
+<meta name="description" content="Why every Castellum account starts read-only, how to see it, and how to enable writes for one account or all of them." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Read-only (evaluation) mode</h1>
+<p class="eff">Settings &gt; Accounts · Castellum</p>
+
+<p>Every account you add to Castellum starts in <strong>read-only (evaluation) mode</strong>. Castellum downloads and shows your mail, but makes <strong>no changes on the mail server</strong>. This is deliberate: you can try the app on a real mailbox with nothing at risk, and switch writes on only when you are ready.</p>
+
+<h2>1. What read-only means</h2>
+<p>While an account is read-only, these actions are refused for it: archiving, deleting, flagging, marking read or unread, and sending. If you try one, Castellum shows a <strong>“This Account Is Read-only”</strong> dialog that says the action was not applied and offers <strong>Enable Writes</strong> or <strong>Keep Read-only</strong>. If the action was Send from a compose window, Castellum repeats it for you straight after you enable writes.</p>
+<div class="note"><strong>Why does Archive seem to do nothing?</strong> If an account has just been added, this is the reason. Nothing is wrong with the account; it simply has not had writes enabled yet.</div>
+<p>Other things that change the server also wait: <a href="/help/rules">rules</a> cannot change mail on a read-only account, and <a href="/help/tags">tags</a> need writes too, because they are stored on the server as IMAP keywords.</p>
+
+<h2>2. Seeing the state</h2>
+<p>Open <strong>Settings &gt; Accounts</strong>. Each account row has a button on its right: <strong>Enable Writes…</strong> if the account is read-only, or <strong>Return to Read-only…</strong> if writes are on. Hover over it for a one-line explanation. Under the list, a footer reads <em>“N of M accounts read-only (evaluation mode).”</em> or <em>“Writes are enabled for every account.”</em></p>
+<p>If Castellum has not yet heard back about an account, it shows it as read-only. It never shows an account as writable unless that is confirmed.</p>
+
+<h2>3. Enabling writes</h2>
+<ol>
+<li>For one account, click <strong>Enable Writes…</strong> on its row.</li>
+<li>For every read-only account at once, click <strong>Enable Writes for All Accounts…</strong> in the footer. The confirmation lists each account it covers.</li>
+<li>Read the confirmation and click <strong>Enable Writes</strong> (or <strong>Enable Writes for All</strong>). Nothing changes until you do.</li>
+</ol>
+<p>Enabling for all covers only the accounts listed. <strong>An account you add later still starts read-only.</strong></p>
+
+<h2>4. Going back</h2>
+<p>Click <strong>Return to Read-only…</strong> on the account row and confirm. The account stops making changes on the server. Changes still queued for it are not sent while it stays read-only, and archiving, deleting, flagging and sending are refused again. Nothing already done on the server is undone.</p>
+
+<p>Next: <a href="/help/manage-accounts">Managing accounts</a> · <a href="/help/connect-account">Connect any account</a></p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

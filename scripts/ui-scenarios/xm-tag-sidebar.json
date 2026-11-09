@@ -1,0 +1,291 @@
+{
+ "schema": 1,
+ "name": "xm-tag-sidebar",
+ "covers": [
+  "MM-8 slice 1",
+  "N/A (Tags sidebar section with unread badges and a tag list)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Work",
+   "text": "blue"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Later",
+   "text": "orange"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagCount:Work",
+     "equals": "0/0"
+    },
+    {
+     "model": "reading:tagCount:Later",
+     "equals": "0/0"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Work",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "This Week in Rust"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Work",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Solutions Architect role"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Later"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "Later",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "sidebar-tags-before-open"
+  },
+  {
+   "op": "reading",
+   "id": "selectTag",
+   "text": "Work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "messageCount",
+   "text": "2",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "tagBadgeAgrees:Work",
+   "text": "true",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedTag",
+     "equals": "Work"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:This Week in Rust",
+     "equals": "true"
+    },
+    {
+     "model": "reading:tagBadgeAgrees:Work",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tag-work-list"
+  },
+  {
+   "op": "reading",
+   "id": "selectTag",
+   "text": "Later"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "messageCount",
+   "text": "1",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "tagBadgeAgrees:Later",
+   "text": "true",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedTag",
+     "equals": "Later"
+    },
+    {
+     "model": "reading:hasSubject:Solutions Architect role",
+     "equals": "true"
+    },
+    {
+     "model": "reading:tagBadgeAgrees:Later",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tag-later-list"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedTag",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

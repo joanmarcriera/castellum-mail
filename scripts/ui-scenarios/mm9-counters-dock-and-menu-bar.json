@@ -1,0 +1,273 @@
+{
+ "schema": 1,
+ "name": "mm9-counters-dock-and-menu-bar",
+ "covers": [
+  "MM-9 slice 1",
+  "N/A",
+  "Settings > Notifications > Counters: Dock badge scope (inbox / smart mailbox), optional menu bar counter, per-account inclusion; Dock and menu bar numbers equal the sidebar's; toggling the menu bar off removes the item"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "All unread",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"is_read\", \"operator\": \"is\", \"value\": false}], \"groups\": []}"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "counterMatches:dock:inbox",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:menuBarTitle",
+     "equals": "off"
+    },
+    {
+     "model": "reading:counterMatches:dock:inbox",
+     "equals": "true"
+    },
+    {
+     "model": "reading:dockBadgeShown",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "notifications"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "capture",
+   "name": "counters-default",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "setCounter",
+   "name": "menuBar",
+   "text": "inbox"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "counterMatches:menuBar:inbox",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:counterMatches:menuBar:inbox",
+     "equals": "true"
+    },
+    {
+     "model": "reading:counterMatches:dock:inbox",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "setCounter",
+   "name": "dock",
+   "text": "smart:All unread"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "counterMatches:dock:smart:All unread",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:counterMatches:dock:smart:All unread",
+     "equals": "true"
+    },
+    {
+     "model": "reading:counterMatches:menuBar:inbox",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "counters-smart-dock",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "setCounter",
+   "name": "dock",
+   "text": "inbox"
+  },
+  {
+   "op": "reading",
+   "id": "setCountsInCounters",
+   "accountRef": "alice",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "counterMatches:dock:inbox:bob",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "counterMatches:menuBar:inbox:bob",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:counterMatches:dock:inbox:bob",
+     "equals": "true"
+    },
+    {
+     "model": "reading:counterMatches:menuBar:inbox:bob",
+     "equals": "true"
+    },
+    {
+     "model": "reading:counterMatches:dock:inbox",
+     "equals": "false"
+    },
+    {
+     "model": "reading:dockBadgeShown",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "counters-alice-excluded",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "resizable",
+    "movable"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "counters-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "resizable",
+    "movable",
+    "noClippedText"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "setCounter",
+   "name": "menuBar",
+   "text": "off"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "menuBarTitle",
+   "text": "off",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:menuBarTitle",
+     "equals": "off"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,273 @@
+{
+ "schema": 1,
+ "name": "xi-invite-variants-after-hydration",
+ "covers": [
+  "S55 invite card",
+  "multipart/alternative text/calendar",
+  "LOCATION with escaped comma",
+  "TZID with VTIMEZONE",
+  "all-day event",
+  "folded lines"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-inv1@local.test",
+   "password": "xi-inv1@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000",
+   "timeoutMs": 28000
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv bare"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "bare",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv bare|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv location comma"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "location-comma",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv location comma|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv description escapes"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "description-escapes",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv description escapes|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv tzid"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "tzid",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv tzid|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv allday"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "allday",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv allday|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inv folded"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500",
+   "timeoutMs": 21500
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "folded",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:invite",
+     "equals": "REQUEST|XI inv folded|xi-sender@local.test|1"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

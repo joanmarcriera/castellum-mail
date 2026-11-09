@@ -1,0 +1,50 @@
+{
+  "feature": "extract_thread_items",
+  "language": "es",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Factura 0932 y entrega",
+      "from_name": "Lucia Prats",
+      "from_address": "lucia.prats@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@es-factura",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Factura 0932 y entrega",
+      "from_name": "Mario Soler",
+      "from_address": "mario.soler@example.com",
+      "sent_at_offset_secs": 1800,
+      "rfc822_message_id": "reply1@es-factura",
+      "references": [
+        "root@es-factura"
+      ]
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "albaran firmado",
+        "albaran"
+      ],
+      [
+        "transferencia",
+        "pago",
+        "pagar"
+      ]
+    ],
+    "dates": [
+      "2026-10-20"
+    ],
+    "amounts": [
+      {
+        "amount": 980.5,
+        "currency": "EUR"
+      }
+    ]
+  }
+}

@@ -1,0 +1,350 @@
+{
+ "schema": 1,
+ "name": "xf-list-sort-by-column",
+ "covers": [
+  "sort",
+  "list",
+  "headers"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-s@local.test",
+   "password": "xf-s@local.test",
+   "as": "s",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Dates|Fwd: carrots|\u00c9mile letter|Banana bread|apple pie"
+    },
+    {
+     "model": "reading:sort",
+     "equals": "date:desc"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "date:desc"
+    }
+   ],
+   "label": "default: newest first, Received arrow down"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "from",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "from-asc"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "apple pie|Dates|Fwd: carrots|Banana bread|\u00c9mile letter"
+    },
+    {
+     "model": "reading:sort",
+     "equals": "from:asc"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "from:asc"
+    }
+   ],
+   "label": "From A-Z folds accents and case; equal senders newest first"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "from",
+   "text": "desc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Re: Zebra crossing|\u00c9mile letter|Banana bread|Dates|Fwd: carrots"
+    },
+    {
+     "model": "reading:sort",
+     "equals": "from:desc"
+    }
+   ],
+   "label": "From Z-A reverses the sender, not the date tie-break"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "subject",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "subject-asc"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "apple pie|Banana bread|Fwd: carrots|Dates|\u00c9mile letter"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "subject:asc"
+    }
+   ],
+   "label": "Subject A-Z ignores Re:/Fwd: and accents"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "date",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Re: Zebra crossing|apple pie|Banana bread|\u00c9mile letter|Fwd: carrots"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "date:asc"
+    }
+   ],
+   "label": "Received oldest first"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "subject",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "apple pie|Banana bread|Fwd: carrots|Dates|\u00c9mile letter"
+    },
+    {
+     "model": "reading:sort",
+     "equals": "subject:asc"
+    }
+   ],
+   "label": "a sync reload keeps the chosen sort"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "date",
+   "text": "desc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Dates|Fwd: carrots|\u00c9mile letter|Banana bread|apple pie"
+    },
+    {
+     "model": "reading:sort",
+     "equals": "date:desc"
+    }
+   ],
+   "label": "back to newest first"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "unread",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "unread-asc"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Dates|Fwd: carrots|\u00c9mile letter|Banana bread|apple pie"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "unread:asc"
+    }
+   ],
+   "label": "the flag-style keys sort too (slice 5); all seeded mail is unread, so the date order inside the group shows"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "starred",
+   "text": "desc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:sortIndicator",
+     "equals": "starred:desc"
+    }
+   ],
+   "label": "Flag"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "attachments",
+   "text": "desc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:sortIndicator",
+     "equals": "attachments:desc"
+    }
+   ],
+   "label": "Attachments"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,125 @@
+{
+ "schema": 1,
+ "name": "xk-defect-keybinding-typo-silent",
+ "covers": [
+  "S45 custom key bindings",
+  "KeyBindingsStore.warnings: an unparseable chord is reported"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    1100
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "440,856",
+   "label": "Reload Key Bindings (a SwiftUI button: no NSControl to press)"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "after-reload"
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+shift+9"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "control-valid-override-applied"
+  },
+  {
+   "op": "assert",
+   "label": "control: the file was read (the valid shift-cmd-9 override opens Status)",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "text": "showDiagnostics"
+   },
+   "value": true,
+   "timeoutMs": 4000,
+   "label": "Reload tells the user that the showDiagnostics chord 'cmd+shift+8' could not be understood"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

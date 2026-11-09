@@ -1,0 +1,106 @@
+{
+ "schema": 1,
+ "name": "cm1-row-menu-read-only",
+ "covers": [
+  "N/A",
+  "context-menu slice 1",
+  "WS1 evaluation mode"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "readOnlyAccounts",
+   "text": "alice@local.test",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuDisabled:archive",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:delete",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:markUnread",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:toggleFlag",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:tagMessage",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:snoozeTomorrow",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuReason:archive",
+     "equals": "alice@local.test is in evaluation mode (read-only). Enable writes to use this."
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "read-only-row-menu-state"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "enableWrites:alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "writePrompt",
+   "text": "enable-alice@local.test",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

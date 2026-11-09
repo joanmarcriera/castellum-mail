@@ -1,0 +1,22 @@
+{
+ "schema": 1,
+ "name": "u5-t1b-general-min-width-tall",
+ "covers": ["T1b", "N/A", "General at minimum width, tall enough to show every row down to Default Mail App"],
+ "requires": {"greenmail": false},
+ "screen": {"width": 1280, "height": 1500, "menuBar": 25},
+ "timeoutMs": 60000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "wait", "until": "settingsOpenerReady", "timeoutMs": 15000},
+  {"op": "openWindow", "target": "settings", "tab": "general"},
+  {"op": "wait", "until": "window:settings"},
+  {"op": "resizeWindow", "window": "settings", "contentSize": "min"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "general-min"},
+  {"op": "resizeWindow", "window": "settings", "contentSize": [480, 1300]},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "general-min-width-tall"},
+  {"op": "assert", "window": "settings", "rules": ["nonBlank", "fitsScreen", "noClippedText", "controlsReachable"]},
+  {"op": "quit"}
+ ]
+}

@@ -1,0 +1,152 @@
+{
+ "schema": 1,
+ "name": "hp2-split-inbox-two-splits",
+ "covers": [
+  "HP-2",
+  "N/A",
+  "Split Inbox: two splits with distinct mail"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:splitStrip",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Invoices",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"invoice\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Newsletters",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"rustweekly\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitTabs",
+   "text": "Invoices,Newsletters,Other"
+  },
+  {
+   "op": "reading",
+   "id": "selectSplit",
+   "text": "Invoices"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:Invoice R0012345678",
+   "text": "true"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:splitStrip",
+     "equals": "true"
+    },
+    {
+     "model": "reading:splitSelected",
+     "equals": "Invoices"
+    },
+    {
+     "model": "reading:hasSubject:This Week in Rust",
+     "equals": "false"
+    },
+    {
+     "model": "reading:splitOf:Invoice R0012345678",
+     "equals": "Invoices"
+    },
+    {
+     "model": "reading:splitOf:This Week in Rust",
+     "equals": "Newsletters"
+    },
+    {
+     "model": "reading:splitCountsMatch",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tab-invoices"
+  },
+  {
+   "op": "reading",
+   "id": "selectSplit",
+   "text": "Newsletters"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:This Week in Rust",
+   "text": "true"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:splitSelected",
+     "equals": "Newsletters"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tab-newsletters"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

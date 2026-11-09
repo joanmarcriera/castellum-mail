@@ -1,0 +1,143 @@
+{
+ "schema": 1,
+ "name": "xj-snooze-due-while-snoozed-list-open",
+ "covers": [
+  "S43 snooze return",
+  "due sweep",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "snooze",
+   "text": "3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "snoozedCount",
+   "text": "1",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "selectSnoozed"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isSnoozedList",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "snoozedCount",
+   "text": "0",
+   "timeoutMs": 50000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "snoozed-list-emptied-when-due"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedInList",
+     "equals": "true"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "back-in-inbox"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

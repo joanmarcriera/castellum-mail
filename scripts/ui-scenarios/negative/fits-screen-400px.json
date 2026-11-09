@@ -1,0 +1,63 @@
+{
+ "schema": 1,
+ "name": "negative-fits-screen-400px",
+ "covers": [
+  "negative control: MUST exit 1"
+ ],
+ "requires": {
+  "greenmail": false
+ },
+ "screen": {
+  "width": 400,
+  "height": 400,
+  "menuBar": 25
+ },
+ "timeoutMs": 45000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "default"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen",
+    "primaryButtonsVisible",
+    "noZeroSizeTextFields",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "button",
+      "label": "Cancel"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

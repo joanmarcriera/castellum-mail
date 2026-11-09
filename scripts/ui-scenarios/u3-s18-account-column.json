@@ -1,0 +1,193 @@
+{
+ "schema": 1,
+ "name": "u3-s18-account-column",
+ "covers": [
+  "S18",
+  "N/A",
+  "S34 unified inbox"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "unified-inbox-widescreen"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:tableFound",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:account",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnTitle:account",
+     "equals": "Account"
+    },
+    {
+     "model": "reading:columnVisible:from",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:Your order #203",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "unified-inbox-classic-full-width"
+  },
+  {
+   "op": "search",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "unified-search-alice-rows"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:cell:account:0",
+     "equals": "alice@local.test"
+    },
+    {
+     "model": "reading:cell:account:1",
+     "equals": "alice@local.test"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "Your order #203"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:cell:account:0",
+     "equals": "bob@local.test"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "single-mailbox-classic"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "false"
+    },
+    {
+     "model": "reading:columnVisible:account",
+     "equals": "true"
+    },
+    {
+     "model": "reading:columnVisible:from",
+     "equals": "true"
+    },
+    {
+     "model": "reading:autosaveColumns",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

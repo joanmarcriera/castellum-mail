@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Custom key bindings</title>
+<meta name="description" content="Change any Castellum menu shortcut or message-list key by editing keybindings.json." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Custom key bindings</h1>
+<p class="eff">Settings &gt; General &gt; Key Bindings · Castellum</p>
+
+<p>You can rebind any menu shortcut or message-list key. The bindings live in a small text file, <code>keybindings.json</code>, in your Castellum profile folder. If the file does not exist, every default applies.</p>
+
+<h2>1. Open the file</h2>
+<p>Go to <strong>Settings &gt; General &gt; Key Bindings</strong> and click <strong>Reveal Key Bindings File…</strong>. The first time, Castellum writes a starting file for you and shows it in Finder. It never overwrites a file you already have. Open it in any text editor.</p>
+
+<h2>2. The format</h2>
+<p>The starting file has a <code>note</code>, a <code>currentBindings</code> list, and an empty <code>overrides</code> section. <code>currentBindings</code> is a read-only snapshot of every command's key, taken when the file was created; changing it does nothing. Put your changes in <code>overrides</code>, keyed by command id:</p>
+<pre style="background:var(--stone-850);padding:14px 16px;border-radius:10px;overflow-x:auto;margin:16px 0"><code>{
+  "version": 1,
+  "overrides": {
+    "archive": { "bareKey": "y" },
+    "forward": { "menuChord": "⌥⌘F" }
+  }
+}</code></pre>
+<ul>
+<li><code>menuChord</code> is a menu shortcut written the way the menus show it: modifier symbols <code>⌃ ⌥ ⇧ ⌘</code> followed by one key, for example <code>⇧⌘R</code> or <code>⌘⌫</code>.</li>
+<li><code>bareKey</code> is the single key used in the message list. Use exactly one character; a capital letter means Shift plus that letter.</li>
+<li>Leave out a field to keep its default. Only these two settings can be changed; go-to chords (<code>g</code> then a letter) and menu placement cannot.</li>
+<li>Command ids are the names in the <code>currentBindings</code> list, such as <code>archive</code>, <code>reply</code>, <code>snooze</code> and <code>toggleFlag</code>.</li>
+</ul>
+
+<h2>3. Apply your changes</h2>
+<p>Castellum reads the file at launch and when you click <strong>Reload Key Bindings</strong> in the same settings section. It does not watch the file, so save it first, then reload.</p>
+
+<h2>4. When something is wrong</h2>
+<p>A bad entry is skipped, never a crash, and the rest of the file still applies. Castellum reports each problem in its error banner:</p>
+<ul>
+<li>A file that is not valid JSON is ignored entirely, and the built-in bindings are used.</li>
+<li>An unknown command id, or a key it cannot understand, is ignored and that command keeps its default.</li>
+<li>An override that would clash with another command's key is skipped.</li>
+</ul>
+<p>To start again, delete <code>keybindings.json</code> and click <strong>Reveal Key Bindings File…</strong>.</p>
+<p>See also: <a href="/help/keyboard-shortcuts">Keyboard shortcuts</a>.</p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

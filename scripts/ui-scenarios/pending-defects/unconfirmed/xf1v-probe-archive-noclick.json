@@ -1,0 +1,82 @@
+{
+ "schema": 1,
+ "name": "xf1v-probe-archive-noclick",
+ "covers": [
+  "WS1"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-a@local.test",
+   "password": "xf-a@local.test",
+   "as": "a",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF a msg 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "capture",
+   "name": "after",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ],
+   "label": "an alert sheet must be attached to the main window"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

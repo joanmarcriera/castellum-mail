@@ -1,0 +1,133 @@
+{
+ "schema": 1,
+ "name": "xd-defect-find-similar-second-open",
+ "covers": [
+  "Find Similar",
+  "do it twice"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xd phrase one"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "findSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:findSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "first-open"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:findSimilarShown",
+     "equals": "true"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "dismissFindSimilar"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:findSimilar"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "reading",
+   "id": "findSimilar"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "second-open-no-sheet"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:findSimilarShown",
+     "equals": "true"
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

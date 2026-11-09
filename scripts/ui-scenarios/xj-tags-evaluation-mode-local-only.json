@@ -1,0 +1,186 @@
+{
+ "schema": 1,
+ "name": "xj-tags-evaluation-mode-local-only",
+ "covers": [
+  "S42 tags",
+  "evaluation mode keeps tags local",
+  "local tag survives a re-sync",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "tagNotice",
+   "text": "Tag kept on this Mac only: this account is in evaluation mode.",
+   "timeoutMs": 8000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "Feina"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "local-only-notice"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Feina by name",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": \"Feina\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Feina by name"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "XJ Plain note"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ],
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Feina by name"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

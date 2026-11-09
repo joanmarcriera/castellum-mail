@@ -1,0 +1,549 @@
+{
+ "schema": 1,
+ "name": "xd-search-words-accents",
+ "covers": [
+  "search: plain words, accents, no results, clear"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "pressupost"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió de pressupost",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "PRESSUPOST"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió de pressupost",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "calcul"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "càlcul"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "CÀLCUL"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "matí"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "mati"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "d'enginyeria"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "año"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Presupuesto año",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "ano"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Presupuesto año",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "nino"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Presupuesto año",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "señor"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Presupuesto año",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "Núria"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "nuria"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "C++"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:C++ and 50%",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "50%"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:C++ and 50%",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "(limited)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:C++ and 50%",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "[promo]"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:C++ and 50%",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "pangolin-report"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd report with attachment",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "superlongsubjectword"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd long",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "accent-search-result"
+  },
+  {
+   "op": "search",
+   "text": "zzzznotfound"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "zzzznotfound"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "no-results"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": ""
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "cleared"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

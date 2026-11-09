@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "es",
+  "content_format": "html",
+  "subject": "Recordatorio: webinar de formación el viernes",
+  "from_name": "RRHH",
+  "from_address": "rrhh@example.com",
+  "content_file": "es_short_html.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["webinar", "formación"],
+      ["viernes", "11:00"]
+    ],
+    "forbidden_keywords": []
+  }
+}

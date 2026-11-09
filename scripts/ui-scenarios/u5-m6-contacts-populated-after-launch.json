@@ -1,0 +1,21 @@
+{
+ "schema": 1,
+ "name": "u5-m6-contacts-populated-after-launch",
+ "covers": ["M6", "N/A", "contacts refresh runs after the first list; Contacts window still fills"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 200000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "reading", "id": "selectMailbox", "accountRef": "alice", "text": "inbox"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "first-list-delivered"},
+  {"op": "openWindow", "target": "contacts"},
+  {"op": "wait", "until": "window:contacts"},
+  {"op": "wait", "until": "idle", "timeoutMs": 20000},
+  {"op": "capture", "name": "contacts-window"},
+  {"op": "assert", "window": "contacts", "rules": ["nonBlank", "fitsScreen"]},
+  {"op": "quit"}
+ ]
+}

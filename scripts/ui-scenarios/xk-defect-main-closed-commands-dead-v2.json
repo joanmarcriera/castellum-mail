@@ -1,0 +1,156 @@
+{
+ "schema": 1,
+ "name": "xk-defect-main-closed-commands-dead-v2",
+ "covers": [
+  "menu commands keep working after the main window is closed (no first-command grace, long settle)"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showContacts"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "control: with the main window open, People > Contacts opens (main + Status + Contacts)",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "main"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "main closed, Status and Contacts still open",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showDiagnostics"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-requested-with-main-closed"
+  },
+  {
+   "op": "assert",
+   "label": "Help > Diagnostics opens with the main window closed",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showProjects"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Projects > Projects Board opens with the main window closed",
+   "expect": [
+    {
+     "windowCount": 4
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showMainWindow"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "main-window-reopened"
+  },
+  {
+   "op": "assert",
+   "label": "Window > Main Window reopens the closed main window",
+   "expect": [
+    {
+     "windowCount": 5
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

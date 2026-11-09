@@ -1,0 +1,54 @@
+{
+  "feature": "summarize_thread",
+  "language": "ca",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Sortida d'empresa — proposta de data",
+      "from_name": "Marc Font",
+      "from_address": "marc.font@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@ca-long-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Sortida d'empresa — proposta de data",
+      "from_name": "Berta Solé",
+      "from_address": "berta.sole@example.com",
+      "sent_at_offset_secs": 3600,
+      "rfc822_message_id": "reply1@ca-long-thread",
+      "references": ["root@ca-long-thread"]
+    },
+    {
+      "content_file": "msg2.txt",
+      "content_format": "plain",
+      "subject": "Re: Sortida d'empresa — proposta de data",
+      "from_name": "Marc Font",
+      "from_address": "marc.font@example.com",
+      "sent_at_offset_secs": 7200,
+      "rfc822_message_id": "reply2@ca-long-thread",
+      "references": ["root@ca-long-thread", "reply1@ca-long-thread"]
+    },
+    {
+      "content_file": "msg3.txt",
+      "content_format": "plain",
+      "subject": "Re: Sortida d'empresa — proposta de data",
+      "from_name": "Berta Solé",
+      "from_address": "berta.sole@example.com",
+      "sent_at_offset_secs": 10800,
+      "rfc822_message_id": "reply3@ca-long-thread",
+      "references": ["root@ca-long-thread", "reply1@ca-long-thread", "reply2@ca-long-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 40,
+    "max_chars": 700,
+    "required_keyword_groups": [
+      ["21 de juny", "21 juny"]
+    ],
+    "forbidden_keywords": []
+  }
+}

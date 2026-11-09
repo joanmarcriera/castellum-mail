@@ -1,0 +1,258 @@
+{
+ "schema": 1,
+ "name": "xh-status-retry-hammer",
+ "covers": [
+  "status dashboard: Retry clicked several times while the server is still down never leaves the row on 'syncing', raises no modal; Retry twice after the server is back recovers once"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    620,
+    460
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   },
+   "value": true,
+   "timeoutMs": 5000
+  },
+  {
+   "op": "capture",
+   "name": "01-down",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   },
+   "value": true,
+   "timeoutMs": 8000
+  },
+  {
+   "op": "press",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   },
+   "value": true,
+   "timeoutMs": 8000
+  },
+  {
+   "op": "press",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-after-three-retries"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "status",
+   "find": {
+    "identifier": "statusRow",
+    "text": ": syncing"
+   },
+   "value": false,
+   "timeoutMs": 8000
+  },
+  {
+   "op": "assert",
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3143",
+   "value": false
+  },
+  {
+   "op": "press",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "03-recovered"
+  },
+  {
+   "op": "assert",
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "ok"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,150 @@
+{
+ "schema": 1,
+ "name": "xd-defect-quoted-phrase-not-exact",
+ "covers": [
+  "search",
+  "S39 grammar: \"exact phrase\""
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "\"quick brown fox\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "quoted-phrase-returns-non-phrase-mail"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase two",
+     "equals": "false"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "\"brown quick\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "body:\"brown quick\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "-\"lazy dog\" fox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:xd phrase two",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "openSheet",
+   "target": "saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "save-sheet-promises-exact-phrase"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

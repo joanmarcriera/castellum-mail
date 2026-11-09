@@ -1,0 +1,777 @@
+{
+ "schema": 1,
+ "name": "xk-aux-windows-empty",
+ "covers": [
+  "aux windows empty state",
+  "open twice",
+  "min and large size",
+  "close"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "main-empty"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-default",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "status default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showStatus"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "status opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-min",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "status min",
+   "expect": [],
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "status-large",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "status large",
+   "expect": [],
+   "window": "status",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "status closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "window:aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "aiActivity-default",
+   "windows": [
+    "aiActivity"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "aiActivity",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showAiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "aiActivity",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "aiActivity-min",
+   "windows": [
+    "aiActivity"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity min",
+   "expect": [],
+   "window": "aiActivity",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "aiActivity",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "aiActivity-large",
+   "windows": [
+    "aiActivity"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity large",
+   "expect": [],
+   "window": "aiActivity",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "aiActivity"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "aiActivity closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "window:diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-default",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "diagnostics",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showDiagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "diagnostics",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-min",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics min",
+   "expect": [],
+   "window": "diagnostics",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "diagnostics",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "diagnostics-large",
+   "windows": [
+    "diagnostics"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics large",
+   "expect": [],
+   "window": "diagnostics",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "diagnostics"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "diagnostics closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-default",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "outbox default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "outbox",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showOutbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "outbox opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "outbox",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-min",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "outbox min",
+   "expect": [],
+   "window": "outbox",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "outbox",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-large",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "outbox large",
+   "expect": [],
+   "window": "outbox",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "outbox closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "contacts"
+  },
+  {
+   "op": "wait",
+   "until": "window:contacts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "contacts-default",
+   "windows": [
+    "contacts"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "contacts default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "contacts",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showContacts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "contacts opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "contacts",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "contacts-min",
+   "windows": [
+    "contacts"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "contacts min",
+   "expect": [],
+   "window": "contacts",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "contacts",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "contacts-large",
+   "windows": [
+    "contacts"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "contacts large",
+   "expect": [],
+   "window": "contacts",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "contacts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "contacts closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "window:projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-default",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "projects default",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "projects",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen",
+    "onScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showProjects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "projects opened twice stays one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "projects",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-min",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "projects min",
+   "expect": [],
+   "window": "projects",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "projects",
+   "contentSize": [
+    1240,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "projects-large",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "projects large",
+   "expect": [],
+   "window": "projects",
+   "rules": [
+    "nonBlank"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "projects closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

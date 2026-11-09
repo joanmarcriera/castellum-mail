@@ -1,0 +1,341 @@
+{
+ "schema": 1,
+ "name": "xf-trash-archive-restore-empty-race",
+ "covers": [
+  "trash",
+  "archive",
+  "empty-trash",
+  "race"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-p@local.test",
+   "password": "xf-p@local.test",
+   "as": "p",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-p@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "p",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF p msg 1"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "p",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF p msg 1",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF p msg 1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:pendingDelete",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ],
+   "label": "Archive inside Trash moves the message out: no permanent-delete prompt, no error"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ],
+   "label": "Trash stays empty after replay"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "p",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    }
+   ],
+   "label": "Inbox has 4"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF p msg 2"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1000,330",
+   "name": "sheet:empty"
+  },
+  {
+   "op": "command",
+   "id": "emptyTrash",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:empty",
+   "timeoutMs": 5000,
+   "label": "Empty Trash asks first"
+  },
+  {
+   "op": "capture",
+   "name": "empty-trash-right-after-delete",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:empty",
+   "find": {
+    "text": "Empty Trash"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:hasSubject:XF p msg 2",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "Inbox: only the deleted one is gone"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "p",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ],
+   "label": "the message deleted just before Empty Trash is erased too"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "p",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:hasSubject:XF p msg 2",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "and it does not come back with the next sync"
+  },
+  {
+   "op": "capture",
+   "name": "end"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

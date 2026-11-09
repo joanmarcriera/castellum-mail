@@ -1,0 +1,51 @@
+{
+  "feature": "extract_thread_items",
+  "language": "ca",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Factura 0288 i lliurament",
+      "from_name": "Núria Camps",
+      "from_address": "nuria.camps@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@ca-factura",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Factura 0288 i lliurament",
+      "from_name": "Jordi Puig",
+      "from_address": "jordi.puig@example.com",
+      "sent_at_offset_secs": 1800,
+      "rfc822_message_id": "reply1@ca-factura",
+      "references": [
+        "root@ca-factura"
+      ]
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "albarà signat",
+        "albara signat",
+        "albarà"
+      ],
+      [
+        "transferència",
+        "transferencia",
+        "pagament"
+      ]
+    ],
+    "dates": [
+      "2026-10-25"
+    ],
+    "amounts": [
+      {
+        "amount": 1450.0,
+        "currency": "EUR"
+      }
+    ]
+  }
+}

@@ -1,0 +1,327 @@
+{
+ "schema": 1,
+ "name": "xi-remote-content-and-hostile-html",
+ "covers": [
+  "S48 remote content policy",
+  "remote image blocked with banner",
+  "no banner for data: images or plain links",
+  "hostile HTML sanitised (script, form, iframe, meta refresh)",
+  "multipart/alternative prefers HTML"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-rem1@local.test",
+   "password": "xi-rem1@local.test",
+   "as": "rem",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "rem",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "5000",
+   "timeoutMs": 25000
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem img"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "remote-img-blocked",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "true"
+    },
+    {
+     "model": "reading:webBodyHas:XI-REM-IMG",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem protocol relative"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem style url"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "remote-style-url",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem data uri only"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "data-uri-image",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    },
+    {
+     "model": "reading:webBodyHas:XI-REM-DATA-URI-ONLY",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem link only no images"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "link-only",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi rem td background"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi html hostile"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "hostile",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:webBodyHas:XI-HOSTILE-BODY visible",
+     "equals": "true"
+    },
+    {
+     "model": "reading:webBodyHas:XI-SCRIPT-RAN",
+     "equals": "false"
+    },
+    {
+     "model": "reading:webBodyHas:XI-SUBMIT",
+     "equals": "false"
+    },
+    {
+     "model": "reading:webBodyHas:XI-PWNED",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi alternative text and html differ"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "alternative",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:webBodyHas:XI-ALT-HTMLPART",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi inline cid image"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "cid-inline",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:webBodyHas:XI-CID-BODY above",
+     "equals": "true"
+    },
+    {
+     "model": "reading:attachmentCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

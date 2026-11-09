@@ -1,0 +1,192 @@
+{
+ "schema": 1,
+ "name": "u3-mm1-smart-mailboxes",
+ "covers": [
+  "MM-1",
+  "N/A",
+  "S41 smart mailboxes"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Unread, not newsletters",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"is_read\", \"operator\": \"is\", \"value\": false}], \"groups\": [{\"op\": \"none\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"rustweekly\"}, {\"field\": \"date\", \"operator\": \"older_than_days\", \"value\": 30}], \"groups\": []}]}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Unread, not newsletters"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Unread, not newsletters"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    },
+    {
+     "model": "reading:smartNames",
+     "equals": "Unread, not newsletters"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:This Week in Rust",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "smart-mailbox-list"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Old text mailbox",
+   "text": "subject:invoice"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Old text mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Old text mailbox"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "deleteSmart",
+   "name": "Old text mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNames",
+     "equals": "Unread, not newsletters"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-delete-back-to-inbox"
+  },
+  {
+   "op": "openSheet",
+   "target": "saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:saveSearch"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "save-search-sheet-empty-field-opens-on-conditions"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:saveSearch",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "reading:segment:sheet:saveSearch",
+     "equals": "Conditions"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

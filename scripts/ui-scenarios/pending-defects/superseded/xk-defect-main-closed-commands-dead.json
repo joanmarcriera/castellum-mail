@@ -1,0 +1,155 @@
+{
+ "schema": 1,
+ "name": "xk-defect-main-closed-commands-dead",
+ "covers": [
+  "close the main window and reopen it",
+  "menu commands keep working without the main window"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "closeWindow",
+   "window": "main"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "main closed, Status still open",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showContacts"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "control: the first menu command after closing the main window still works (People > Contacts)",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showDiagnostics"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "second-command-diagnostics"
+  },
+  {
+   "op": "assert",
+   "label": "the second menu command works too (Help > Diagnostics opens)",
+   "expect": [
+    {
+     "windowCount": 3
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showProjects"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "and the third (Projects > Projects Board opens)",
+   "expect": [
+    {
+     "windowCount": 4
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-requested-with-main-closed"
+  },
+  {
+   "op": "assert",
+   "label": "View > Command Palette shows the palette, bringing the main window back to host it",
+   "expect": [
+    {
+     "windowCount": 6
+    },
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

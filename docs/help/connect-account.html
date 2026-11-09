@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Connect Any Account</title>
+<meta name="description" content="How to connect Gmail, iCloud, Fastmail, Yahoo and generic IMAP accounts to Castellum with an app password, plus the Outlook/Microsoft 365 status." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Connect any account</h1>
+<p class="eff">Add Account · Castellum</p>
+
+<p>Castellum connects over standard IMAP/SMTP, so it works with almost any mail provider. Typing your address in the <strong>Add IMAP account</strong> sheet (the <strong>+</strong> button in the main window toolbar, or <strong>Add…</strong> in Settings &gt; Accounts) detects well-known providers automatically and fills in the server settings below — you only need to generate an app password on the provider's side and paste it in. This page covers Gmail, iCloud, Fastmail, Yahoo, generic IMAP, and the current status of Outlook/Microsoft 365.</p>
+
+<div class="note"><strong>Why an app password, not your normal password?</strong> All of these providers require two-factor authentication (2FA) to be turned on before they'll issue an app password, and the app password is what Castellum stores in your Mac's Keychain — never your account password. Revoking an app password later (from the provider's site) disconnects Castellum without touching your main sign-in.</div>
+
+<h2>1. Gmail</h2>
+<ol>
+<li>Turn on <strong>2-Step Verification</strong> if you haven't already: <a href="https://myaccount.google.com/security">Google Account &gt; Security</a>.</li>
+<li>Go to <strong>Google Account &gt; Security &gt; App passwords</strong>, and generate one for "Mail" / "Castellum".</li>
+<li>In Castellum's Add IMAP account sheet, enter your Gmail address, then paste the 16-character app password when prompted.</li>
+</ol>
+<table><tr><th>Setting</th><th>Value</th></tr>
+<tr><td>IMAP host</td><td><code>imap.gmail.com</code></td></tr>
+<tr><td>IMAP port</td><td><code>993</code> (TLS)</td></tr>
+<tr><td>SMTP host</td><td><code>smtp.gmail.com</code></td></tr>
+<tr><td>SMTP port</td><td><code>587</code> (STARTTLS)</td></tr>
+</table>
+<p>Castellum detects <code>@gmail.com</code> and <code>@googlemail.com</code> addresses and fills these in for you; a Google Workspace domain isn't detected automatically, but you can apply the Gmail preset yourself from the sheet's "Use settings for…" menu.</p>
+
+<h2>2. iCloud Mail</h2>
+<ol>
+<li>Turn on <strong>Two-Factor Authentication</strong> for your Apple ID if it isn't already (it's required for iCloud Mail app passwords).</li>
+<li>Go to <a href="https://account.apple.com">account.apple.com</a> &gt; <strong>Sign-In and Security</strong> &gt; <strong>App-Specific Passwords</strong>, and generate one for Castellum.</li>
+<li>In Castellum, enter your <code>@icloud.com</code>, <code>@me.com</code> or <code>@mac.com</code> address, then paste the app-specific password.</li>
+</ol>
+<table><tr><th>Setting</th><th>Value</th></tr>
+<tr><td>IMAP host</td><td><code>imap.mail.me.com</code></td></tr>
+<tr><td>IMAP port</td><td><code>993</code> (TLS)</td></tr>
+<tr><td>SMTP host</td><td><code>smtp.mail.me.com</code></td></tr>
+<tr><td>SMTP port</td><td><code>587</code> (STARTTLS)</td></tr>
+</table>
+
+<h2>3. Fastmail</h2>
+<ol>
+<li>In Fastmail, go to <strong>Settings &gt; Privacy &amp; Security &gt; App passwords</strong>.</li>
+<li>Create a new app password, scoped to "Mail" (IMAP/SMTP) if Fastmail asks.</li>
+<li>In Castellum, enter your <code>@fastmail.com</code> or <code>@fastmail.fm</code> address, then paste the app password.</li>
+</ol>
+<table><tr><th>Setting</th><th>Value</th></tr>
+<tr><td>IMAP host</td><td><code>imap.fastmail.com</code></td></tr>
+<tr><td>IMAP port</td><td><code>993</code> (TLS)</td></tr>
+<tr><td>SMTP host</td><td><code>smtp.fastmail.com</code></td></tr>
+<tr><td>SMTP port</td><td><code>465</code> (implicit TLS)</td></tr>
+</table>
+<p>A custom domain hosted at Fastmail isn't detected from the address alone; apply the Fastmail preset from the "Use settings for…" menu instead.</p>
+
+<h2>4. Yahoo Mail</h2>
+<ol>
+<li>In Yahoo, go to <strong>Account Security</strong> and turn on two-step verification.</li>
+<li>Choose <strong>Generate app password</strong>, select "Other App" and name it Castellum.</li>
+<li>In Castellum, enter your <code>@yahoo.com</code>, <code>@yahoo.co.uk</code> or <code>@ymail.com</code> address, then paste the app password.</li>
+</ol>
+<table><tr><th>Setting</th><th>Value</th></tr>
+<tr><td>IMAP host</td><td><code>imap.mail.yahoo.com</code></td></tr>
+<tr><td>IMAP port</td><td><code>993</code> (TLS)</td></tr>
+<tr><td>SMTP host</td><td><code>smtp.mail.yahoo.com</code></td></tr>
+<tr><td>SMTP port</td><td><code>465</code> (implicit TLS)</td></tr>
+</table>
+
+<h2>5. Generic IMAP (any other provider)</h2>
+<p>Any provider offering standard IMAP and SMTP access works, even without a built-in preset. You'll need the server settings from your provider (usually on a "mail client setup" or "IMAP/SMTP settings" support page) and, if the provider requires 2FA, an app-specific password the same way as above.</p>
+<div class="note"><strong>IMAP must use port 993 with implicit TLS.</strong> Castellum's IMAP client doesn't support STARTTLS yet, so port <code>143</code> won't work: with "Use TLS" on you'll get a TLS handshake failure, and with it off your password is sent unencrypted. Never turn "Use TLS" off for IMAP. SMTP is more flexible — <code>465</code> (implicit TLS) or <code>587</code> (STARTTLS) both work.</div>
+<ol>
+<li>In the Add IMAP account sheet, enter your email address — if it isn't one of the built-in presets, Castellum leaves the server fields for you to fill in.</li>
+<li>Enter the IMAP host and port your provider publishes for implicit TLS — this is almost always port <code>993</code>. Keep "Use TLS" on.</li>
+<li>Enter the SMTP host and port (commonly <code>465</code> for implicit TLS, or <code>587</code> with STARTTLS).</li>
+<li>Enter your username (usually your full email address) and password or app password.</li>
+<li>Use <strong>Test Connection</strong> in the sheet to check both legs before saving.</li>
+</ol>
+
+<h2>6. Outlook.com / Microsoft 365 — not supported yet</h2>
+<p>Microsoft retired password sign-in for Outlook.com, Hotmail, Live and Microsoft 365 mailboxes, so these accounts need OAuth2 (XOAUTH2) sign-in rather than an app password. Castellum recognises these domains and says so plainly instead of letting you hit an opaque sign-in failure — Microsoft OAuth support is tracked as a future release (roadmap item S37) and isn't built yet.</p>
+<p>Affected domains: <code>outlook.com</code>, <code>hotmail.com</code>, <code>live.com</code>, <code>msn.com</code>, and their regional variants (e.g. <code>hotmail.co.uk</code>, <code>outlook.es</code>).</p>
+<p>Microsoft 365 work or school addresses on your own domain aren't detected automatically and won't connect until Microsoft sign-in (S37, #2240) ships.</p>
+
+<h2>7. After you connect</h2>
+<ul>
+<li><strong>Test Connection</strong> checks the IMAP login and folder list, and the SMTP login, for the details currently in the sheet. It saves and syncs nothing. When you then press Sync, Castellum runs the same check itself first, so a wrong password fails fast; if a Test Connection with exactly the same settings has already passed, it is reused. Editing a field marks an earlier result as out of date.</li>
+<li><strong>Choose what to sync.</strong> The sheet lets you pick how much history to import (last month, 3 months, 12 months or all mail) and, after a test, which folders. You can change folders later in <a href="/help/manage-accounts">Settings &gt; Accounts &gt; Folders…</a>.</li>
+<li><strong>The first sync can take a while</strong> on a large mailbox.</li>
+<li><strong>New accounts start read-only.</strong> Castellum shows your mail but will not archive, delete, flag or send until you enable writes. This is deliberate; see <a href="/help/read-only-mode">Read-only (evaluation) mode</a>.</li>
+<li>Later changes, such as a new password, are in <a href="/help/manage-accounts">Managing accounts</a>. If something goes wrong, see <a href="/help/troubleshooting">Status and Diagnostics</a>.</li>
+</ul>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

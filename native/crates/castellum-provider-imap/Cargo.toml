@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-provider-imap"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+castellum-providers = { path = "../castellum-providers" }
+native-tls = "0.2"
+# Pinned exactly: the 2.0.0-alpha line has not cut a stable release (see DECISIONS.md).
+imap-codec = { version = "=2.0.0-alpha.9", features = ["ext_namespace", "ext_condstore_qresync"] }
+imap-types = { version = "=2.0.0-alpha.7", features = ["ext_namespace", "ext_condstore_qresync"] }
+base64 = "0.23"
+chrono = { version = "0.4", default-features = false }
+# RFC 2047 charset tables for ENVELOPE text (encoded_words.rs). `full_encoding`
+# pulls in encoding_rs for the CJK charsets (Shift_JIS, ISO-2022-JP, GBK, ...).
+mail-parser = { version = "0.11", features = ["full_encoding"] }

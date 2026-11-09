@@ -1,0 +1,843 @@
+{
+ "schema": 1,
+ "name": "xd-search-qualifiers",
+ "covers": [
+  "search: from: to: subject: has: before: after: date: in: is: tag: -exclude"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "from:nuria"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:\"Núria Solé\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Reunió",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:fox@xd.example"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:=fox@xd.example"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase two",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "to:other@xd.example"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd cc test",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:C++"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:C++ and 50%",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:\"\\\"Budget\\\" v2\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:Re: \"Budget\" v2: final",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:\"phrase one\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "has:attachment"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd report with attachment",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "HAS:ATTACHMENT"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd report",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "attachment:pangolin"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd report",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "filename:pangolin-report.pdf"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd report",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "before:2021-01-01"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd old message from 2020",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "before:2020-01-16"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd old message",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "after:2020-01-15 before:2020-01-16"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd old message",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2020"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd old message",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2020-01"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd old message",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "in:inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "in:Inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "is:UNREAD"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "-quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    },
+    {
+     "model": "reading:hasSubject:xd cc test",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "-lazy quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase two",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "quick   brown"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "within:30d"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "9"
+    },
+    {
+     "model": "reading:hasSubject:xd cc test",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "size:>1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:hasSubject:xd cc test",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:\"one phrase\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:\"one phrase\""
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "before:2020-01-15"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "before:2020-01-15"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2020-02"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "date:2020-02"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "in:sent"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "in:sent"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "in:trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "in:trash"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "is:read"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "is:read"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "is:flagged"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "is:flagged"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:work"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "tag:work"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "after:2021-01-01 ocelot"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "after:2021-01-01 ocelot"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "is:unread is:read"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "is:unread is:read"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "size:<10"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "size:<10"
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "qualifiers-last"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

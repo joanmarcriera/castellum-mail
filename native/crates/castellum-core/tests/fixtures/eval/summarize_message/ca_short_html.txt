@@ -1,0 +1,5 @@
+<p>Hola a tothom,</p>
+<p>Us recordem que l'oficina estarà <strong>tancada per vacances</strong>
+tota la primera setmana d'<strong>agost</strong>. L'atenció al client es
+reprendrà amb normalitat el dilluns 11.</p>
+<p>Bones vacances a tothom!<br/>Administració</p>

@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "en",
+  "content_format": "html",
+  "subject": "Invoice #4471 overdue",
+  "from_name": "Accounts, Meridian Supplies",
+  "from_address": "accounts@meridiansupplies.example.com",
+  "content_file": "en_short_html.txt",
+  "rubric": {
+    "min_chars": 20,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["invoice", "#4471"],
+      ["overdue", "pay", "payment"]
+    ],
+    "forbidden_keywords": []
+  }
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Managing accounts</title>
+<meta name="description" content="Choose which folders sync, re-authenticate, duplicate, reset or remove a Castellum account." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Managing accounts</h1>
+<p class="eff">Settings &gt; Accounts · Castellum</p>
+
+<p>Adding an account is covered in <a href="/help/connect-account">Connect any account</a>. Everything you do with an account afterwards is in <strong>Settings &gt; Accounts</strong>. Select an account in the list, then use the buttons underneath. On a narrow window the last three sit under a <strong>More</strong> menu.</p>
+
+<h2>1. What the list shows</h2>
+<p>Each row shows the address, the server it talks to, when it last synced (or the last error), and whether it is <a href="/help/read-only-mode">read-only or has writes enabled</a>. A footer summarises how many accounts are read-only. Your passwords are kept in the macOS Keychain, not in the list.</p>
+
+<h2>2. Add…</h2>
+<p>Opens the same sheet as the <strong>+</strong> button in the main window toolbar.</p>
+
+<h2>3. Re-authenticate…</h2>
+<p>Use this when a password stops working, for example after you revoke or replace an app password. It reopens the sign-in sheet for the same account, so your mail and settings stay where they are. Enter the new password and save.</p>
+
+<h2>4. Folders…</h2>
+<p>Choose which folders this account syncs, and how far back to go. Castellum asks your server for its current folder list, with today's choices ticked. If the server cannot be reached, the sheet shows your saved choice read-only, and you can still change how far back to sync. Saving does not touch your password and does not start a sync by itself.</p>
+
+<h2>5. Duplicate…</h2>
+<p>Starts adding a <em>new</em> account with the settings of the selected one already filled in. Useful for a second mailbox on the same provider. It creates a separate account; it does not copy any mail.</p>
+
+<h2>6. Reset…</h2>
+<p>Wipes this account's locally-synced mail, downloaded attachments, drafts, sync state and AI summaries from this Mac, then syncs again from the server. Kept: the saved password, the server settings and the signature. Nothing on the mail server changes. If the account still has unsent drafts or changes waiting to go to the server, Castellum warns you first (<strong>Still Sending</strong>); <strong>Discard and Reset</strong> throws them away, and a message still sending will not be delivered. Reset cannot be undone.</p>
+
+<h2>7. Remove…</h2>
+<p>Permanently deletes the account's locally-synced mail, drafts and queued sends from this Mac, and removes its saved password from the Keychain. Nothing on the mail server is deleted. Removing cannot be undone.</p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

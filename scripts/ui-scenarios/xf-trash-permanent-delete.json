@@ -1,0 +1,463 @@
+{
+ "schema": 1,
+ "name": "xf-trash-permanent-delete",
+ "covers": [
+  "trash",
+  "permanent-delete",
+  "confirmation",
+  "empty-trash",
+  "min-window"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-d@local.test",
+   "password": "xf-d@local.test",
+   "as": "d",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-d@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "d",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF d msg 2"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF d msg 4"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "d",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "messageCount",
+   "text": "2",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    }
+   ],
+   "label": "two in Trash"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF d msg 2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1000,330",
+   "name": "sheet:confirm1"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:confirm1",
+   "timeoutMs": 5000,
+   "label": "Delete in Trash asks first"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "pendingDelete",
+   "text": "true",
+   "timeoutMs": 3000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 2000
+  },
+  {
+   "op": "capture",
+   "name": "confirm-dialog",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm1",
+   "find": {
+    "text": "Cancel"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    },
+    {
+     "model": "reading:pendingDelete",
+     "equals": "false"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ],
+   "label": "Delete pressed twice = one dialog; Cancel deletes nothing"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1000,330",
+   "name": "sheet:confirm2"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm2",
+   "find": {
+    "text": "Delete Permanently"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF d msg 2",
+   "text": "false",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:XF d msg 4",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "confirmed: gone, the other stays"
+  },
+  {
+   "op": "capture",
+   "name": "after-permanent"
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "d",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF d msg 4"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1000,330",
+   "name": "sheet:confirm3"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm3",
+   "find": {
+    "text": "Delete Permanently"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:XF d msg 4",
+     "equals": "true"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "read-only again: confirmed permanent delete is refused, row stays, nothing queued"
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "d",
+   "value": true
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "300,150",
+   "name": "sheet:empty"
+  },
+  {
+   "op": "command",
+   "id": "emptyTrash",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:empty",
+   "timeoutMs": 5000,
+   "label": "Empty Trash asks first"
+  },
+  {
+   "op": "capture",
+   "name": "empty-trash-dialog-min-window",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "messageCount",
+   "text": "1",
+   "timeoutMs": 2000
+  },
+  {
+   "op": "press",
+   "window": "sheet:empty",
+   "find": {
+    "text": "Empty Trash"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "messageCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "trash-empty"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "d",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "Inbox untouched by Empty Trash"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

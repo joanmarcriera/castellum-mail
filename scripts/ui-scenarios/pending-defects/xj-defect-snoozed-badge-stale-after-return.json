@@ -1,0 +1,113 @@
+{
+ "schema": 1,
+ "name": "xj-defect-snoozed-badge-stale-after-return",
+ "covers": [
+  "S43 snooze return",
+  "Snoozed sidebar badge",
+  "runSnoozeSweep reloads snoozedMessages only when the Snoozed list is open",
+  "xj defect"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "snooze",
+   "text": "3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "snoozedCount",
+   "text": "1",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "rememberedInList",
+   "text": "true",
+   "timeoutMs": 50000
+  },
+  {
+   "op": "capture",
+   "name": "message-back-in-inbox"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:rememberedSnoozed",
+     "equals": "false"
+    },
+    {
+     "model": "reading:snoozedCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

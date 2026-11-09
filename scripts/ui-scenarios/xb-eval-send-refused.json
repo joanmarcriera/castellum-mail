@@ -1,0 +1,220 @@
+{
+ "schema": 1,
+ "name": "xb-eval-send-refused",
+ "covers": [
+  "compose",
+  "evaluation mode refuses Send and Send Later with the enable-writes hint; nothing queued; draft kept"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb eval refused {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "This must never leave the machine."
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "typed-eval-mode"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "after-send-refused"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "ext:undoBanner",
+     "equals": "hidden"
+    },
+    {
+     "model": "ext:body",
+     "equals": "This must never leave the machine."
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "expect": [
+    {
+     "find": {
+      "text": "evaluation mode"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "text": "Enable writes"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "sendLaterInOneHour",
+   "allowServerWrites": true
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "after-send-later-refused"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-empty"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "drafts:alice@local.test",
+   "text": "xb eval refused {run}",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

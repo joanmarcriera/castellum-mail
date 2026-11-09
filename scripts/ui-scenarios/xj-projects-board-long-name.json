@@ -1,0 +1,133 @@
+{
+ "schema": 1,
+ "name": "xj-projects-board-long-name",
+ "covers": [
+  "Active Work project board",
+  "project link provenance",
+  "smallest window",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createProjectAssign",
+   "name": "Projecte amb un nom molt llarg per veure com es comporta el tauler quan algu escriu una frase sencera com a titol"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:projectCount",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "projectLinks"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:derived|message:",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "window:projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "board",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "projects",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "board-min",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "projects",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "controlsReachable",
+    "primaryButtonsVisible"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

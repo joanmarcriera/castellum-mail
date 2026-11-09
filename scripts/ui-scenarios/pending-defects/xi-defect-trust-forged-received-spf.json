@@ -1,0 +1,75 @@
+{
+ "schema": 1,
+ "name": "xi-defect-trust-forged-received-spf",
+ "covers": [
+  "S48 trust surface",
+  "an attacker-authored Received-SPF header that merely mentions the IMAP host in a comment reads as SPF pass"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-tr1@local.test",
+   "password": "xi-tr1@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust received-spf forged"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "forged-received-spf",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "a sender-authored Received-SPF line must not read as pass",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi trust received-spf forged"
+    },
+    {
+     "model": "reading:trust",
+     "equals": "spf=none dkim=none dmarc=none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

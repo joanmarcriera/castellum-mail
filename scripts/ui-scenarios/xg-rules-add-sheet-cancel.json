@@ -1,0 +1,142 @@
+{
+ "schema": 1,
+ "name": "xg-rules-add-sheet-cancel",
+ "covers": [
+  "Settings > Rules empty state at minimum size: Add\u2026 opens the rule editor sheet; exploring its layout and Cancel half-way leaves no rule"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "dave",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "44,400",
+   "name": "sheet:rule"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:rule",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-rule-editor"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:rule",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen",
+    "noClippedText",
+    "controlsReachable",
+    "noZeroSizeTextFields"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:rule",
+   "name": "0",
+   "text": "A rule name that is much longer than anybody sensible would type into this field, to see the list row cope"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-rule-editor-long-name",
+   "windows": [
+    "sheet:rule"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:rule",
+   "text": "524,357"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:rule",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-rules-after-cancel",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "reading:ruleCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,173 @@
+{
+ "schema": 1,
+ "name": "xh-defect-silent-server-syncs-forever",
+ "covers": [
+  "offline: a server that accepts the TCP connection but never answers must turn into a readable failure within a bounded time (75 s here), and Retry must work once the server is back",
+  "NEEDS the helper running first: python3 build/explore/xh/silent-server.py 39917 240 &  (the 3 s 'syncing' assert proves it is there)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-two@local.test",
+   "password": "xh-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    620,
+    460
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:39917"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "capture",
+   "name": "01-syncing-after-3s"
+  },
+  {
+   "op": "assert",
+   "label": "helper is listening: the sync is in flight, not refused",
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "syncing"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "72000"
+  },
+  {
+   "op": "capture",
+   "name": "02-after-75s"
+  },
+  {
+   "op": "assert",
+   "label": "a silent server is a failure after 75 s, not an endless Syncing",
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3143",
+   "label": "server is back: store the working endpoint and retry (what the Retry button calls)"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "15000"
+  },
+  {
+   "op": "capture",
+   "name": "03-server-back-retry-clicked"
+  },
+  {
+   "op": "assert",
+   "label": "Retry after the server is back recovers the account",
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:endpoint:one",
+     "equals": "127.0.0.1:3143"
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "the healthy account is unaffected",
+   "expect": [
+    {
+     "model": "accounts:dotState:two",
+     "equals": "ok"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "status",
+   "find": {
+    "identifier": "retry",
+    "text": "Retry sync for xh-one@local.test"
+   },
+   "value": true,
+   "timeoutMs": 3000,
+   "label": "the stuck row offers Retry again"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

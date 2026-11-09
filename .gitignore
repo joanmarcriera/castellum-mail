@@ -1,0 +1,115 @@
+# SPDX-License-Identifier: Apache-2.0
+
+dist/
+*.backup
+node_modules/
+.DS_Store
+.env
+.idea
+.vscode
+coverage/
+test-results/
+playwright-report/
+*.log
+*.db
+*.db-wal
+*.db-shm
+
+# Sensitive files
+.env
+.env.bak*
+*.bak-20*
+*.key
+*.pem
+oauth-credentials/
+config/secrets.json
+
+# Build-time injected license secret (never commit)
+src/main/license/license-secret.generated.ts
+
+# Build artifacts
+dist/
+.codex-derivedData/
+# Ignore build output, but keep the electron-builder resources we version
+# (entitlements + notarize hook live here).
+build/*
+!build/entitlements.mac.plist
+!build/notarize.js
+release/
+*.dmg
+*.pkg
+
+# Local databases (don't commit test data)
+*.db
+*.db-journal
+.aider*
+
+# Local agent/tooling state
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/castellum-active-work/
+!.agents/skills/castellum-active-work/**
+!.agents/skills/castellum-mail-foundation/
+!.agents/skills/castellum-mail-foundation/**
+!.agents/skills/castellum-native-ux/
+!.agents/skills/castellum-native-ux/**
+!.agents/skills/castellum-release-governance/
+!.agents/skills/castellum-release-governance/**
+!.agents/skills/castellum-native-verify/
+!.agents/skills/castellum-native-verify/**
+!.agents/skills/castellum-lan-ci/
+!.agents/skills/castellum-lan-ci/**
+!.agents/skills/castellum-release/
+!.agents/skills/castellum-release/**
+.claude/skills/
+.codebuddy/
+.continue/
+.junie/
+.kiro/
+skills-lock.json
+
+# Google OAuth client secret JSON (never commit; keep outside the repo)
+assets/Google OAuth client Desktop App/
+*client_secret*.json
+
+# graphify knowledge-graph output (local only)
+graphify-out/
+
+# Local-only planning notes (not versioned)
+FUTURE-POSSIBILITIES.md
+
+# Walkthrough screenshots (generated, used for marketing — not source)
+screenshots/
+/providers-section.png
+/site-localai.png
+
+# Locally installed generic agent skill library. Only Castellum's tracked
+# worker skills belong to this repository.
+/.agents/skills/*
+!/.agents/skills/castellum-active-work/
+!/.agents/skills/castellum-active-work/**
+!/.agents/skills/castellum-mail-foundation/
+!/.agents/skills/castellum-mail-foundation/**
+!/.agents/skills/castellum-native-ux/
+!/.agents/skills/castellum-native-ux/**
+!/.agents/skills/castellum-release-governance/
+!/.agents/skills/castellum-release-governance/**
+!/.agents/skills/castellum-write-safety/
+!/.agents/skills/castellum-write-safety/**
+!/.agents/skills/castellum-native-verify/
+!/.agents/skills/castellum-native-verify/**
+!/.agents/skills/castellum-lan-ci/
+!/.agents/skills/castellum-lan-ci/**
+!/.agents/skills/castellum-release/
+!/.agents/skills/castellum-release/**
+
+# Claude Code agent worktrees are never repo content
+/.claude/worktrees/
+
+# /run-project local markers (DONE/WORKED/DECISION, codex logs, queued the tracker writes)
+/.run-project/
+apple/configs/Local.xcconfig
+
+# archify scratch
+.archify/

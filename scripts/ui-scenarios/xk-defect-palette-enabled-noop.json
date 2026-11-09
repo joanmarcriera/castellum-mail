@@ -1,0 +1,537 @@
+{
+ "schema": 1,
+ "name": "xk-defect-palette-enabled-noop",
+ "covers": [
+  "S45 command palette",
+  "TASKS.md: commands have enabled/focus predicates"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 120000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "print"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-print"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'print' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "export"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-export"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'export' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "mute"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-mute"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'mute' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "vip"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-vip"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'vip' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "snooze"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-snooze"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'snooze' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-tag"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'tag' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "send in one hour"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-send-in-one-hour"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'send in one hour' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "correspondence"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-correspondence"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'correspondence' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "message source"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-message-source"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'message source' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "300"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "move to inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-move-to-inbox"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "'move to inbox' with no account, no message, no composer: must be unavailable (palette stays open, as it does for Reply)",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

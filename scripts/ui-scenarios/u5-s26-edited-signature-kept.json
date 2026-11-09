@@ -1,0 +1,38 @@
+{
+ "schema": 1,
+ "name": "u5-s26-edited-signature-kept",
+ "covers": ["S26", "a hand-edited signature block (delimiter intact) survives a From change", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 120000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "addAccount", "persona": "bob", "as": "bob", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "setPref", "name": "signature:bob@local.test", "text": "Bob"},
+  {"op": "ext", "id": "selectMailbox", "email": "bob@local.test", "text": "inbox"},
+  {"op": "wait", "until": "idle"},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "assert", "expect": [
+    {"model": "ext:fromPopup", "equals": "bob@local.test"},
+    {"model": "ext:body", "equals": "\n\n-- \nBob"}
+  ]},
+  {"op": "ext", "id": "appendBody", "window": "compose", "text": " Jr (edited by hand)"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "edited-from-bob", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:body", "equals": "\n\n-- \nBob Jr (edited by hand)"}
+  ]},
+  {"op": "ext", "id": "setPopup", "window": "compose", "find": {"role": "popup", "label": "bob@local.test"}, "text": "alice@local.test"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "edited-kept-from-alice", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:fromPopup", "equals": "alice@local.test"},
+    {"model": "ext:body", "equals": "\n\n-- \nBob Jr (edited by hand)"}
+  ]},
+  {"op": "closeWindow", "window": "compose"},
+  {"op": "quit"}
+ ]
+}

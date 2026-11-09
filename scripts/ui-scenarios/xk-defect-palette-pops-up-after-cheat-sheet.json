@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "name": "xk-defect-palette-pops-up-after-cheat-sheet",
+ "covers": [
+  "S45 command palette",
+  "cheat sheet",
+  "a command that could not run is dropped, not replayed later"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "showShortcuts"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "cheat sheet up",
+   "expect": [
+    {
+     "sheetAttached": true
+    },
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-requested-over-cheat-sheet"
+  },
+  {
+   "op": "assert",
+   "label": "the request does nothing visible: still the one cheat sheet",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "572,536",
+   "label": "Done"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-done"
+  },
+  {
+   "op": "assert",
+   "label": "after Done the main window has no sheet (the stale palette request must not fire now)",
+   "expect": [
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

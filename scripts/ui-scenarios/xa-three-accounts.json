@@ -1,0 +1,188 @@
+{
+ "schema": 1,
+ "name": "xa-three-accounts",
+ "covers": [
+  "Second and third account: all three sync, All Inboxes lists their mail, Settings > Accounts and the Status dashboard list three rows without clipping"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    690
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-two@local.test",
+   "password": "xa-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-caps@local.test",
+   "password": "xa-caps@local.test",
+   "as": "caps",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-all-inboxes",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "3"
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:dotState:two",
+     "equals": "ok"
+    },
+    {
+     "model": "accounts:dotState:caps",
+     "equals": "ok"
+    },
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "two"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-settings-three",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    620,
+    460
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-status-three",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "status",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

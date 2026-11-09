@@ -1,0 +1,95 @@
+{
+ "schema": 1,
+ "name": "x1-encoded-subjects",
+ "covers": [
+  "X1 RFC 2047 encoded words in ENVELOPE subjects and names",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:Solutions Architect role — Cambridge, hybrid",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:Scheduled maintenance: Sat 13 Sep 02:00–03:00 UTC",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:=?",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:?=",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "alice-inbox-decoded-subjects"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Solutions Architect role — Cambridge, hybrid"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Solutions Architect role — Cambridge, hybrid"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "recruiter-message-open"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

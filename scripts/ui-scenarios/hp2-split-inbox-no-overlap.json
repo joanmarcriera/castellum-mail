@@ -1,0 +1,147 @@
+{
+ "schema": 1,
+ "name": "hp2-split-inbox-no-overlap",
+ "covers": [
+  "HP-2",
+  "N/A",
+  "Split Inbox: a message matching two splits appears in only the first"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Invoices",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"invoice\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Hetzner and status",
+   "text": "{\"op\": \"or\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"hetzner\"}, {\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"maintenance\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitTabs",
+   "text": "Invoices,Hetzner and status,Other"
+  },
+  {
+   "op": "reading",
+   "id": "selectSplit",
+   "text": "Hetzner and status"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:Scheduled maintenance",
+   "text": "true"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:splitSelected",
+     "equals": "Hetzner and status"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "false"
+    },
+    {
+     "model": "reading:splitOf:Invoice R0012345678",
+     "equals": "Invoices"
+    },
+    {
+     "model": "reading:splitsDisjoint",
+     "equals": "true"
+    },
+    {
+     "model": "reading:splitCountsMatch",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "overlap-goes-to-first-split"
+  },
+  {
+   "op": "reading",
+   "id": "nextSplit"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitSelected",
+   "text": "Other"
+  },
+  {
+   "op": "reading",
+   "id": "nextSplit"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitSelected",
+   "text": "Invoices"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:Invoice R0012345678",
+   "text": "true"
+  },
+  {
+   "op": "reading",
+   "id": "previousSplit"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitSelected",
+   "text": "Other"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

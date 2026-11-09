@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- S57: registers Castellum as a mailto: handler candidate (never
+	     automatically default — see DefaultMailAppSetting.swift) and
+	     provides the GetURL Apple Event AppDelegate.swift handles. Merged
+	     alongside GENERATE_INFOPLIST_FILE's flat INFOPLIST_KEY_* values via
+	     INFOPLIST_FILE (Xcode 13+ supports both at once; build-setting keys
+	     win on conflict, so there is no overlap here). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>uk.co.riera.castellum.mailto</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mailto</string>
+			</array>
+		</dict>
+	</array>
+	<!-- S57: the Services menu provider (ServicesProvider.swift), registered
+	     as NSApp.servicesProvider in AppDelegate.swift. -->
+	<key>NSServices</key>
+	<array>
+		<dict>
+			<key>NSMenuItem</key>
+			<dict>
+				<key>default</key>
+				<string>New Email With Selection</string>
+			</dict>
+			<key>NSMessage</key>
+			<string>newEmailWithSelection</string>
+			<key>NSPortName</key>
+			<string>Castellum</string>
+			<key>NSSendTypes</key>
+			<array>
+				<string>public.utf8-plain-text</string>
+				<string>NSStringPboardType</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

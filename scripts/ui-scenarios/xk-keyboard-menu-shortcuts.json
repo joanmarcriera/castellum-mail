@@ -1,0 +1,202 @@
+{
+ "schema": 1,
+ "name": "xk-keyboard-menu-shortcuts",
+ "covers": [
+  "keyboard shortcuts",
+  "menu key equivalents",
+  "cheat sheet"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+shift+k"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-by-shortcut"
+  },
+  {
+   "op": "assert",
+   "label": "shift-cmd-K opens the palette",
+   "expect": [
+    {
+     "sheetAttached": true
+    },
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "class:SheetPresentationWindow",
+   "text": "classic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "100,20"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "ran",
+   "expect": [
+    {
+     "model": "reading:layout",
+     "equals": "classic"
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showShortcuts"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "cheat-sheet-with-mail"
+  },
+  {
+   "op": "assert",
+   "label": "Help > Keyboard Shortcuts opens the cheat sheet",
+   "expect": [
+    {
+     "sheetAttached": true
+    },
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "572,536"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Done closes the cheat sheet",
+   "expect": [
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "main",
+   "text": "cmd+n"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "compose-by-shortcut"
+  },
+  {
+   "op": "assert",
+   "label": "cmd-N opens a composer",
+   "expect": [
+    {
+     "windowCount": 2
+    },
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

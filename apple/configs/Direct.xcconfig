@@ -1,0 +1,29 @@
+// Castellum - DEVELOPMENT (Debug configuration) build settings.
+//
+// Ad-hoc signed, so a local build and the unsigned CI job need no certificate
+// and no keychain access (an Apple Development identity would make every
+// agent build hit a codesign keychain prompt instead).
+//
+// Dev/prod identity split (2026-09-23). A Debug build is a DIFFERENT app to
+// macOS: bundle id uk.co.riera.castellum.dev, shown as "Castellum Dev". TCC
+// records grants per bundle id, and an ad-hoc signature changes with every
+// build, so sharing the production id meant every one of ~120 DerivedData
+// copies polluted the shipped app's Privacy & Security rows (Contacts,
+// Calendars, App Data). Keeping the file/executable name "Castellum.app"
+// (PRODUCT_NAME) is deliberate: scripts, skills and TEST_HOST all find the
+// app by that path. The profile directory and Keychain namespaces are NOT
+// keyed on the bundle id, so the dev build still opens the same mail profile.
+
+CASTELLUM_BUNDLE_ID_SUFFIX = .dev
+CASTELLUM_DISPLAY_NAME = Castellum Dev
+
+CODE_SIGN_STYLE = Manual
+CODE_SIGN_IDENTITY = -
+CODE_SIGN_ENTITLEMENTS = Castellum.entitlements
+ENABLE_HARDENED_RUNTIME = YES
+// Empty => $(TeamIdentifierPrefix) is empty, so the App Group entitlement
+// expands to a bare id that SharePendingCompose refuses to open (no Team ID
+// can authorize it): the Share Extension handoff is off in Debug by design,
+// which is what keeps Debug builds from raising the App Data prompt.
+DEVELOPMENT_TEAM =
+

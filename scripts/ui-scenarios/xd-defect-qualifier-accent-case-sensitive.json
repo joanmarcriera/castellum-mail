@@ -1,0 +1,340 @@
+{
+ "schema": 1,
+ "name": "xd-defect-qualifier-accent-case-sensitive",
+ "covers": [
+  "search",
+  "accents ca/es",
+  "from: subject:"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "search",
+   "text": "reunio"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "reunio"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "REUNIÓ"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "REUNIÓ"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:reunió"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:reunió"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:reunio"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:reunio"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:REUNIÓ"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:REUNIÓ"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:AÑO"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:AÑO"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:ano"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "subject:ano"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "munoz"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "munoz"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:Muñoz"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "from:Muñoz"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:munoz"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "from:munoz"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:MUÑOZ"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "from:MUÑOZ"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:NÚRIA"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "from:NÚRIA"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "from:\"Nuria Sole\""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "from:\"Nuria Sole\""
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:REUNIÓ"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "subject-qualifier-uppercase-accent-finds-nothing"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

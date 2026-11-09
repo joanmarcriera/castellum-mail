@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "es",
+  "content_format": "plain",
+  "subject": "Pedido #58231 — retraso y propuesta de compensación",
+  "from_name": "Maria Ferrer",
+  "from_address": "marc@example.com",
+  "content_file": "es_long_plain.txt",
+  "rubric": {
+    "min_chars": 60,
+    "max_chars": 900,
+    "required_keyword_groups": [
+      ["pedido", "#58231", "58231"],
+      ["reembolso", "15%", "compensación"]
+    ],
+    "forbidden_keywords": []
+  }
+}

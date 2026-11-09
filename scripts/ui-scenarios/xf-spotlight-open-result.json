@@ -1,0 +1,188 @@
+{
+ "schema": 1,
+ "name": "xf-spotlight-open-result",
+ "covers": [
+  "spotlight",
+  "continuation",
+  "reveal"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-s@local.test",
+   "password": "xf-s@local.test",
+   "as": "s",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Dates"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    }
+   ],
+   "label": "start from All Inboxes with nothing of ours selected"
+  },
+  {
+   "op": "reading",
+   "id": "spotlightOpen",
+   "text": "remembered"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "opened"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Dates"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    },
+    {
+     "model": "reading:isUnified",
+     "equals": "false"
+    },
+    {
+     "model": "reading:smartNotice",
+     "equals": "none"
+    }
+   ],
+   "label": "the result opens its message in its own mailbox"
+  },
+  {
+   "op": "reading",
+   "id": "spotlightOpen",
+   "text": "id:nope:INBOX:999999"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "dead-result"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNotice",
+     "equals": "That message is no longer in this mailbox. It may have been moved or deleted."
+    }
+   ],
+   "label": "a result whose message is gone shows the notice"
+  },
+  {
+   "op": "reading",
+   "id": "spotlightOpen",
+   "text": "remembered"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNotice",
+     "equals": "none"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Dates"
+    }
+   ],
+   "label": "opening a live result clears the notice again"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

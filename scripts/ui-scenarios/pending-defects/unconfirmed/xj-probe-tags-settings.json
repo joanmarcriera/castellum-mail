@@ -1,0 +1,159 @@
+{
+ "schema": 1,
+ "name": "xj-probe-tags-settings",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Casa",
+   "text": "red"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "tags"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "tags-before",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "863,434"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-adopt",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "876,117"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "900"
+  },
+  {
+   "op": "capture",
+   "name": "after-trash-click"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "describe",
+   "window": "settings"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- S47 address autocomplete reads the user's Contacts. The app is not
+	     sandboxed, but the Release build runs under the hardened runtime
+	     (DirectRelease.xcconfig), which blocks TCC-protected Contacts access
+	     unless it is granted here. Without it the signed, notarized build is
+	     denied and falls back to local-correspondent suggestions SILENTLY —
+	     while the ad-hoc Debug build used for GUI checks works fine, so the
+	     failure would only ever appear to a paying user. Contacts data stays
+	     on the Mac: it is read for ranking and never logged or exported. -->
+	<key>com.apple.security.personal-information.addressbook</key>
+	<true/>
+	<!-- S55 calendar invites: "Add to Calendar" and the iTIP-reply flow write
+	     one EKEvent via EventKit. Same hardened-runtime rationale as Contacts
+	     above — without this the signed, notarized build is denied and the
+	     invite card silently degrades to read-only. Calendar data is written,
+	     never read back or exported, beyond the default-calendar handle
+	     needed to create the event. -->
+	<key>com.apple.security.personal-information.calendars</key>
+	<true/>
+	<!-- Shares a container with CastellumShareExtension (S57) so the Share
+	     Extension can hand off shared content without needing the Rust FFI
+	     itself. Works without the app being sandboxed. The id is the
+	     macOS-native Team-ID-prefixed form, expanded by Xcode from
+	     DEVELOPMENT_TEAM: a team-signed build is authorized by its signature
+	     alone (no provisioning profile, no portal registration). The old
+	     iOS-style "group.uk.co.riera.castellum" needed a profile we never
+	     ship, so macOS 15+ met every container access with the "would like to
+	     access data from other apps" prompt. An ad-hoc Debug build has no team,
+	     so this expands to a bare id that SharePendingCompose refuses to use —
+	     the handoff is simply off in Debug. Must match
+	     ShareExtension.entitlements and SharePendingCompose.appGroupSuffix. -->
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>$(TeamIdentifierPrefix)uk.co.riera.castellum</string>
+	</array>
+</dict>
+</plist>

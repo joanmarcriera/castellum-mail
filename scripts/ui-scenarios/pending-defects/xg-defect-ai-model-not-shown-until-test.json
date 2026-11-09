@@ -1,0 +1,101 @@
+{
+ "schema": 1,
+ "name": "xg-defect-ai-model-not-shown-until-test",
+ "covers": [
+  "Settings > AI with a model already configured (the state after every relaunch): the pane must show which model is in use. Today the Model and Embedding model pickers are drawn only while a Test Connection result is held in view-local @State, so a freshly opened pane shows no model anywhere until the user presses Test Connection again. Needs a local Ollama on 127.0.0.1:11434 (aiUseFirstModel)"
+ ],
+ "requires": {
+  "greenmail": false,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 90000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "aiEnabled",
+   "text": "true"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "aiEndpoint",
+   "text": "http://127.0.0.1:11434"
+  },
+  {
+   "op": "ext",
+   "id": "aiUseFirstModel"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "ai"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    700,
+    640
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "01-ai-pane-fresh-with-model-set",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "textField"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "role": "popup"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

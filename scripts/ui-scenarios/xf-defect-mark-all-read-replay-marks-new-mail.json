@@ -1,0 +1,189 @@
+{
+ "schema": 1,
+ "name": "xf-defect-mark-all-read-replay-marks-new-mail",
+ "covers": [
+  "mark-all-read",
+  "offline",
+  "replay",
+  "read"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-t@local.test",
+   "password": "xf-t@local.test",
+   "as": "t",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-t@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "t",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "5 seeded, all unread"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "t",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "clearMessage"
+  },
+  {
+   "op": "command",
+   "id": "markAllRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "marked-all-while-offline"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "15000",
+   "label": "RUN VIA build/explore/xf/late-mail.sh: it delivers 'XF t late arrival' by SMTP now, while the app cannot reach the server"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "t",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "t",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF t late arrival",
+   "text": "true",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "back-online-late-mail-listed"
+  },
+  {
+   "op": "search",
+   "text": "is:unread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "700"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XF t late arrival",
+     "equals": "true"
+    }
+   ],
+   "label": "mail that arrived AFTER Mark All as Read was pressed must still be unread once the queue replays"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "name": "xi-defect-invite-card-lost-on-first-open",
+ "covers": [
+  "S55 calendar invite card",
+  "reading pane: a message opened before background body hydration reaches it keeps no invite card (AppModel.detailWithCurrentSelectionState drops calendarInvite and threadId)"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi invite planning sync"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000",
+   "timeoutMs": 24000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "invite-first-open",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "the open message carries a text/calendar part, so the reading pane must show the invite card without re-selecting it",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi invite planning sync"
+    },
+    {
+     "model": "reading:hasCalendarPart",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasInvite",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

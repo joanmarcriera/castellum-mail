@@ -1,0 +1,51 @@
+{
+ "schema": 1,
+ "name": "xf1v-probe-compose-noaccount",
+ "covers": [
+  "WS1"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 120000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "command",
+   "id": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "capture",
+   "name": "after",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ],
+   "label": "an alert sheet must be attached to the main window"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

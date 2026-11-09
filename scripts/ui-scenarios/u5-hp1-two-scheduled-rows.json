@@ -1,0 +1,94 @@
+{
+ "schema": 1,
+ "name": "u5-hp1-two-scheduled-rows",
+ "covers": [
+  "HP1",
+  "two scheduled sends are listed in the Outbox with Send Now / Reschedule / Cancel and a scheduled-for time; Send Later control exists in compose",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "alice",
+   "value": true
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "closeWindow",
+   "window": "compose"
+  },
+  {
+   "op": "capture",
+   "name": "compose-send-later"
+  },
+  {
+   "op": "reading",
+   "id": "scheduleSend",
+   "accountRef": "alice",
+   "text": "U5 keep me"
+  },
+  {
+   "op": "reading",
+   "id": "scheduleSend",
+   "accountRef": "alice",
+   "text": "U5 cancel me"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-two-scheduled"
+  },
+  {
+   "op": "assert",
+   "window": "outbox",
+   "rules": [
+    "nonBlank",
+    "onScreen",
+    "noClippedText"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

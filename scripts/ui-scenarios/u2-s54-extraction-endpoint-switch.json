@@ -1,0 +1,30 @@
+{
+ "schema": 1,
+ "name": "u2-s54-extraction-endpoint-switch",
+ "covers": ["S54 step 4 (pack order: success first, then an unreachable endpoint)", "Extraction panel failure caption (#2256)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 300000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "carol", "as": "carol", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "ext", "id": "aiUseFirstModel", "text": "llama3.1:8b|qwen2.5:7b|largest"},
+  {"op": "ext", "id": "selectMailbox", "email": "carol@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "Factura pendiente", "timeoutMs": 30000},
+  {"op": "ext", "id": "waitAiJob", "name": "extract_thread_items", "text": "any", "timeoutMs": 30000},
+  {"op": "ext", "id": "waitExt", "name": "aiRunning:extract_thread_items", "text": "0", "timeoutMs": 150000},
+  {"op": "ext", "id": "pause", "text": "5000"},
+  {"op": "ext", "id": "setPref", "name": "aiEndpoint", "text": "http://127.0.0.1:1"},
+  {"op": "ext", "id": "selectMessage", "text": "Scheduled maintenance", "timeoutMs": 30000},
+  {"op": "ext", "id": "pause", "text": "15000"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "after-switching-to-unreachable", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:aiJob.extract_thread_items", "equals": "failed"},
+    {"model": "ext:aiRunning:extract_thread_items", "equals": "0"}
+  ]},
+  {"op": "quit"}
+ ]
+}

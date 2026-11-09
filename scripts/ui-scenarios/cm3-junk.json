@@ -1,0 +1,210 @@
+{
+ "schema": 1,
+ "name": "cm3-junk",
+ "covers": [
+  "N/A",
+  "context-menu slice 3 (Junk / Not Junk)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "cm-a@local.test",
+   "password": "cm-a@local.test",
+   "as": "a",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "cm-a@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuDisabled:markJunk",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:markNotJunk",
+     "equals": "absent"
+    }
+   ],
+   "label": "Mark as Junk is offered in the Inbox"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "markJunk",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    },
+    {
+     "model": "reading:hasSubject:CM a msg 5",
+     "equals": "false"
+    }
+   ],
+   "label": "the row left the Inbox"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "junk"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:CM a msg 5",
+     "equals": "true"
+    }
+   ],
+   "label": "and is in Junk"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuDisabled:markNotJunk",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:markJunk",
+     "equals": "absent"
+    }
+   ],
+   "label": "inside Junk the item flips to Not Junk"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "markNotJunk",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    }
+   ],
+   "label": "it left Junk"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    },
+    {
+     "model": "reading:hasSubject:CM a msg 5",
+     "equals": "true"
+    }
+   ],
+   "label": "and is back in the Inbox"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

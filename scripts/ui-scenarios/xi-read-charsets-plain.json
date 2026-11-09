@@ -1,0 +1,312 @@
+{
+ "schema": 1,
+ "name": "xi-read-charsets-plain",
+ "covers": [
+  "reading plain text",
+  "Catalan ISO-8859-1 quoted-printable",
+  "Spanish windows-1252 8bit",
+  "base64 UTF-8",
+  "body search finds decoded text"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000",
+   "timeoutMs": 28000
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi plain hello"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "plain",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi plain hello"
+    },
+    {
+     "model": "reading:detailTextHas:XI-PLAIN-BODY first line.",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:https://example.org/docs?a=1&b=2",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi catala latin1 qp"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "catala-latin1",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:l'àvia Concepció farà canelons demà. Què et sembla si hi anem?",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:col·legi",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:garçon",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:=E0",
+     "equals": "false"
+    },
+    {
+     "model": "reading:detailTextHas:Ã",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi espanol cp1252 8bit"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "espanol-cp1252",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:¿Qué tal, señor Núñez? Son 25 € — “comillas” y ¡ánimo!",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:�",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi base64 utf8 body"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "base64-utf8",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:El pingüí menja peix. 日本語 ✓",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi no charset 8bit"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:XI-NOCS-BODY café señor",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "canelons"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi catala latin1 qp"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "pingüí"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi base64 utf8 body"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "capture",
+   "name": "after-search-cleared"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "40"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

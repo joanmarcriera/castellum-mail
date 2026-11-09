@@ -1,0 +1,122 @@
+{
+ "schema": 1,
+ "name": "xg-defect-identity-add-double-error",
+ "covers": [
+  "Settings > Accounts > Add Identity: an address the core rejects (local part over 64 characters, accepted by the sheet's own validation) must be reported once, inline in the sheet; today the sheet shows a generic inline error AND a separate modal Error alert carrying the real reason"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "dave",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "dave"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    900,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "00-accounts",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "63,515",
+   "name": "sheet:identity"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:identity",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:identity",
+   "name": "0",
+   "text": "xg-alias-with-a-really-long-local-part-to-stress-the-identities-row-layout@a-long-subdomain.example-organisation.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:identity",
+   "text": "425,284"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "01-after-rejected-add"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:identity",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

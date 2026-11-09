@@ -1,0 +1,43 @@
+{
+ "schema": 1,
+ "name": "u2-s15-ai-settings",
+ "covers": ["S15", "AI settings polish: endpoint field, auto-enable, AI Activity window (#2177)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 200000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "assert", "expect": [{"model": "ext:pref.aiEnabled", "equals": "false"}]},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "assert", "expect": [{"model": "ext:pref.aiEndpoint", "equals": "http://127.0.0.1:11434"}]},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "wait", "until": "settingsOpenerReady"},
+  {"op": "openWindow", "target": "settings", "tab": "ai"},
+  {"op": "wait", "until": "window:settings"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "ai-settings", "windows": ["settings"]},
+  {"op": "assert", "window": "settings", "rules": ["nonBlank", "noClippedText"], "expect": [
+    {"find": {"role": "textField", "label": "http://127.0.0.1:11434"}, "exists": true, "visible": true}
+  ]},
+  {"op": "closeWindow", "window": "settings"},
+
+  {"op": "ext", "id": "aiUseFirstModel", "text": "llama3.1:8b|qwen2.5:7b|largest"},
+  {"op": "ext", "id": "selectMailbox", "email": "alice@local.test", "text": "inbox"},
+  {"op": "ext", "id": "selectMessage", "text": "This Week in Rust", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "command", "id": "summarize"},
+  {"op": "ext", "id": "waitAiJob", "name": "summarize_message", "text": "any", "timeoutMs": 20000},
+  {"op": "openWindow", "target": "aiActivity"},
+  {"op": "wait", "until": "window:aiActivity"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "ai-activity-job-listed"},
+  {"op": "assert", "expect": [{"model": "ext:aiJob.summarize_message", "equals": "running"}]},
+  {"op": "ext", "id": "aiCancelRunning"},
+  {"op": "ext", "id": "waitExt", "name": "aiJobsRunning", "text": "0", "timeoutMs": 10000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "ai-activity-after-cancel"},
+  {"op": "assert", "expect": [{"model": "ext:aiJob.summarize_message", "equals": "cancelled"}]},
+  {"op": "quit"}
+ ]
+}

@@ -1,0 +1,152 @@
+{
+ "schema": 1,
+ "name": "xh-defect-banner-hides-earlier-failure",
+ "covers": [
+  "offline: two accounts fail, the later one recovers; the banner must still report the account that is STILL failing (AppModel.performSync clears the single slot and never re-surfaces the earlier failure)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-two@local.test",
+   "password": "xh-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "one",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-one-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:syncBanner",
+     "equals": "unreachable: Can’t reach 127.0.0.1:3999 — the connection failed."
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "two",
+   "text": "127.0.0.1:3998"
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-both-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "two",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-two-recovered-one-still-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "one account is still unreachable, so the banner must still say so",
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "accounts:dotState:two",
+     "equals": "ok"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "unreachable: Can’t reach 127.0.0.1:3999 — the connection failed."
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

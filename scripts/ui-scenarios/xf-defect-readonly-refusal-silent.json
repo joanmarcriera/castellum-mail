@@ -1,0 +1,124 @@
+{
+ "schema": 1,
+ "name": "xf-defect-readonly-refusal-silent",
+ "covers": [
+  "evaluation-mode",
+  "archive",
+  "WS1"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-a@local.test",
+   "password": "xf-a@local.test",
+   "as": "a",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF a msg 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1000,330",
+   "name": "sheet:blocked"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "after-archive",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "sheet:blocked",
+   "timeoutMs": 5000,
+   "label": "Archive on a read-only account must present the 'This Account Is Read-only' dialog (Enable Writes / Keep Read-only)"
+  },
+  {
+   "op": "capture",
+   "name": "refusal-dialog",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:blocked",
+   "find": {
+    "text": "Keep Read-only"
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": false
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ],
+   "label": "kept read-only: nothing applied"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

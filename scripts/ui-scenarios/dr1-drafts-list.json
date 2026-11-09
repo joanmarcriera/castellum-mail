@@ -1,0 +1,37 @@
+{
+ "schema": 1,
+ "name": "dr1-drafts-list",
+ "covers": ["DR1", "Drafts list shows subject and recipient; opening a draft row restores the composer", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 240000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "reading", "id": "setWrite", "accountRef": "alice", "value": true},
+  {"op": "reading", "id": "seedServerDraft", "accountRef": "alice", "text": "DR1 budget review", "name": "bob@local.test"},
+  {"op": "reading", "id": "seedServerDraft", "accountRef": "alice", "text": "DR1 holiday plans", "name": "carol@local.test"},
+  {"op": "reading", "id": "seedServerDraft", "accountRef": "alice", "text": "DR1 invoice chaser", "name": "dave@local.test"},
+  {"op": "reading", "id": "selectMailbox", "accountRef": "alice", "text": "drafts"},
+  {"op": "reading", "id": "reSyncAll"},
+  {"op": "reading", "id": "waitFor", "name": "rowFor:DR1 budget review", "text": "To: bob@local.test", "timeoutMs": 120000},
+  {"op": "reading", "id": "waitFor", "name": "rowFor:DR1 holiday plans", "text": "To: carol@local.test", "timeoutMs": 60000},
+  {"op": "reading", "id": "waitFor", "name": "rowFor:DR1 invoice chaser", "text": "To: dave@local.test", "timeoutMs": 60000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "drafts-list-subject-and-recipient", "windows": ["main"]},
+  {"op": "assert", "window": "main", "rules": ["nonBlank", "onScreen"]},
+  {"op": "assert", "expect": [
+    {"model": "reading:rowFor:DR1 budget review", "equals": "To: bob@local.test"},
+    {"model": "reading:rowFor:DR1 holiday plans", "equals": "To: carol@local.test"},
+    {"model": "reading:rowFor:DR1 invoice chaser", "equals": "To: dave@local.test"}
+  ]},
+  {"op": "reading", "id": "openDraftRow", "text": "DR1 budget review"},
+  {"op": "wait", "until": "window:title:DR1 budget review", "timeoutMs": 15000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "draft-opened-in-composer"},
+  {"op": "assert", "expect": [
+    {"model": "ext:bodyHas:Seeded by the UIT-1 harness", "equals": "true"}
+  ]},
+  {"op": "quit"}
+ ]
+}

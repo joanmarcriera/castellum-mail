@@ -1,0 +1,92 @@
+{
+ "schema": 1,
+ "name": "xk-defect-empty-trash-unnamed-account",
+ "covers": [
+  "Empty Trash per account",
+  "irreversible action names its target"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "bob",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "emptyTrash",
+   "allowServerWrites": true,
+   "label": "opens the confirmation only; never confirmed, writes never enabled"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "empty-trash-two-accounts"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "text": "Cancel"
+   },
+   "value": true,
+   "timeoutMs": 3000,
+   "label": "control: the confirmation is up"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "class:_NSAlertPanel",
+   "find": {
+    "text": "bob@local.test"
+   },
+   "value": true,
+   "timeoutMs": 3000,
+   "label": "the permanent-erase confirmation names the account whose Trash it will empty"
+  },
+  {
+   "op": "quit"
+  }
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ }
+}

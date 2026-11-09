@@ -1,0 +1,222 @@
+{
+ "schema": 1,
+ "name": "mm14-add-account-autodetect",
+ "covers": [
+  "MM-14 slice 1",
+  "account auto-detect: fills unknown-domain servers, never overwrites a typed host, no lookup for a known provider"
+ ],
+ "requires": {
+  "greenmail": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 60000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "ext",
+   "id": "setAutoconfigFixture",
+   "text": "{\"status\": \"found\", \"source\": \"srv\", \"imap\": {\"host\": \"imap.small-isp.net\", \"port\": 143, \"tls\": \"starttls\"}, \"smtp\": {\"host\": \"smtp.small-isp.net\", \"port\": 587, \"tls\": \"starttls\"}, \"username\": \"local_part\", \"tried\": []}"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "me@small-isp.net"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "autoconfigDomains",
+   "text": "small-isp.net",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "found"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "onScreen",
+    "primaryButtonsVisible",
+    "noZeroSizeTextFields",
+    "noClippedText"
+   ],
+   "expect": [
+    {
+     "find": {
+      "identifier": "imapHostValue",
+      "label": "imap.small-isp.net"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "imapPortValue",
+      "label": "143"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "imapSecurityValue",
+      "label": "starttls"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "smtpHostValue",
+      "label": "smtp.small-isp.net"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "smtpPortValue",
+      "label": "587"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "usernameValue",
+      "label": "me"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "providerNote",
+      "label": "discovered:srv"
+     },
+     "exists": true
+    },
+    {
+     "find": {
+      "identifier": "smtpPassword"
+     },
+     "inVisibleRect": true
+    },
+    {
+     "find": {
+      "identifier": "initialHistory"
+     },
+     "inVisibleRect": true
+    },
+    {
+     "find": {
+      "role": "button",
+      "label": "Cancel"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "imapHost"
+   },
+   "text": "typed.example.net"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "me@third-isp.net"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "autoconfigDomains",
+   "text": "small-isp.net,third-isp.net",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "expect": [
+    {
+     "find": {
+      "identifier": "imapHostValue",
+      "label": "typed.example.net"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "me@gmail.com"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:autoconfigDomains",
+     "equals": "small-isp.net,third-isp.net"
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

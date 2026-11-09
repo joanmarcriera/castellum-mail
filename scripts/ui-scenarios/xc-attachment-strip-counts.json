@@ -1,0 +1,136 @@
+{
+ "schema": 1,
+ "name": "xc-attachment-strip-counts",
+ "covers": [
+  "reader attachment strip: 12 attachments, 2 attachments (pdf + png with a space in the name), minimum window, none"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xc-me@local.test",
+   "password": "xc-me@local.test",
+   "imap": "127.0.0.1:3143",
+   "smtp": "127.0.0.1:3025",
+   "tls": false,
+   "as": "me",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "me",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC twelve attachments"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "twelve"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:attachmentCount",
+     "equals": "12"
+    }
+   ],
+   "rules": [
+    "nonBlank"
+   ],
+   "window": "main"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC pressupost amb adjunt"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "two"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:attachmentCount",
+     "equals": "2"
+    }
+   ],
+   "rules": [
+    "nonBlank"
+   ],
+   "window": "main"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XC plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "none"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:attachmentCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

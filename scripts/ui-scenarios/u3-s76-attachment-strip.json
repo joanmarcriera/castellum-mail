@@ -1,0 +1,79 @@
+{
+ "schema": 1,
+ "name": "u3-s76-attachment-strip",
+ "covers": [
+  "S76",
+  "PR-192",
+  "N/A",
+  "GUI-6",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "test@local.test",
+   "password": "secret",
+   "as": "test",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "test",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Attachment sample: PDF report + PNG photo"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "idle",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "capture",
+   "name": "attachment-strip"
+  },
+  {
+   "op": "assert",
+   "window": "main",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:attachmentCount",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

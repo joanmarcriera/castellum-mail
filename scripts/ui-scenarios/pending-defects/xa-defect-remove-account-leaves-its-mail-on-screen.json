@@ -1,0 +1,196 @@
+{
+ "schema": 1,
+ "name": "xa-defect-remove-account-leaves-its-mail-on-screen",
+ "covers": [
+  "Removing an account while All Inboxes shows its mail: the removed account's messages must leave the list and the open message must close"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-two@local.test",
+   "password": "xa-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XA two only message"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-unified-before",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "XA two only message"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "two"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "708,538",
+   "name": "sheet:remove"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:remove",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-remove-confirm",
+   "windows": [
+    "sheet:remove",
+    "settings"
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:remove",
+   "find": {
+    "role": "button",
+    "label": "Remove"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:remove",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "accountCount",
+   "text": "1",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-after-remove",
+   "windows": [
+    "main",
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:two",
+     "equals": "none"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "none"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

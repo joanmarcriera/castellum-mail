@@ -1,0 +1,195 @@
+{
+ "schema": 1,
+ "name": "xh-walk-body-fetch-fails",
+ "covers": [
+  "offline: open messages whose body is not local (older than the 25 newest) while IMAP is a closed port: inline 'not downloaded' + error, no modal, no banner; Load twice; Load after recovery",
+  "needs xh-body@local.test seeded with >25 messages newer than 'XH big body' (build/explore/xh/seed.py)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-body@local.test",
+   "password": "xh-body@local.test",
+   "as": "body",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "body",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "body",
+   "text": "127.0.0.1:3999",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH big body"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "capture",
+   "name": "01-big-body-while-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1244,195"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1244,195"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "capture",
+   "name": "02-load-clicked-twice-still-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH with attachment"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "capture",
+   "name": "03-attachment-while-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "XH with attachment"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH big body"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "body",
+   "text": "127.0.0.1:3143",
+   "value": false
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "04-server-back-before-load",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "1244,195"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "5000"
+  },
+  {
+   "op": "capture",
+   "name": "05-server-back-after-load",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "XH big body"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,189 @@
+{
+ "schema": 1,
+ "name": "xh-send-fails-immediate",
+ "covers": [
+  "send fails with undo-send off: compose stays open with an inline readable reason, message kept in the Outbox, no modal; Outbox + Status windows"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000,
+   "smtp": "127.0.0.1:3998"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xh-one@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "wait",
+   "until": "window:compose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "to",
+   "text": "xh-two@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "compose",
+   "name": "subject",
+   "text": "XH unsendable now {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "compose",
+   "text": "Immediate send to a closed SMTP port."
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "5000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-compose-after-failed-send"
+  },
+  {
+   "op": "assert",
+   "window": "compose",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "model": "ext:composeWindows",
+     "equals": "1"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "1"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "compose",
+   "find": {
+    "text": "Not sent"
+   },
+   "value": true,
+   "timeoutMs": 3000,
+   "label": "inline reason shown in the compose window"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    620,
+    460
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "03-outbox-and-status"
+  },
+  {
+   "op": "assert",
+   "window": "outbox",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

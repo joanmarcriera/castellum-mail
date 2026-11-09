@@ -1,0 +1,130 @@
+{
+ "schema": 1,
+ "name": "xe-rules-missing-folder-run-now",
+ "covers": [
+  "MM-3",
+  "rule whose Move folder is gone: Run Now reports it and queues nothing (no half-applied actions)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xe-r1@local.test",
+   "password": "xe-r1@local.test",
+   "as": "r1",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "setWrite",
+   "accountRef": "r1",
+   "value": true
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Gone folder",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"xe-corp\"}], \"groups\": []}, \"actions\": [\"mark_read\", {\"move\": {\"mailbox_id\": \"xe-r1@local.test:Nonexistent\"}}], \"stop\": false, \"account\": \"r1\"}"
+  },
+  {
+   "op": "reading",
+   "id": "previewRule",
+   "name": "Gone folder"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:note",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "Gone folder",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:1 matched, 0 actions queued",
+     "equals": "true"
+    },
+    {
+     "model": "reading:noteHas:no longer exists in this account",
+     "equals": "true"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "r1",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "rule-row-shows-raw-mailbox-id",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

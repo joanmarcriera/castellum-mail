@@ -1,0 +1,223 @@
+{
+ "schema": 1,
+ "name": "xg-identity-sheet-wrong-input",
+ "covers": [
+  "Settings > Accounts > Add Identity sheet: invalid address keeps Add disabled, cancel half-way leaves no identity, a very long alias is added and shown, adding the same alias twice"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 150000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "dave",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "dave"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    900,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "00-accounts",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "52,537",
+   "name": "sheet:identity"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:identity",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:identity",
+   "name": "0",
+   "text": "not-an-email"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:identity",
+   "name": "2",
+   "text": "also wrong"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-identity-invalid"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:identity",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "noZeroSizeTextFields"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:identity",
+   "text": "359,284"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:identity",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:identities:dave@local.test",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "52,537",
+   "name": "sheet:identity2"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:identity2",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:identity2",
+   "name": "0",
+   "text": "xg-alias-with-a-long-local-part-for-the-identities-row-layout@a-long-subdomain.example-organisation.test"
+  },
+  {
+   "op": "accounts",
+   "id": "setNth",
+   "window": "sheet:identity2",
+   "name": "1",
+   "text": "Dave the Tester with a Remarkably Long Display Name for Layout"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:identity2",
+   "text": "425,284"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:identity2",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-long-identity-listed",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "noClippedText",
+    "controlsReachable"
+   ],
+   "expect": [
+    {
+     "model": "ext:identities:dave@local.test",
+     "equals": "xg-alias-with-a-long-local-part-for-the-identities-row-layout@a-long-subdomain.example-organisation.test"
+    }
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-long-identity-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

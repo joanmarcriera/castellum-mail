@@ -1,0 +1,288 @@
+{
+ "schema": 1,
+ "name": "xh-walk-offline-writes",
+ "covers": [
+  "offline walk with writes enabled: flag and delete while IMAP is unreachable; local state, what the Outbox says, no modal; the queue drains after the server is back",
+  "seed first: python3 build/explore/xh/seed-off.py"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-off@local.test",
+   "password": "xh-off@local.test",
+   "as": "off",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xh-off@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "off",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "off",
+   "text": "127.0.0.1:3999",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH off A"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "toggleFlag",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "capture",
+   "name": "01-flagged-while-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "a write while unreachable is queued, not an alert",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH off B"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "4000"
+  },
+  {
+   "op": "capture",
+   "name": "02-deleted-while-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "03-outbox-while-down"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "sync:off=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "outbox",
+   "text": "508,378"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "04-outbox-after-failed-resync"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "off",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "wait",
+   "until": "sync:off=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2000"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "outbox",
+   "text": "508,378"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "05-recovered"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

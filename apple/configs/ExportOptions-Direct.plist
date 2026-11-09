@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Export options for the Direct (Developer ID, notarized DMG) channel.
+     `developer-id` is the method that produces a Gatekeeper-acceptable app
+     for distribution outside the Mac App Store. teamID is injected by the
+     release workflow (sed) so the repo carries no account identity. -->
+<plist version="1.0">
+<dict>
+    <key>method</key>
+    <string>developer-id</string>
+    <key>signingStyle</key>
+    <string>manual</string>
+    <key>teamID</key>
+    <string>__APPLE_TEAM_ID__</string>
+    <!-- Notarization is a separate, explicit notarytool step in the workflow so
+         its result can be gated on; letting xcodebuild do it hides the outcome. -->
+    <key>destination</key>
+    <string>export</string>
+</dict>
+</plist>

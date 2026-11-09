@@ -1,0 +1,326 @@
+{
+ "schema": 1,
+ "name": "xj-probe-tags-writes",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org2@local.test",
+   "password": "xj-org2@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNotice",
+     "equals": "?"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "eval-mode-tag"
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xj-org2@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Roadmap thread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNotice",
+     "equals": "?"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto only)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNotice",
+     "equals": "?"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "?"
+    },
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "6000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "?"
+    },
+    {
+     "model": "reading:tagDots:0",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-resync"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "feina",
+   "text": "red"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Follow/up (2026) 100% \"x\"",
+   "text": "green"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "   ",
+   "text": "green"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

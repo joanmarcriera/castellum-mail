@@ -1,0 +1,35 @@
+{
+  "feature": "summarize_thread",
+  "language": "es",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "¿Sala Vermell libre el martes?",
+      "from_name": "Nuria Ferrer",
+      "from_address": "nuria.ferrer@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@es-short-thread",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: ¿Sala Vermell libre el martes?",
+      "from_name": "Recepción",
+      "from_address": "recepcion@example.com",
+      "sent_at_offset_secs": 1800,
+      "rfc822_message_id": "reply1@es-short-thread",
+      "references": ["root@es-short-thread"]
+    }
+  ],
+  "rubric": {
+    "min_chars": 30,
+    "max_chars": 500,
+    "required_keyword_groups": [
+      ["martes"],
+      ["11:00", "11h", "a las 11"]
+    ],
+    "forbidden_keywords": []
+  }
+}

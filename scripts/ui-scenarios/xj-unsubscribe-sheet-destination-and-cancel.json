@@ -1,0 +1,200 @@
+{
+ "schema": 1,
+ "name": "xj-unsubscribe-sheet-destination-and-cancel",
+ "covers": [
+  "S44 List-Unsubscribe",
+  "confirmation shows the exact destination",
+  "cancel sends nothing",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto only)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:mailto"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:mailto"
+  },
+  {
+   "op": "capture",
+   "name": "mailto-sheet"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:mailto",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "staticText",
+      "label": "xj-unsub@local.test"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:mailto",
+   "text": "216,117"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:mailto"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "ext:drafts:xj-org1@local.test",
+     "equals": ""
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Weekly digest (one-click)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:oneclick"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:oneclick"
+  },
+  {
+   "op": "capture",
+   "name": "one-click-sheet"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:oneclick",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "staticText",
+      "label": "https://127.0.0.1:9/unsub?u=xj"
+     },
+     "exists": true
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:oneclick",
+   "text": "216,141"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:oneclick"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:pendingCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[toolchain]
+channel = "stable"
+components = ["rustfmt", "clippy"]
+# Apple cross targets (x86_64/aarch64) are added on demand by
+# apple/scripts/build-rust.sh for the universal build; not pinned here so an
+# offline `cargo build` never triggers a target download.

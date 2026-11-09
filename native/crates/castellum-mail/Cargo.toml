@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-mail"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+ammonia = "4"
+castellum-models = { path = "../castellum-models" }
+idna = "1"
+mail-parser = { version = "0.11", features = ["full_encoding"] }
+serde = { version = "1", features = ["derive"] }
+url = "2"
+pulldown-cmark = "0.13.0"
+# S55 calendar invites (text/calendar detection + ICS parse/compose). Small,
+# actively maintained parser/builder crate; default-features off so we don't
+# pull chrono-tz/rrule/serde/thiserror — dates are kept as raw ICS values +
+# TZID (Swift resolves the real timezone via Foundation), never guessed here.
+icalendar = { version = "0.17", default-features = false, features = ["parser"] }

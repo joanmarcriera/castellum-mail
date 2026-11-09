@@ -1,0 +1,127 @@
+{
+ "schema": 1,
+ "name": "xf-list-sort-search",
+ "covers": [
+  "sort",
+  "search",
+  "relevance"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-s@local.test",
+   "password": "xf-s@local.test",
+   "as": "s",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "s",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "subject",
+   "text": "asc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "drillDown",
+   "name": "from",
+   "text": "sort.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:sortIndicator",
+     "equals": "none"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "6"
+    }
+   ],
+   "label": "a new search shows relevance order: no sort arrow"
+  },
+  {
+   "op": "reading",
+   "id": "sortBy",
+   "name": "from",
+   "text": "desc"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "search-from-desc"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:firstRowSubjects",
+     "equals": "Re: Zebra crossing|\u00c9mile letter|Banana bread|Dates|Fwd: carrots"
+    },
+    {
+     "model": "reading:sortIndicator",
+     "equals": "from:desc"
+    }
+   ],
+   "label": "a header click sorts the results; equal senders newest first"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

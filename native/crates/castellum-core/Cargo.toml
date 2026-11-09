@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+castellum-models = { path = "../castellum-models" }
+castellum-db = { path = "../castellum-db" }
+castellum-mail = { path = "../castellum-mail" }
+castellum-providers = { path = "../castellum-providers" }
+castellum-provider-imap = { path = "../castellum-provider-imap" }
+castellum-provider-smtp = { path = "../castellum-provider-smtp" }
+castellum-provider-ollama = { path = "../castellum-provider-ollama" }
+# Optional (feature `mlx`, off by default): see the `mlx` feature doc below
+# and DECISIONS.md's 2026-09-25 entry. Compiling this in pulls mlx-rs/
+# mlx-sys's C++ build into every release of castellum-ffi, which is only
+# worth paying for once a backend picker can actually select MLX at runtime.
+castellum-provider-mlx = { path = "../castellum-provider-mlx", optional = true }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Decoding raw RFC822 bytes from `sent_copy` operation payloads.
+base64 = "0.23"
+# Content-addressed attachment cache key (S32).
+sha2 = "0.11"
+# Blocking HTTP client for the RFC 8058 one-click unsubscribe POST (S44) —
+# the only outbound call to an arbitrary (non-account, non-Ollama) internet
+# host in the codebase. Unlike castellum-provider-ollama's plain-HTTP,
+# localhost-only client (default-features = false, no TLS needed), this one
+# talks to an arbitrary https: host named in the mail itself, so TLS is
+# required, never optional or downgraded.
+ureq = { version = "3", default-features = false, features = ["rustls"] }
+# Read-only XML parser for account auto-detect (MM-14): untrusted
+# config-v1.1.xml documents from a domain's web host / Mozilla ISPDB. No DTD or
+# entity support by design, so there is no entity-expansion attack surface.
+roxmltree = "0.20"
+# Sync/replay/send failure + mutex-recovery breadcrumbs (observability slice).
+tracing = { workspace = true }
+
+[dev-dependencies]
+castellum-testutil = { path = "../castellum-testutil" }
+tempfile = "3"
+# markdown_compose_greenmail.rs parses the delivered raw source (already in the lockfile).
+mail-parser = { version = "0.11", features = ["full_encoding"] }
+# examples/sync_bench.rs raw wire probe (same versions castellum-provider-imap
+# already pins, so no new crates enter the lockfile).
+imap-codec = { version = "=2.0.0-alpha.9", features = ["ext_namespace", "ext_condstore_qresync"] }
+native-tls = "0.2"
+# A second connection to a temp DB file lets a test inject a failure into the
+# display-name upsert (S31b finding d); same version castellum-db pins.
+rusqlite = { version = "0.40", features = ["bundled"] }
+# examples/perf_footprint.rs peak-RSS probe (getrusage); the version
+# castellum-db already depends on, so no new crate enters the lockfile.
+libc = "0.2"
+
+[features]
+# Compiles the real MLX backend (mlx-rs/mlx-sys, Apple-Silicon-only) into
+# `AiBackendKind::Mlx`'s selection path. Off by default: castellum-ffi's
+# `mlx` feature (default off) forwards to this one, and until a Swift
+# backend picker can select Mlx at runtime, the feature-off build returns a
+# typed error instead of linking MLX. See DECISIONS.md 2026-09-25.
+mlx = ["castellum-provider-mlx"]
+
+# S64: these two examples carry `mod tests` (determinism/unit checks on the
+# harness itself, not the perf measurement it prints), but Cargo's default
+# for an `[[example]]` target is `test = false` — so without this, plain
+# `cargo test` silently never runs them (only an explicit
+# `cargo test --example seed_profile` does). `autoexamples` stays on
+# (2021-edition default), so sync_bench/sync_perf_gate/read_perf_gate's
+# sibling examples are still auto-discovered as before; only these two gain
+# an explicit target.
+[[example]]
+name = "seed_profile"
+path = "examples/seed_profile.rs"
+test = true
+
+[[example]]
+name = "read_perf_gate"
+path = "examples/read_perf_gate.rs"
+test = true
+
+# M2: memory and on-disk footprint of the seeded profile (advisory PERF rows).
+[[example]]
+name = "perf_footprint"
+path = "examples/perf_footprint.rs"
+test = true

@@ -1,0 +1,18 @@
+{
+  "feature": "summarize_message",
+  "language": "ca",
+  "content_format": "plain",
+  "subject": "Estat de la migració de dades — projecte Riu",
+  "from_name": "Pol Serra",
+  "from_address": "pol.serra@example.com",
+  "content_file": "ca_long_plain.txt",
+  "rubric": {
+    "min_chars": 60,
+    "max_chars": 900,
+    "required_keyword_groups": [
+      ["migració"],
+      ["risc", "riscos", "endarreriment", "endarrerir"]
+    ],
+    "forbidden_keywords": []
+  }
+}

@@ -1,0 +1,259 @@
+{
+ "schema": 1,
+ "name": "xd-smart-mailbox-lifecycle",
+ "covers": [
+  "smart mailboxes: create, select, search inside, clear, delete"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xd-s1@local.test",
+   "password": "xd-s1@local.test",
+   "as": "xd",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "xd quick",
+   "text": "quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "xd bogus",
+   "text": "is:bogus before:garbage"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNames",
+     "equals": "xd bogus,xd quick"
+    },
+    {
+     "model": "reading:smartTotal:xd quick",
+     "equals": "2"
+    },
+    {
+     "model": "reading:smartTotal:xd bogus",
+     "equals": "0"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "xd quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "xd quick"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "smart-selected"
+  },
+  {
+   "op": "search",
+   "text": "zebra"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:smartSelected",
+     "equals": "xd quick"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "2"
+    },
+    {
+     "model": "reading:hasSubject:xd phrase one",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "xd bogus"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "smart-empty"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSmart",
+   "name": "xd quick"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartNames",
+     "equals": "xd bogus"
+    },
+    {
+     "model": "reading:smartSelected",
+     "equals": "xd bogus"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "deleteSmart",
+   "name": "xd bogus"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:smartSelected",
+     "equals": "none"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "deleted-while-selected"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xd",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

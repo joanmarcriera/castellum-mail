@@ -1,0 +1,85 @@
+{
+ "schema": 1,
+ "name": "u4-reader-body-catalan",
+ "covers": [
+  "UIT-1 reader-pane body capture",
+  "non-ASCII (Catalan) body decoded, no mojibake or encoded-word residue"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "carol",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Re: Pressupost web botiga"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reader-body",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "Re: Pressupost web botiga — revisió"
+    },
+    {
+     "model": "reading:detailTextHas:Cap problema: pla trimestral a 240 EUR",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:versió corregida demà",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:Ã",
+     "equals": "false"
+    },
+    {
+     "model": "reading:detailTextHas:=C3",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

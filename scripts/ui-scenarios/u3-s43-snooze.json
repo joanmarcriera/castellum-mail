@@ -1,0 +1,158 @@
+{
+ "schema": 1,
+ "name": "u3-s43-snooze",
+ "covers": [
+  "S43",
+  "snooze"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedInList",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "snooze",
+   "text": "8"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "rememberedInList",
+   "text": "false",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "selectSnoozed"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isSnoozedList",
+     "equals": "true"
+    },
+    {
+     "model": "reading:rememberedSnoozed",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "snoozed-list"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "inbox-without-the-snoozed-message"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "rememberedInList",
+   "text": "true",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "capture",
+   "name": "returned-to-inbox-without-a-click"
+  },
+  {
+   "op": "reading",
+   "id": "selectSnoozed"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:rememberedSnoozed",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

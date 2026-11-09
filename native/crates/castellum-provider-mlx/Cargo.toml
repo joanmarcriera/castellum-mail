@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+[package]
+name = "castellum-provider-mlx"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+castellum-providers = { path = "../castellum-providers" }
+
+# MLX Rust bindings (target-gated to Apple Silicon macOS only).
+# The mlx-sys crate depends on the C++ MLX library and Metal SDK, which are
+# not available on other platforms. We gate the dependency itself (not just
+# code inside the crate) so Cargo never attempts to fetch/build it elsewhere.
+#
+# Verified 2026-09-22:
+# - mlx-rs version 0.25.3 pinned mlx-sys 0.2.0, whose vendored MLX Metal
+#   source (fence.metal) uses `metal::thread_scope_system`, which does not
+#   exist in this machine's Xcode 27 / Metal 27.1 toolchain namespace —
+#   confirmed as a hard build failure (3 compile errors), not a hang or a
+#   flake. Bumped to mlx-rs 0.32 (-> mlx-sys 0.6.0, MLX 0.32.2), which builds
+#   and runs correctly on this exact machine/toolchain (verified end-to-end:
+#   build + a real matmul execution).
+# - Maintained by oxiglade (https://github.com/oxiglade/mlx-rs)
+# - License: MIT + Apache-2.0 (permissive, compatible with workspace Apache-2.0)
+# - API supports model loading from local paths, forward pass inference,
+#   and examples include embedding and generation (mistral example)
+# tokenizers (Hugging Face's Rust WordPiece/BPE tokenizer, Apache-2.0
+# https://raw.githubusercontent.com/huggingface/tokenizers/main/LICENSE,
+# verified 2026-09-25) loads the model's shipped `tokenizer.json` directly —
+# no hand-rolled WordPiece implementation. Target-gated alongside mlx-rs
+# since it is only used by the real (Apple-Silicon) embedding path.
+[target.'cfg(all(target_os = "macos", target_arch = "aarch64"))'.dependencies]
+mlx-rs = "0.32"
+tokenizers = "0.23"

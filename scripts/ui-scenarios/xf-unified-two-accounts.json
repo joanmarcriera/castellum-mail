@@ -1,0 +1,306 @@
+{
+ "schema": 1,
+ "name": "xf-unified-two-accounts",
+ "covers": [
+  "unified",
+  "archive",
+  "delete",
+  "evaluation-mode",
+  "counts"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-e@local.test",
+   "password": "xf-e@local.test",
+   "as": "e",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-f@local.test",
+   "password": "xf-f@local.test",
+   "as": "f",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-e@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "10"
+    },
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    }
+   ],
+   "label": "10 across two accounts"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF e msg 2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "9"
+    },
+    {
+     "model": "reading:hasSubject:XF e msg 2",
+     "equals": "false"
+    }
+   ],
+   "label": "writable account: deleted"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF f msg 2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "9"
+    },
+    {
+     "model": "reading:hasSubject:XF f msg 2",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "read-only account: refused, row kept"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF e msg 4"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    }
+   ],
+   "label": "archived"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF f msg 4"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1200"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    },
+    {
+     "model": "reading:hasSubject:XF f msg 4",
+     "equals": "true"
+    }
+   ],
+   "label": "read-only archive refused"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "8"
+    },
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    }
+   ],
+   "label": "stable after replay"
+  },
+  {
+   "op": "capture",
+   "name": "unified-after"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "e",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    }
+   ],
+   "label": "e inbox"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "f",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "f inbox untouched"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "e",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:hasSubject:XF e msg 2",
+     "equals": "true"
+    }
+   ],
+   "label": "e trash"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

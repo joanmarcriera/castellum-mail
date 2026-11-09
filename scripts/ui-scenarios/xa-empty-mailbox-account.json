@@ -1,0 +1,137 @@
+{
+ "schema": 1,
+ "name": "xa-empty-mailbox-account",
+ "covers": [
+  "An account whose mailbox is empty (xa-empty, emptied over IMAP): first sync ends ok, Inbox selected shows an empty list with no error, banner or alert; Settings row shows it synced"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-empty@local.test",
+   "password": "xa-empty@local.test",
+   "as": "dave",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "dave",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-dave-inbox",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:dave",
+     "equals": "ok"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "false"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "dave"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-settings-dave",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

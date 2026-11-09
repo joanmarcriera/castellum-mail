@@ -1,0 +1,138 @@
+{
+ "schema": 1,
+ "name": "xi-defect-list-stale-after-hydration",
+ "covers": [
+  "message list sorting",
+  "after first sync the open list keeps the pre-hydration order (INTERNALDATE) and empty previews until the mailbox is selected again"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "30000",
+   "timeoutMs": 50000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "open-list-30s-after-sync"
+  },
+  {
+   "op": "assert",
+   "label": "30 s after sync the open list must be in Date order (newest first), as it is after re-selecting the mailbox",
+   "expect": [
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi future date"
+    },
+    {
+     "model": "reading:cell:subject:1",
+     "equals": "xi no date header"
+    },
+    {
+     "model": "reading:cell:subject:2",
+     "equals": "xi plain hello"
+    },
+    {
+     "model": "reading:cell:subject:3",
+     "equals": "xi html remote image"
+    },
+    {
+     "model": "reading:cell:subject:4",
+     "equals": "xi inline cid image"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "same-list-after-reselect"
+  },
+  {
+   "op": "assert",
+   "label": "control: the same mailbox, re-selected, is in Date order",
+   "expect": [
+    {
+     "model": "reading:cell:subject:0",
+     "equals": "xi future date"
+    },
+    {
+     "model": "reading:cell:subject:1",
+     "equals": "xi no date header"
+    },
+    {
+     "model": "reading:cell:subject:2",
+     "equals": "xi plain hello"
+    },
+    {
+     "model": "reading:cell:subject:3",
+     "equals": "xi html remote image"
+    },
+    {
+     "model": "reading:cell:subject:4",
+     "equals": "xi inline cid image"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

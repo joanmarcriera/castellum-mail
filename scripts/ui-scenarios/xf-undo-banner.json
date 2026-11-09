@@ -1,0 +1,152 @@
+{
+ "schema": 1,
+ "name": "xf-undo-banner",
+ "covers": [
+  "undo",
+  "banner"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-u@local.test",
+   "password": "xf-u@local.test",
+   "as": "u",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-u@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "u",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF u msg 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2500"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "banner-offered"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:removalBanner",
+     "equals": "offering"
+    },
+    {
+     "model": "ext:removalBannerText",
+     "equals": "Archived 1 message"
+    }
+   ],
+   "label": "the banner offers Undo"
+  },
+  {
+   "op": "command",
+   "id": "undoRemoval",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "300"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:removalBanner",
+     "equals": "returning"
+    }
+   ],
+   "label": "Undo switches it to Returning"
+  },
+  {
+   "op": "capture",
+   "name": "banner-returning"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "removalBanner",
+   "text": "hidden",
+   "timeoutMs": 45000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    },
+    {
+     "model": "ext:removalBanner",
+     "equals": "hidden"
+    }
+   ],
+   "label": "the message is back and the banner is gone"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

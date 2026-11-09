@@ -1,0 +1,9 @@
+Hola equipo,
+
+Para la migración de los servidores propongo hacer la ventana de
+mantenimiento el sábado por la noche, a partir de las 22:00, cuando el
+tráfico es más bajo.
+
+¿Alguna objeción antes de bloquear la fecha?
+
+Carlos

@@ -1,0 +1,263 @@
+{
+ "schema": 1,
+ "name": "xi-switch-messages-no-stale-body",
+ "covers": [
+  "switching quickly between messages shows the selected body, never the previous one",
+  "switching mailbox clears the reading pane",
+  "thread count column"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-tr1@local.test",
+   "password": "xi-tr1@local.test",
+   "as": "tr",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1270,
+    720
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "tr",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000",
+   "timeoutMs": 24000
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust exact host fail"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust exact host pass"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust none"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust exact host pass"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust forged suffix id"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi trust none"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-six-switches",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi trust none"
+    },
+    {
+     "model": "reading:detailTextHas:XI-TRUST-NONE",
+     "equals": "true"
+    },
+    {
+     "model": "reading:detailTextHas:XI-TRUST-PASS",
+     "equals": "false"
+    },
+    {
+     "model": "reading:detailTextHas:XI-TRUST-FORGED",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "mailbox-switched-pane-empty"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "none"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi html remote image"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi plain hello"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi html hostile"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "xi plain hello"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "html-then-plain",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedSubject",
+     "equals": "xi plain hello"
+    },
+    {
+     "model": "reading:hasRemoteContent",
+     "equals": "false"
+    },
+    {
+     "model": "reading:webBodyHas:XI-HOSTILE-BODY",
+     "equals": "false"
+    },
+    {
+     "model": "reading:webBodyHas:XI-REMOTE-BODY",
+     "equals": "false"
+    },
+    {
+     "model": "reading:detailTextHas:XI-PLAIN-BODY",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xi long thread topic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "12"
+    },
+    {
+     "model": "reading:cell:thread:0",
+     "equals": "▾12"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "xi plain hello"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800",
+   "timeoutMs": 20800
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:cell:thread:0",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

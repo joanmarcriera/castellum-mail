@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "name": "xf-defect-mark-all-read-unified-noop",
+ "covers": [
+  "mark-all-read",
+  "unified",
+  "read"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-r@local.test",
+   "password": "xf-r@local.test",
+   "as": "r",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-r@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "All Inboxes, 5 unread listed"
+  },
+  {
+   "op": "command",
+   "id": "markAllRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "capture",
+   "name": "after-mark-all-in-all-inboxes"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "Mark All as Read needs a single mailbox. Select a mailbox first."
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "Mark All as Read in All Inboxes explains that it needs a single mailbox and leaves the rows unread"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,267 @@
+{
+ "schema": 1,
+ "name": "xf-offline-queue-replays",
+ "covers": [
+  "delete",
+  "archive",
+  "offline",
+  "replay",
+  "sync-banner"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-o@local.test",
+   "password": "xf-o@local.test",
+   "as": "o",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xf-o@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "o",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "5"
+    }
+   ],
+   "label": "5 seeded"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "o",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF o msg 4"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "capture",
+   "name": "deleted-while-unreachable"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    },
+    {
+     "model": "reading:hasSubject:XF o msg 4",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "delete while the server is down: row leaves, no error dialog"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF o msg 2"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "command",
+   "id": "archive",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "6000"
+  },
+  {
+   "op": "capture",
+   "name": "failed-sync-while-queued"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:hasSubject:XF o msg 4",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:XF o msg 2",
+     "equals": "false"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ],
+   "label": "a failed sync while the moves are queued resurrects nothing"
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "o",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1000"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "2000"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "o",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "3"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    }
+   ],
+   "label": "back online: queue drained, Inbox still 3"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "o",
+   "text": "trash"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:XF o msg 4",
+   "text": "true",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    }
+   ],
+   "label": "the delete reached the server Trash"
+  },
+  {
+   "op": "capture",
+   "name": "trash-after-replay"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

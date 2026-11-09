@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Joan Marc Riera Duocastella
+# Local GreenMail IMAP/SMTP for Castellum development.
+# Accounts are fixed at start-up (greenmail.users): see README.md "Test accounts".
+# Any other address that receives mail is auto-created with an unknown password
+# (SMTP delivery creates accounts; IMAP login alone does not).
+services:
+  greenmail:
+    image: greenmail/standalone:latest
+    container_name: castellum-local-imap
+    ports:
+      - "3025:3025" # SMTP
+      - "3143:3143" # IMAP
+      - "3993:3993" # IMAPS (optional)
+    environment:
+      GREENMAIL_OPTS: "-Dgreenmail.setup.test.all -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.users=test@local.test:secret,alice@local.test:alice-pass,bob@local.test:bob-pass,carol@local.test:carol-pass,dave@local.test:dave-pass"

@@ -1,0 +1,151 @@
+{
+ "schema": 1,
+ "name": "xf-defect-delete-trashed-from-search-v2",
+ "covers": [
+  "delete",
+  "trash",
+  "search"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xfv4-g@local.test",
+   "password": "xfv4-g@local.test",
+   "as": "g",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xfv4-g@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "g",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XFV4 trashme"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "400"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "account"
+  },
+  {
+   "op": "search",
+   "text": "trashme"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "900"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:XFV4 trashme",
+     "equals": "true"
+    }
+   ],
+   "label": "the search (account scope) lists the trashed message next to inbox mail"
+  },
+  {
+   "op": "capture",
+   "name": "search-results"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XFV4 trashme"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "deleteSelected"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "after-delete",
+   "windows": [
+    "all"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:pendingDelete",
+     "equals": "true"
+    }
+   ],
+   "label": "Delete on a message already in Trash must ask for the permanent delete (or do it), never fail with a dead-end error"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

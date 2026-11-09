@@ -1,0 +1,38 @@
+{
+  "feature": "extract_thread_items",
+  "language": "ca",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Revisió del pla",
+      "from_name": "Marta Riba",
+      "from_address": "marta.riba@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@ca-reunio",
+      "references": []
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "presentacions",
+        "pugeu"
+      ],
+      [
+        "reserveu la sala",
+        "sala petita",
+        "sala"
+      ]
+    ],
+    "dates": [
+      "2026-11-18"
+    ],
+    "amounts": [
+      {
+        "amount": 30.0,
+        "currency": "EUR"
+      }
+    ]
+  }
+}

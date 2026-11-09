@@ -1,0 +1,116 @@
+{
+ "schema": 1,
+ "name": "xj-probe-mailto-body",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org3@local.test",
+   "password": "xj-org3@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Listserv (mailto body)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:m"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:m"
+  },
+  {
+   "op": "capture",
+   "name": "confirm-sheet"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:m",
+   "text": "310,117"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "ext",
+   "id": "openFirstDraft",
+   "email": "xj-org3@local.test",
+   "timeoutMs": 4000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "capture",
+   "name": "draft"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:body",
+     "equals": "?"
+    },
+    {
+     "model": "ext:subject",
+     "equals": "?"
+    },
+    {
+     "model": "ext:bodyHas:SIGNOFF",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

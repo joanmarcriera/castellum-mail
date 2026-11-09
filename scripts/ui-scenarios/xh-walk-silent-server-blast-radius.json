@@ -1,0 +1,166 @@
+{
+ "schema": 1,
+ "name": "xh-walk-silent-server-blast-radius",
+ "covers": [
+  "one account's sync hangs on a silent server: does the other account still sync, can a body of the hung account still be fetched once its endpoint is good again, does the app still quit",
+  "NEEDS the helper first: python3 build/explore/xh/silent-server.py 39917 240 &   and xh-body seeded (seed.py)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 200000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-body@local.test",
+   "password": "xh-body@local.test",
+   "as": "body",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-two@local.test",
+   "password": "xh-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "body",
+   "text": "127.0.0.1:39917"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "assert",
+   "label": "helper is listening: body's sync is in flight",
+   "expect": [
+    {
+     "model": "accounts:dotState:body",
+     "equals": "syncing"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "two",
+   "text": "127.0.0.1:3143",
+   "label": "retry the healthy account while the other hangs"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "600"
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=ok",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "two",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-other-account-synced-while-one-hangs",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "body",
+   "text": "127.0.0.1:3143",
+   "value": false
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "body",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH big body"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "10000"
+  },
+  {
+   "op": "capture",
+   "name": "02-body-of-hung-account-10s",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "the body arrives over a fresh connection although the account's sync is still hung",
+   "expect": [
+    {
+     "model": "accounts:dotState:body",
+     "equals": "syncing"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "main",
+   "find": {
+    "text": "error"
+   },
+   "value": false,
+   "timeoutMs": 2000
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

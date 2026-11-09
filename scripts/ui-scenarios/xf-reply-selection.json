@@ -1,0 +1,215 @@
+{
+ "schema": 1,
+ "name": "xf-reply-selection",
+ "covers": [
+  "reply",
+  "selection",
+  "signature"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xf-f@local.test",
+   "password": "xf-f@local.test",
+   "as": "f",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "f",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF fold"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "reading",
+   "id": "detailSelect",
+   "text": "Thanks for the update"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "200"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "wait",
+   "until": "window:title:Re: XF fold",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:bodyHas:> Thanks for the update",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:See you soon.",
+     "equals": "false"
+    },
+    {
+     "model": "ext:bodyHas:quoted line",
+     "equals": "false"
+    }
+   ],
+   "label": "a selection is all that is quoted"
+  },
+  {
+   "op": "capture",
+   "name": "reply-with-selection",
+   "windows": [
+    "title:Re: XF fold"
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "closeCompose"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "fold other"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XF fold"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:readingSelection",
+     "equals": ""
+    }
+   ],
+   "label": "the selection did not follow to the other message and back"
+  },
+  {
+   "op": "command",
+   "id": "reply"
+  },
+  {
+   "op": "wait",
+   "until": "window:title:Re: XF fold",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "500"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:bodyHas:> Thanks for the update",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:> See you soon.",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyHas:Cambridge",
+     "equals": "false"
+    },
+    {
+     "model": "ext:bodyHas:Marc Riera",
+     "equals": "false"
+    }
+   ],
+   "label": "no selection: the whole message is quoted, without the sender's signature"
+  },
+  {
+   "op": "capture",
+   "name": "reply-whole",
+   "windows": [
+    "title:Re: XF fold"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

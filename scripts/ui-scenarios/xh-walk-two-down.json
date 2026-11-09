@@ -1,0 +1,276 @@
+{
+ "schema": 1,
+ "name": "xh-walk-two-down",
+ "covers": [
+  "offline walk: two accounts go unreachable one after the other, one recovers; banner, sidebar, status, cached reading",
+  "re-sync all (the launch path) with every account unreachable: no modal, cached message stays open"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1440,
+  "height": 900,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-one@local.test",
+   "password": "xh-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "addAccount",
+   "email": "xh-two@local.test",
+   "password": "xh-two@local.test",
+   "as": "two",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1300,
+    600
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "one",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-healthy",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "one",
+   "text": "127.0.0.1:3999"
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-one-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:syncBanner",
+     "equals": "unreachable: Can’t reach 127.0.0.1:3999 — the connection failed."
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "two",
+   "text": "127.0.0.1:3998"
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-both-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:syncBanner",
+     "equals": "unreachable: Can’t reach 127.0.0.1:3998 — the connection failed."
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XH note 3"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04-read-cached-while-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll",
+   "label": "what launch does: sync every account, both unreachable"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "sync:one=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "04b-resync-all-both-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "no modal for sync errors",
+   "expect": [
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "sheetAttached": false
+    },
+    {
+     "windowCount": 1
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "accounts:dotState:two",
+     "equals": "unreachable"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "XH note 3"
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "setEndpoint",
+   "accountRef": "two",
+   "text": "127.0.0.1:3143"
+  },
+  {
+   "op": "wait",
+   "until": "sync:two=ok",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "05-two-recovered-one-still-down",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accounts:dotState:one",
+     "equals": "unreachable"
+    },
+    {
+     "model": "accounts:dotState:two",
+     "equals": "ok"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "status"
+  },
+  {
+   "op": "wait",
+   "until": "window:status"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "status",
+   "contentSize": [
+    620,
+    460
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "06-status",
+   "windows": [
+    "status"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,208 @@
+{
+ "schema": 1,
+ "name": "xb-markdown-signature-send",
+ "covers": [
+  "markdown compose",
+  "Markdown message with signature is sent as multipart/alternative with rendered HTML and the plain source"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "undoSendDelay",
+   "text": "0"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setPref",
+   "name": "signature:alice@local.test",
+   "text": "-- \nAlice Puig\nCastellum tester"
+  },
+  {
+   "op": "openWindow",
+   "target": "compose"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "1",
+   "timeoutMs": 10000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "new-with-signature"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:bodyHas:Alice Puig",
+     "equals": "true"
+    },
+    {
+     "model": "ext:bodyCount:Castellum tester",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "to",
+   "text": "bob@local.test"
+  },
+  {
+   "op": "ext",
+   "id": "setField",
+   "window": "@compose",
+   "name": "subject",
+   "text": "xb markdown {run}"
+  },
+  {
+   "op": "ext",
+   "id": "setBody",
+   "window": "@compose",
+   "text": "# Heading\n\nSome **bold** text, a [link](https://example.org/x?a=1&b=2) and `code`.\n\n- one\n- two\n\n-- \nAlice Puig\nCastellum tester"
+  },
+  {
+   "op": "ext",
+   "id": "composeSet",
+   "window": "@compose",
+   "name": "markdown",
+   "value": true
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "markdown-on"
+  },
+  {
+   "op": "ext",
+   "id": "keyEquivalent",
+   "window": "@compose",
+   "text": "cmd+return"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "composeWindows",
+   "text": "0",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "selectMailbox",
+   "email": "bob@local.test",
+   "text": "inbox"
+  },
+  {
+   "op": "ext",
+   "id": "selectMessage",
+   "text": "=xb markdown {run}",
+   "timeoutMs": 120000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "loadSource",
+   "timeoutMs": 30000
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "bob-reads-markdown",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:src.has:multipart/alternative",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:<strong>bold</strong>",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:<li>one</li>",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:Some **bold** text",
+     "equals": "true"
+    },
+    {
+     "model": "ext:src.has:Castellum tester",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

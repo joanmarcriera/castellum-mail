@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Castellum — Settings: General</title>
+<meta name="description" content="A guide to every section of Castellum's General settings: reading, layout, remote content, Spotlight, updates and default mail app." />
+<meta name="theme-color" content="#0b1626" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --stone-950:#070d18; --stone-900:#0f172a; --stone-850:#141f33; --stone-800:#1e293b;
+    --stone-700:#334155; --stone-500:#64748b; --stone-300:#cbd5e1; --stone-200:#e2e8f0;
+    --bronze-300:#d6b67e; --bronze-400:#c69f5b; --gold:#d8b878;
+    --ink:#eef2f8; --muted:#9fb0c6; --maxw:820px;
+    --serif:"Fraunces",Georgia,serif; --sans:"Hanken Grotesk",-apple-system,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--stone-950);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  header.site{border-bottom:1px solid rgba(180,138,74,.14);padding:22px 0}
+  header.site a.brand{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);text-decoration:none;letter-spacing:.2px}
+  header.site a.brand span{color:var(--bronze-400)}
+  header.site nav{float:right;font-size:14px}
+  header.site nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+  header.site nav a:hover{color:var(--gold)}
+  main{padding:54px 0 40px}
+  h1{font-family:var(--serif);font-weight:700;font-size:38px;line-height:1.15;margin-bottom:8px}
+  .eff{color:var(--muted);font-size:14px;margin-bottom:36px;font-family:var(--mono)}
+  h2{font-family:var(--serif);font-weight:600;font-size:24px;margin:34px 0 12px;color:var(--bronze-300)}
+  h3{font-weight:700;font-size:17px;margin:22px 0 8px;color:var(--stone-200)}
+  p{margin:12px 0;color:var(--stone-200)}
+  ul,ol{margin:12px 0 12px 26px;color:var(--stone-200)}
+  li{margin:7px 0}
+  a{color:var(--bronze-300)}
+  strong{color:var(--ink)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--stone-850);padding:2px 6px;border-radius:5px;color:var(--bronze-300)}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(180,138,74,.14);color:var(--stone-200)}
+  th{color:var(--muted);font-weight:600;font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  td code{white-space:nowrap}
+  hr{border:0;border-top:1px solid rgba(180,138,74,.14);margin:28px 0}
+  .note{background:var(--stone-850);border:1px solid rgba(180,138,74,.14);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:14.5px;color:var(--stone-300)}
+  .note strong{color:var(--bronze-300)}
+  footer{border-top:1px solid rgba(180,138,74,.12);padding:34px 0 60px;margin-top:40px;color:var(--muted);font-size:14px}
+  footer a{color:var(--muted);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/">Castellum<span>.</span></a>
+  <nav><a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+</div></header>
+<main><div class="wrap">
+<h1>Settings: General</h1>
+<p class="eff">Settings &gt; General · Castellum</p>
+
+<p>One section per heading in <strong>Settings &gt; General</strong>. Settings for sending, Markdown and key bindings have their own pages: <a href="/help/sending-undo-outbox">Sending</a>, <a href="/help/compose-markdown-signatures">Composing</a>, <a href="/help/custom-key-bindings">Key bindings</a>.</p>
+
+<h2>1. Reading</h2>
+<p><strong>Mark messages read</strong>: <em>Never</em>, <em>When opened</em>, or <em>After a delay</em> (1 to 30 seconds, set with the stepper).</p>
+
+<h2>2. Layout</h2>
+<p><strong>Widescreen</strong> puts the message list beside the reading pane; <strong>Classic</strong> puts it above. You can also switch under <strong>View</strong> in the menu bar.</p>
+
+<h2>3. Attachments</h2>
+<p><strong>Clicking an attachment</strong>: <em>Ask each time</em>, or always <em>Open</em>, <em>Save As…</em> or <em>Quick Look</em>. The gear menu on a message's attachment strip offers the same choices.</p>
+
+<h2>4. Remote content</h2>
+<p><strong>Always load remote images</strong> is off by default. While it is off, a message with remote images shows a <strong>Load</strong> button instead, because loading remote images can tell the sender when you read their mail. Senders you chose to always allow (or always block) are listed below with a <strong>Revoke</strong> button.</p>
+
+<h2>5. Spotlight</h2>
+<p><strong>Index message subjects and senders in Spotlight</strong> is off by default. When on, only the subject and sender become searchable in Spotlight. Message bodies, attachments and HTML content are never indexed, and everything stays on your Mac. Turning it off removes everything Castellum indexed.</p>
+
+<h2>6. Updates</h2>
+<p><strong>Check for updates</strong>: <em>Never</em>, <em>At launch</em> or <em>Daily</em> (the default, at most once every 24 hours). A check contacts github.com and sends no identifiers. With <em>Never</em>, Castellum contacts github.com only when you choose <strong>Check for Updates…</strong> from the app menu. <a href="/help/troubleshooting">Window &gt; Status</a> shows when the last check ran.</p>
+
+<h2>7. Default mail app</h2>
+<p>Click <strong>Make Castellum My Default Mail App…</strong> to have Castellum open when you click an email link (<code>mailto:</code>). Castellum never does this on its own: macOS asks you to confirm, and you can switch back any time in System Settings.</p>
+
+</div></main>
+<footer><div class="wrap">
+  <a href="/">Home</a><a href="/help/">Help</a><a href="/help/connect-account">Connect an Account</a><a href="/help/ai">AI Help</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>
+  <p style="margin-top:14px">© 2026 Joan Marc Riera Duocastella · Castellum — a private, AI-powered email client for macOS.</p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "feature": "draft_reply",
+  "language": "ca",
+  "content_format": "plain",
+  "subject": "Un cafè aquesta setmana?",
+  "from_name": "Marta Puig",
+  "from_address": "marta.puig@example.com",
+  "content_file": "ca_short.txt",
+  "instruction": "Accepta i proposa divendres al matí.",
+  "rubric": {
+    "min_chars": 15,
+    "max_chars": 400,
+    "required_keyword_groups": [
+      ["divendres"],
+      ["matí"]
+    ],
+    "forbidden_keywords": []
+  }
+}

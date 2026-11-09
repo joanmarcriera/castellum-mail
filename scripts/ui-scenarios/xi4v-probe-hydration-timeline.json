@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "name": "xi4v-probe-hydration-timeline",
+ "covers": [
+  "message list sorting",
+  "verifier probe: when does the open list diverge from the DB after first sync"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xi-r4@local.test",
+   "password": "xi-r4@local.test",
+   "as": "xi",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "command",
+   "id": "layoutClassic"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "t0-after-select"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "3000",
+   "timeoutMs": 23000
+  },
+  {
+   "op": "capture",
+   "name": "t3"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "7000",
+   "timeoutMs": 27000
+  },
+  {
+   "op": "capture",
+   "name": "t10"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reselect-at-10"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "20000",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "capture",
+   "name": "t30-no-reselect-since-10"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xi",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "reselect-at-30"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

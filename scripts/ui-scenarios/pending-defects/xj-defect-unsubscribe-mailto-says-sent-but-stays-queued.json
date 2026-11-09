@@ -1,0 +1,167 @@
+{
+ "schema": 1,
+ "name": "xj-defect-unsubscribe-mailto-says-sent-but-stays-queued",
+ "covers": [
+  "S44 List-Unsubscribe mailto",
+  "writes enabled",
+  "confirmUnsubscribeByMailto queues the send and never drains the outbox",
+  "xj defect"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org3@local.test",
+   "password": "xj-org3@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xj-org3@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Club news (mailto subject)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:m"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:m"
+  },
+  {
+   "op": "capture",
+   "name": "confirm-sheet"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:m",
+   "text": "310,117"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "4000"
+  },
+  {
+   "op": "capture",
+   "name": "app-says-sent"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:_NSAlertPanel",
+   "text": "130,90"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "40000"
+  },
+  {
+   "op": "openWindow",
+   "target": "outbox"
+  },
+  {
+   "op": "wait",
+   "until": "window:outbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "outbox-45s-later",
+   "windows": [
+    "outbox"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "outbox"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-unsub3@local.test",
+   "password": "xj-unsub3@local.test",
+   "as": "rcpt",
+   "waitFor": "synced",
+   "timeoutMs": 60000,
+   "label": "the unsubscribe email must have been delivered: GreenMail creates the recipient mailbox on first delivery, so sign-in fails while the message is still queued"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "rcpt",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:unsubscribe me",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "delivered"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

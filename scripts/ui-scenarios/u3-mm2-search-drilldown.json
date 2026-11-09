@@ -1,0 +1,491 @@
+{
+ "schema": 1,
+ "name": "u3-mm2-search-drilldown",
+ "covers": [
+  "MM-2",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "addAccount",
+   "persona": "bob",
+   "as": "bob",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "search",
+   "text": "subject:invoice"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    },
+    {
+     "model": "reading:searchScope",
+     "equals": "mailbox"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "subject:order"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasMessages",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "scope-current-mailbox-no-order-mail"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "all"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasSubject:Your order #203",
+     "equals": "true"
+    },
+    {
+     "model": "reading:searchScope",
+     "equals": "all"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "scope-all-accounts-widened"
+  },
+  {
+   "op": "reading",
+   "id": "searchScope",
+   "text": "mailbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasMessages",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "body:invoice"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "body:invoice"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "query-body-invoice"
+  },
+  {
+   "op": "search",
+   "text": "bcc:alice"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "bcc:alice"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2026-09"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "date:2026-09"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2026-09-01..2026-09-15"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "date:2026-09-01..2026-09-15"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "within:30d"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "within:30d"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "size:>10k"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "size:>10k"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "flag:unanswered"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "flag:unanswered"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "folder:Sent"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "folder:Sent"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "attachment:pdf"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "attachment:pdf"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "date:2026-13"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    },
+    {
+     "model": "reading:searchText",
+     "equals": "date:2026-13"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "query-date-2026-13"
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "drillSelected",
+   "text": "from"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "from:=billing@hetzner.example"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "drill-sender"
+  },
+  {
+   "op": "reading",
+   "id": "drillSelected",
+   "text": "from"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": "from:=billing@hetzner.example"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "drillSelected",
+   "text": "subject"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "drill-sender-and-subject"
+  },
+  {
+   "op": "reading",
+   "id": "drillSelected",
+   "text": "date"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:searchText",
+     "equals": ""
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    },
+    {
+     "model": "reading:mailboxRole",
+     "equals": "inbox"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "cleared-back-to-mailbox"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

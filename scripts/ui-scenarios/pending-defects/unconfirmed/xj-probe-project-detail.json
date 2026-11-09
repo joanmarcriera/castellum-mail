@@ -1,0 +1,128 @@
+{
+ "schema": 1,
+ "name": "xj-probe-project-detail",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Roadmap thread"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createProjectAssign",
+   "name": "Roadmap"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createProjectAssign",
+   "name": "Roadmap"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:projectCount",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "openWindow",
+   "target": "projects"
+  },
+  {
+   "op": "wait",
+   "until": "window:projects"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "board",
+   "windows": [
+    "projects"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "projects",
+   "text": "100,120"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1200"
+  },
+  {
+   "op": "capture",
+   "name": "after-card-click"
+  },
+  {
+   "op": "ext",
+   "id": "describe",
+   "window": "projects"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

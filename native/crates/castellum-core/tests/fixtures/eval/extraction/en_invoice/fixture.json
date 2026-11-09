@@ -1,0 +1,50 @@
+{
+  "feature": "extract_thread_items",
+  "language": "en",
+  "messages": [
+    {
+      "content_file": "msg0.txt",
+      "content_format": "plain",
+      "subject": "Invoice 0417 and delivery",
+      "from_name": "Priya Nair",
+      "from_address": "priya.nair@example.com",
+      "sent_at_offset_secs": 0,
+      "rfc822_message_id": "root@en-invoice",
+      "references": []
+    },
+    {
+      "content_file": "msg1.txt",
+      "content_format": "plain",
+      "subject": "Re: Invoice 0417 and delivery",
+      "from_name": "Tom Whitby",
+      "from_address": "tom.whitby@example.com",
+      "sent_at_offset_secs": 1800,
+      "rfc822_message_id": "reply1@en-invoice",
+      "references": [
+        "root@en-invoice"
+      ]
+    }
+  ],
+  "expected": {
+    "action_items": [
+      [
+        "signed delivery form",
+        "delivery form"
+      ],
+      [
+        "bank transfer",
+        "pay the invoice",
+        "pay it"
+      ]
+    ],
+    "dates": [
+      "2026-10-15"
+    ],
+    "amounts": [
+      {
+        "amount": 1250.0,
+        "currency": "GBP"
+      }
+    ]
+  }
+}

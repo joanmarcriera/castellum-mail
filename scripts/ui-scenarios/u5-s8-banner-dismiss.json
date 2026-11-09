@@ -1,0 +1,30 @@
+{ "schema": 1, "name": "u5-s8-banner-dismiss",
+  "covers": ["S8", "N/A", "Sync failure banner: a real click on its X dismisses it (non-modal), the per-account status stays unreachable, and a NEW failure brings the banner back"],
+  "requires": {"greenmail": true, "personas": true}, "screen": {"width": 1280, "height": 768, "menuBar": 25},
+  "timeoutMs": 240000,
+  "steps": [
+    {"op": "wait", "until": "accountsLoaded"},
+    {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 90000},
+    {"op": "wait", "until": "idle"},
+    {"op": "accounts", "id": "setEndpoint", "accountRef": "alice", "text": "127.0.0.1:3999"},
+    {"op": "wait", "until": "sync:alice=failed", "timeoutMs": 60000},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "01-banner-shown", "windows": ["main"]},
+    {"op": "assert", "window": "main", "rules": ["nonBlank"], "expect": [
+      {"model": "reading:syncBanner", "equals": "unreachable: Can’t reach 127.0.0.1:3999 — the connection failed."},
+      {"model": "errorText", "equals": ""}, {"sheetAttached": false} ]},
+    {"op": "accounts", "id": "click", "window": "main", "text": "1276,67"},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "02-after-click-on-x", "windows": ["main"]},
+    {"op": "assert", "window": "main", "rules": ["nonBlank"], "expect": [
+      {"model": "reading:syncBanner", "equals": "none"},
+      {"model": "accounts:dotState:alice", "equals": "unreachable"},
+      {"model": "errorText", "equals": ""}, {"sheetAttached": false} ]},
+    {"op": "accounts", "id": "setEndpoint", "accountRef": "alice", "text": "127.0.0.1:3998"},
+    {"op": "wait", "until": "idle"},
+    {"op": "accounts", "id": "settle", "text": "3000"},
+    {"op": "wait", "until": "idle"},
+    {"op": "capture", "name": "03-banner-back-on-next-failure", "windows": ["main"]},
+    {"op": "assert", "window": "main", "rules": ["nonBlank"], "expect": [
+      {"model": "reading:syncBanner", "equals": "unreachable: Can’t reach 127.0.0.1:3998 — the connection failed."} ]},
+    {"op": "quit"} ] }

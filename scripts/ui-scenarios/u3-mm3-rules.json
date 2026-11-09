@@ -1,0 +1,188 @@
+{
+ "schema": 1,
+ "name": "u3-mm3-rules",
+ "covers": [
+  "MM-3",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Newsletters",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"rustweekly\"}], \"groups\": []}, \"actions\": [\"mark_read\", \"archive\"], \"stop\": true, \"account\": \"alice\"}"
+  },
+  {
+   "op": "reading",
+   "id": "saveRule",
+   "name": "Invoices",
+   "text": "{\"group\": {\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"invoice\"}], \"groups\": []}, \"actions\": [{\"add_flag\": {}}], \"account\": \"alice\"}"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleNames",
+     "equals": "Newsletters,Invoices"
+    },
+    {
+     "model": "reading:ruleCount",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "previewRule",
+   "name": "Newsletters"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:error",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "rules-tab-read-only-banner",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "reading:ruleNames",
+     "equals": "Newsletters,Invoices"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "moveRuleToTop",
+   "name": "Invoices"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleNames",
+     "equals": "Invoices,Newsletters"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "toggleRule",
+   "name": "Invoices",
+   "value": false
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:ruleEnabled:Invoices",
+     "equals": "false"
+    },
+    {
+     "model": "reading:ruleEnabled:Newsletters",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "rules-tab-after-reorder-and-disable",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "runRule",
+   "name": "Newsletters"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:noteHas:could not be changed",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "rules-tab-after-run-now-refused",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

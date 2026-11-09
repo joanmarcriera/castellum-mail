@@ -1,0 +1,45 @@
+{
+ "schema": 1,
+ "name": "ws1-refused-send-enable-writes",
+ "covers": ["WS1", "a refused Send from compose carries its own fix, on the compose window", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 150000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "waitExt", "name": "readOnlyAccounts", "text": "alice@local.test", "timeoutMs": 15000},
+
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "to", "text": "bob@local.test"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "WS1 refused send"},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "Sent from a read-only account."},
+  {"op": "wait", "until": "idle"},
+  {"op": "ext", "id": "keyEquivalent", "window": "compose", "text": "cmd+return"},
+
+  {"op": "wait", "until": "window:sheetOf:compose", "timeoutMs": 15000},
+  {"op": "ext", "id": "pause", "text": "600"},
+  {"op": "capture", "name": "refusal-dialog-on-compose", "windows": ["compose", "sheetOf:compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:writePrompt", "equals": "blocked-alice@local.test-Send"},
+    {"model": "ext:sheetHosts", "equals": "New Message"},
+    {"model": "ext:sheetButtons", "equals": "Enable Writes|Keep Read-only"},
+    {"model": "ext:readOnlyAccounts", "equals": "alice@local.test"},
+    {"model": "ext:composeWindows", "equals": "1"}
+  ]},
+
+  {"op": "press", "window": "sheetOf:compose", "find": {"role": "button", "label": "Enable Writes"}},
+  {"op": "ext", "id": "waitExt", "name": "readOnlyAccounts", "text": "none", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "undoBanner", "text": "shown", "timeoutMs": 15000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "after-enable-send-retried", "windows": ["main"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:writePrompt", "equals": "none"},
+    {"model": "ext:sheetHosts", "equals": "none"},
+    {"model": "ext:composeWindows", "equals": "0"},
+    {"model": "ext:undoBanner", "equals": "shown"}
+  ]}
+ ]
+}

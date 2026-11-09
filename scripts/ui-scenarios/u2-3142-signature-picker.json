@@ -1,0 +1,91 @@
+{
+ "schema": 1,
+ "name": "u2-3142-signature-picker",
+ "covers": ["N/A", "N/A",
+            "compose footer signature picker: default first, swap, none, edited kept with a notice; HTML signature in the HTML part; redesigned Signatures window opening an HTML-only signature on the HTML tab, at minimum size",
+            "chooseSignature drives the picker's binding: on macOS 27 SwiftUI pop-ups have no NSPopUpButton for setPopup (PR #224)"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 150000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "bob", "as": "bob", "waitFor": "synced", "timeoutMs": 90000},
+  {"op": "accounts", "id": "sigAdd", "accountRef": "bob", "text": "Work"},
+  {"op": "accounts", "id": "sigText", "text": "Work", "name": "Bob, Work"},
+  {"op": "accounts", "id": "sigHTML", "text": "Work", "name": "<p><b>Bob</b><br><a href=\"https://work.example\">Work Ltd</a></p>"},
+  {"op": "accounts", "id": "sigAdd", "accountRef": "bob", "text": "Home"},
+  {"op": "accounts", "id": "sigText", "text": "Home", "name": "Bob at home"},
+
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "01-compose-starts-on-default", "windows": ["compose"]},
+  {"op": "assert", "window": "compose", "rules": ["nonBlank", "noClippedText"],
+   "expect": [
+    {"model": "ext:signature", "equals": "Work"},
+    {"model": "ext:bodyHas:-- \nBob, Work", "equals": "true"}
+  ]},
+  {"op": "ext", "id": "chooseSignature", "window": "compose", "text": "Home"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "02-picked-home", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:signature", "equals": "Home"},
+    {"model": "ext:bodyHas:-- \nBob at home", "equals": "true"},
+    {"model": "ext:bodyHas:Bob, Work", "equals": "false"},
+    {"model": "ext:bodyCount:-- ", "equals": "1"}
+  ]},
+  {"op": "ext", "id": "chooseSignature", "window": "compose", "text": "None"},
+  {"op": "wait", "until": "idle"},
+  {"op": "assert", "expect": [
+    {"model": "ext:signature", "equals": "None"},
+    {"model": "ext:bodyCount:-- ", "equals": "0"}
+  ]},
+  {"op": "ext", "id": "chooseSignature", "window": "compose", "text": "Work"},
+  {"op": "ext", "id": "composeSet", "window": "compose", "name": "markdown", "value": true},
+  {"op": "accounts", "id": "settle", "text": "800"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "03-work-with-markdown-preview", "windows": ["compose"]},
+  {"op": "assert", "expect": [
+    {"model": "ext:signature", "equals": "Work"},
+    {"model": "ext:bodyHas:-- \nBob, Work", "equals": "true"},
+    {"model": "ext:htmlHas:<strong>Bob</strong>", "equals": "true"},
+    {"model": "ext:htmlHas:https://work.example", "equals": "true"}
+  ]},
+  {"op": "ext", "id": "setBody", "window": "compose", "text": "\n\n-- \nBob, Work (mobile)"},
+  {"op": "ext", "id": "chooseSignature", "window": "compose", "text": "Home"},
+  {"op": "accounts", "id": "settle", "text": "800"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "04-edited-signature-kept-with-notice", "windows": ["compose"]},
+  {"op": "assert", "window": "compose", "rules": ["nonBlank", "noClippedText"],
+   "expect": [
+    {"model": "ext:signature", "equals": "Work"},
+    {"model": "ext:signatureNotice", "equals": "shown"},
+    {"model": "ext:bodyHas:(mobile)", "equals": "true"},
+    {"model": "ext:bodyHas:Bob at home", "equals": "false"},
+    {"model": "ext:htmlHas:<strong>Bob</strong>", "equals": "false"}
+  ]},
+  {"op": "ext", "id": "closeCompose"},
+  {"op": "wait", "until": "idle"},
+
+  {"op": "accounts", "id": "sigAdd", "accountRef": "bob", "text": "Rich"},
+  {"op": "accounts", "id": "sigHTML", "text": "Rich", "name": "<p><b>Bob Example</b><br><i>Example Ltd</i><br><a href=\"https://example.com\">example.com</a></p>"},
+  {"op": "accounts", "id": "sigDefault", "text": "Rich"},
+  {"op": "openWindow", "target": "signatures", "accountRef": "bob"},
+  {"op": "wait", "until": "window:signatures"},
+  {"op": "accounts", "id": "settle", "text": "800"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "05-signatures-window-html-only-opens-on-html-tab", "windows": ["signatures"]},
+  {"op": "assert", "window": "signatures", "rules": ["nonBlank", "resizable", "movable", "fitsScreen", "noClippedText"],
+   "expect": [ {"model": "accounts:signatures:bob", "equals": "Work,Home,Rich*"} ]},
+  {"op": "resizeWindow", "window": "signatures", "contentSize": "min"},
+  {"op": "accounts", "id": "settle", "text": "500"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "06-html-tab-min-size", "windows": ["signatures"]},
+  {"op": "assert", "window": "signatures", "rules": ["nonBlank", "fitsScreen", "noClippedText", "controlsReachable"]},
+  {"op": "accounts", "id": "sigDelete", "text": "Rich"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "07-default-deleted-first-takes-over", "windows": ["signatures"]},
+  {"op": "assert", "expect": [ {"model": "accounts:signatures:bob", "equals": "Work*,Home"} ]},
+  {"op": "quit"}
+ ]
+}

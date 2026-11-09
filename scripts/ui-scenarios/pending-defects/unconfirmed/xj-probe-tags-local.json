@@ -1,0 +1,159 @@
+{
+ "schema": 1,
+ "name": "xj-probe-tags-local",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina",
+   "text": "blue"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "Feina"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "800"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Feina by name",
+   "accountRef": "xj",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": \"Feina\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "reSyncAll"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "8000"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Feina by name"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Follow/up (2026) 100% \"x\"",
+   "text": "green"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "   ",
+   "text": "green"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": "?"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

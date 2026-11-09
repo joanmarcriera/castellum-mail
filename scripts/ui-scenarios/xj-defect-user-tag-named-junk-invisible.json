@@ -1,0 +1,75 @@
+{
+ "schema": 1,
+ "name": "xj-defect-user-tag-named-junk-invisible",
+ "covers": [
+  "S42 tags",
+  "MM1c hidden keywords",
+  "xj defect"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Plain note"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Junk",
+   "text": "red",
+   "value": false
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:tagNames",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "junk-refused"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

@@ -1,0 +1,114 @@
+{
+ "schema": 1,
+ "name": "xk-keys-reload-without-relaunch",
+ "covers": [
+  "MM-12 slice 1",
+  "Reload Key Bindings reaches bare keys without a relaunch"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "selectRows",
+   "text": "0"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "2000"
+  },
+  {
+   "op": "reading",
+   "id": "reloadKeyBindings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "reload applied without a problem",
+   "expect": [
+    {
+     "model": "reading:keyProblems",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "keys",
+   "window": "main",
+   "text": "n"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "400"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "n moves after the reload, no relaunch",
+   "expect": [
+    {
+     "model": "reading:selectedIndex",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "after-reload-n"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

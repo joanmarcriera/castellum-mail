@@ -1,0 +1,253 @@
+{
+ "schema": 1,
+ "name": "xa-remove-own-mailbox-then-readd",
+ "covers": [
+  "Removing the only account while its Inbox is selected empties the list and reader, leaves no status dot, banner or error; adding it again syncs it back"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "one",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XA one message 1"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "one"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "708,538",
+   "name": "sheet:remove"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:remove",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-remove-confirm",
+   "windows": [
+    "sheet:remove"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "sheet:remove",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "primaryButtonsVisible"
+   ],
+   "expect": [
+    {
+     "find": {
+      "role": "button",
+      "label": "Cancel"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:remove",
+   "find": {
+    "role": "button",
+    "label": "Remove"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:remove",
+   "timeoutMs": 5000
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "accountCount",
+   "text": "0",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-after-remove",
+   "windows": [
+    "main",
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "false"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "none"
+    },
+    {
+     "model": "reading:syncBanner",
+     "equals": "none"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "one",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-readded",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "ok"
+    },
+    {
+     "model": "reading:hasMessages",
+     "equals": "true"
+    },
+    {
+     "model": "errorText",
+     "equals": ""
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

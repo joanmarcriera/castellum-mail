@@ -1,0 +1,99 @@
+{
+ "schema": 1,
+ "name": "u3-s45-command-palette",
+ "covers": [
+  "S45",
+  "command palette"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "showPalette"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:palette"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-open"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:palette",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "fieldText",
+   "window": "sheet:palette",
+   "text": "classic"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-filtered-classic"
+  },
+  {
+   "op": "dismissSheet",
+   "window": "sheet:palette"
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:palette"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

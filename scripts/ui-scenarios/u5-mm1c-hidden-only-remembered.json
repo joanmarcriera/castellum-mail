@@ -1,0 +1,207 @@
+{
+ "schema": 1,
+ "name": "u5-mm1c-hidden-only-remembered",
+ "covers": [
+  "MM1c",
+  "N/A"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "Invoice R0012345678"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "toggleTag",
+   "text": "$Forwarded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedKeywords",
+   "text": "$Forwarded",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "reading",
+   "id": "remember"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:selectedKeywords",
+     "equals": "$Forwarded"
+    },
+    {
+     "model": "reading:tagNames",
+     "equals": ""
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "search",
+   "text": "tag:$Forwarded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "1"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "true"
+    },
+    {
+     "model": "reading:errorText",
+     "equals": "none"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tag-search-finds-only-the-remembered-message",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "search",
+   "text": ""
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "Has any tag",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": true}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "Has any tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "Has any tag"
+    },
+    {
+     "model": "reading:messageCount",
+     "equals": "0"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "has-any-tag-excludes-remembered",
+   "windows": [
+    "main"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "upsertSmart",
+   "name": "No tag",
+   "accountRef": "alice",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"tag\", \"operator\": \"is\", \"value\": false}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "selectSmart",
+   "text": "No tag"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:smartSelected",
+     "equals": "No tag"
+    },
+    {
+     "model": "reading:rememberedInList",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "no-tag-includes-remembered",
+   "windows": [
+    "main"
+   ]
+  }
+ ]
+}

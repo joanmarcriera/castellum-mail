@@ -1,0 +1,422 @@
+{
+ "schema": 1,
+ "name": "xk-settings-and-sheets",
+ "covers": [
+  "settings window twice and at min per tab",
+  "cheat sheet",
+  "second sheet requested while one is up"
+ ],
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 120000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-general",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "resizable",
+    "movable",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "Settings twice: one window",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "rules"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-rules-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings rules at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "tags"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-tags-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings tags at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "ai"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-ai-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings ai at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "accounts"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-accounts-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings accounts at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "licence"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-licence-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings licence at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "general"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": "min"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-general-min",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "label": "settings general at min",
+   "expect": [
+    {
+     "windowCount": 2
+    }
+   ],
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    1200,
+    700
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-general-large",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "closeWindow",
+   "window": "settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "label": "closed",
+   "expect": [
+    {
+     "windowCount": 1
+    }
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showShortcuts"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "cheat-sheet"
+  },
+  {
+   "op": "assert",
+   "label": "cheat sheet",
+   "expect": [
+    {
+     "sheetAttached": true
+    }
+   ],
+   "window": "class:SheetPresentationWindow",
+   "rules": [
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "command",
+   "id": "showCommandPalette"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "500"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "palette-requested-over-cheat-sheet"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "class:SheetPresentationWindow",
+   "text": "572,536"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1200"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "after-done"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

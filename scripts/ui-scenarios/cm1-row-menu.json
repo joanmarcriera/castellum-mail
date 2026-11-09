@@ -1,0 +1,149 @@
+{
+ "schema": 1,
+ "name": "cm1-row-menu",
+ "covers": [
+  "N/A",
+  "context-menu slice 1"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "alice@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuDisabled:archive",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:reply",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:snoozeTomorrow",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:markJunk",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:moveToMailbox",
+     "equals": "absent"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "single-row-selected-by-right-click"
+  },
+  {
+   "op": "ext",
+   "id": "selectRows",
+   "text": "2,3,4,5"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "3"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuDisabled:reply",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:replyAll",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:forward",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuDisabled:archive",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuDisabled:markRead",
+     "equals": "false"
+    }
+   ]
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "markUnread",
+   "allowServerWrites": true
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedUnread",
+   "text": "true",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "3"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "markRead",
+   "allowServerWrites": true
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "selectedUnread",
+   "text": "false",
+   "timeoutMs": 15000
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

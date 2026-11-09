@@ -1,0 +1,172 @@
+{
+ "schema": 1,
+ "name": "xj-probe-mailto-send",
+ "covers": [
+  "probe"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org3@local.test",
+   "password": "xj-org3@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "xj-org3@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "XJ Listserv (mailto body)"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "main",
+   "text": "928,145",
+   "name": "sheet:m"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "700"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:m"
+  },
+  {
+   "op": "capture",
+   "name": "sheet"
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "sheet:m",
+   "text": "310,117"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "6000"
+  },
+  {
+   "op": "capture",
+   "name": "after-send"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:errorText",
+     "equals": "?"
+    },
+    {
+     "model": "ext:pendingCount",
+     "equals": "?"
+    },
+    {
+     "model": "ext:undoBanner",
+     "equals": "?"
+    },
+    {
+     "model": "ext:drafts:xj-org3@local.test",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-signoff3@local.test",
+   "password": "xj-signoff3@local.test",
+   "as": "so",
+   "waitFor": "synced",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "so",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:subjects",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "reading",
+   "id": "selectMessage",
+   "text": "unsubscribe"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "ext",
+   "id": "pause",
+   "text": "1500"
+  },
+  {
+   "op": "capture",
+   "name": "received"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:detailTextHas:SIGNOFF",
+     "equals": "?"
+    },
+    {
+     "model": "reading:selectedSubject",
+     "equals": "?"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

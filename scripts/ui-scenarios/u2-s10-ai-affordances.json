@@ -1,0 +1,56 @@
+{
+ "schema": 1,
+ "name": "u2-s10-ai-affordances",
+ "covers": ["S10", "AI UX: Draft/Reply with AI discoverable (#2153)", "S16", "Draft with AI for a new message (#2178)", "N/A"],
+ "requires": {"greenmail": true, "personas": true},
+ "screen": {"width": 1280, "height": 768, "menuBar": 25},
+ "timeoutMs": 240000,
+ "steps": [
+  {"op": "wait", "until": "accountsLoaded"},
+  {"op": "addAccount", "persona": "alice", "as": "alice", "waitFor": "synced", "timeoutMs": 60000},
+  {"op": "ext", "id": "aiProbeFirstLaunch", "timeoutMs": 15000},
+  {"op": "ext", "id": "waitExt", "name": "pref.aiEnabled", "text": "true", "timeoutMs": 15000},
+  {"op": "ext", "id": "aiUseFirstModel", "text": "llama3.1:8b|qwen2.5:7b|largest"},
+  {"op": "ext", "id": "selectMailbox", "email": "alice@local.test", "text": "inbox"},
+
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "new-compose-ai-on", "windows": ["compose"]},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "to", "text": "bob@local.test"},
+  {"op": "ext", "id": "setField", "window": "compose", "name": "subject", "text": "Tomorrow's meeting"},
+  {"op": "ext", "id": "aiDraftMessage", "window": "compose", "text": "decline the meeting politely and explain at length, with a detailed numbered list of forty distinct reasons"},
+  {"op": "ext", "id": "waitAiJob", "name": "draft_message", "text": "any", "timeoutMs": 20000},
+  {"op": "ext", "id": "closeCompose"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "0", "timeoutMs": 10000},
+  {"op": "ext", "id": "waitExt", "name": "aiJob.draft_message", "text": "cancelled", "timeoutMs": 10000},
+  {"op": "assert", "expect": [{"model": "ext:aiRunning:draft_message", "equals": "0"}]},
+
+  {"op": "ext", "id": "selectMessage", "text": "Invoice R0012345678", "timeoutMs": 30000},
+  {"op": "wait", "until": "idle"},
+  {"op": "command", "id": "replyWithAi"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "1", "timeoutMs": 10000},
+  {"op": "ext", "id": "waitAiJob", "name": "draft_reply", "text": "any", "timeoutMs": 20000},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "reply-with-ai-started-immediately"},
+  {"op": "assert", "expect": [{"model": "ext:subject", "equals": "Re: Invoice R0012345678 for August 2026"}]},
+  {"op": "ext", "id": "closeCompose"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "0", "timeoutMs": 10000},
+  {"op": "ext", "id": "waitExt", "name": "aiRunning:draft_reply", "text": "0", "timeoutMs": 10000},
+
+  {"op": "ext", "id": "setPref", "name": "aiEnabled", "text": "false"},
+  {"op": "openWindow", "target": "compose"},
+  {"op": "wait", "until": "window:compose"},
+  {"op": "wait", "until": "idle"},
+  {"op": "capture", "name": "new-compose-ai-off", "windows": ["compose"]},
+  {"op": "ext", "id": "closeCompose"},
+  {"op": "ext", "id": "waitExt", "name": "composeWindows", "text": "0", "timeoutMs": 10000},
+  {"op": "command", "id": "replyWithAi"},
+  {"op": "wait", "until": "idle"},
+  {"op": "assert", "expect": [
+    {"model": "ext:composeWindows", "equals": "0"},
+    {"model": "ext:pref.aiEnabled", "equals": "false"}
+  ]},
+  {"op": "quit"}
+ ]
+}

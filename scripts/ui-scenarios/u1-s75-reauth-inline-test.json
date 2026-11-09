@@ -1,0 +1,376 @@
+{
+ "schema": 1,
+ "name": "u1-s75-reauth-inline-test",
+ "covers": [
+  "S75",
+  "PR-191",
+  "N/A",
+  "GUI-5",
+  "N/A",
+  "S14",
+  "N/A",
+  "Re-authenticate: masked password, eye, inline Test, Save anyway"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 240000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "carol",
+   "as": "carol",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "openWindow",
+   "target": "settings",
+   "tab": "accounts",
+   "accountRef": "carol"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "settings",
+   "contentSize": [
+    760,
+    560
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "settings",
+   "find": {
+    "label": "Re-authenticate…"
+   },
+   "name": "sheet:reauth"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:reauth"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-reauth-masked"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "rules": [
+    "nonBlank",
+    "fitsScreen",
+    "primaryButtonsVisible",
+    "noZeroSizeTextFields"
+   ],
+   "expect": [
+    {
+     "model": "accounts:secureFields:sheet:reauth",
+     "equals": "2"
+    },
+    {
+     "model": "accounts:field:sheet:reauth|#5",
+     "equals": "carol-pass"
+    },
+    {
+     "find": {
+      "identifier": "save"
+     },
+     "enabled": true
+    },
+    {
+     "find": {
+      "identifier": "testConnection"
+     },
+     "enabled": true
+    },
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Show password"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "02-imap-revealed"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "expect": [
+    {
+     "model": "accounts:secureFields:sheet:reauth",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Hide password"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "expect": [
+    {
+     "model": "accounts:secureFields:sheet:reauth",
+     "equals": "2"
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Show SMTP password"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "03-smtp-revealed"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "expect": [
+    {
+     "model": "accounts:secureFields:sheet:reauth",
+     "equals": "1"
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Hide SMTP password"
+   }
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "wrong-password"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:reauth",
+   "find": {
+    "identifier": "smtpPassword"
+   },
+   "text": "carol-pass"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Test",
+    "index": 1
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "capture",
+   "name": "05-smtp-test-only-smtp-verdict"
+  },
+  {
+   "op": "press",
+   "window": "sheet:reauth",
+   "find": {
+    "label": "Test",
+    "index": 0
+   }
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "3000"
+  },
+  {
+   "op": "capture",
+   "name": "04-imap-test-wrong-password"
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "sheet:reauth",
+   "find": {
+    "identifier": "save"
+   },
+   "name": "sheet:confirm"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:confirm"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "06-save-after-failed-test-dialog"
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "sheet:confirm",
+   "find": {
+    "label": "Save anyway"
+   },
+   "value": true,
+   "timeoutMs": 5000
+  },
+  {
+   "op": "accounts",
+   "id": "waitNode",
+   "window": "sheet:confirm",
+   "find": {
+    "label": "Keep Editing"
+   },
+   "value": true,
+   "timeoutMs": 5000
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm",
+   "find": {
+    "label": "Keep Editing"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:confirm"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:reauth",
+   "expect": [
+    {
+     "find": {
+      "identifier": "save"
+     },
+     "visible": true
+    }
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "pressExpect",
+   "window": "sheet:reauth",
+   "find": {
+    "identifier": "save"
+   },
+   "name": "sheet:confirm2"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:confirm2"
+  },
+  {
+   "op": "press",
+   "window": "sheet:confirm2",
+   "find": {
+    "label": "Save anyway"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:reauth",
+   "timeoutMs": 20000
+  },
+  {
+   "op": "wait",
+   "until": "sync:carol=failed",
+   "timeoutMs": 60000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "07-after-save-anyway"
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank"
+   ],
+   "expect": [
+    {
+     "model": "accounts:dotState:carol",
+     "equals": "authenticationFailed"
+    },
+    {
+     "model": "accountSync:carol",
+     "equals": "failed"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

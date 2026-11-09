@@ -1,0 +1,151 @@
+{
+ "schema": 1,
+ "name": "hp2-split-inbox-other-remainder",
+ "covers": [
+  "HP-2",
+  "N/A",
+  "Split Inbox: Other holds the remainder"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "persona": "alice",
+   "as": "alice",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "alice",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Invoices",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"subject\", \"operator\": \"contains\", \"value\": \"invoice\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "upsertSplit",
+   "name": "Newsletters",
+   "text": "{\"op\": \"and\", \"conditions\": [{\"field\": \"from\", \"operator\": \"contains\", \"value\": \"rustweekly\"}], \"groups\": []}"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitTabs",
+   "text": "Invoices,Newsletters,Other"
+  },
+  {
+   "op": "reading",
+   "id": "selectSplit",
+   "text": "Other"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "hasSubject:Scheduled maintenance",
+   "text": "true"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:splitSelected",
+     "equals": "Other"
+    },
+    {
+     "model": "reading:hasSubject:Solutions Architect role",
+     "equals": "true"
+    },
+    {
+     "model": "reading:hasSubject:Invoice R0012345678",
+     "equals": "false"
+    },
+    {
+     "model": "reading:hasSubject:This Week in Rust",
+     "equals": "false"
+    },
+    {
+     "model": "reading:splitOf:Scheduled maintenance",
+     "equals": "Other"
+    },
+    {
+     "model": "reading:splitsDisjoint",
+     "equals": "true"
+    },
+    {
+     "model": "reading:splitCountsMatch",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "tab-other"
+  },
+  {
+   "op": "reading",
+   "id": "selectUnified",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "splitTabs",
+   "text": "Invoices,Newsletters,Other"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:isUnified",
+     "equals": "true"
+    },
+    {
+     "model": "reading:splitStrip",
+     "equals": "true"
+    },
+    {
+     "model": "reading:splitsDisjoint",
+     "equals": "true"
+    }
+   ]
+  },
+  {
+   "op": "capture",
+   "name": "all-inboxes-split"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

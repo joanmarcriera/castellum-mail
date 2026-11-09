@@ -1,0 +1,65 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Castellum app icon — a crenellated Roman keep.
+    Slate "stone" tile, antique-bronze fortress. Bold silhouette that
+    survives down to 16px. Brand: command HQ for your inbox.
+  -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#27344a"/>
+      <stop offset="0.55" stop-color="#15233a"/>
+      <stop offset="1" stop-color="#0b1626"/>
+    </linearGradient>
+    <linearGradient id="bronze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8b878"/>
+      <stop offset="0.5" stop-color="#b48a4a"/>
+      <stop offset="1" stop-color="#866530"/>
+    </linearGradient>
+    <linearGradient id="bronzeFlat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c69f5b"/>
+      <stop offset="1" stop-color="#8a6730"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.5">
+      <stop offset="0" stop-color="#b48a4a" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#b48a4a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Slate tile (Big Sur-ish rounded square) -->
+  <rect x="0" y="0" width="1024" height="1024" rx="228" fill="url(#tile)"/>
+  <!-- minted bronze inner edge -->
+  <rect x="6" y="6" width="1012" height="1012" rx="222" fill="none" stroke="#b48a4a" stroke-opacity="0.22" stroke-width="4"/>
+  <!-- soft glow behind the keep -->
+  <rect x="0" y="0" width="1024" height="1024" rx="228" fill="url(#glow)"/>
+
+  <!-- KEEP (bronze) -->
+  <g fill="url(#bronzeFlat)">
+    <!-- main body -->
+    <rect x="300" y="452" width="424" height="328" rx="6"/>
+    <!-- body battlements (merlons) -->
+    <rect x="300"   y="416" width="55.1" height="44"/>
+    <rect x="392.2" y="416" width="55.1" height="44"/>
+    <rect x="484.4" y="416" width="55.1" height="44"/>
+    <rect x="576.6" y="416" width="55.1" height="44"/>
+    <rect x="668.9" y="416" width="55.1" height="44"/>
+    <!-- central tower -->
+    <rect x="452" y="356" width="120" height="120" rx="4"/>
+    <!-- tower battlements -->
+    <rect x="452"   y="320" width="31.2" height="44"/>
+    <rect x="496.4" y="320" width="31.2" height="44"/>
+    <rect x="540.8" y="320" width="31.2" height="44"/>
+    <!-- plinth / base -->
+    <rect x="276" y="772" width="472" height="22" rx="8"/>
+  </g>
+
+  <!-- DARK CUTOUTS (gate + windows) -->
+  <g fill="#0c1a2e">
+    <!-- arched gate -->
+    <path d="M472 794 L472 632 A40 40 0 0 1 552 632 L552 794 Z"/>
+    <!-- two arched windows flanking the gate -->
+    <path d="M356 700 L356 632 A18 18 0 0 1 392 632 L392 700 Z"/>
+    <path d="M632 700 L632 632 A18 18 0 0 1 668 632 L668 700 Z"/>
+    <!-- a slit window on the central tower -->
+    <path d="M496 452 L496 408 A16 16 0 0 1 528 408 L528 452 Z"/>
+  </g>
+</svg>

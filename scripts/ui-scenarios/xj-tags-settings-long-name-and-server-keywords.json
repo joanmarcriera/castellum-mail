@@ -1,0 +1,120 @@
+{
+ "schema": 1,
+ "name": "xj-tags-settings-long-name-and-server-keywords",
+ "covers": [
+  "S42 Settings > Tags",
+  "long tag name",
+  "adopt a server keyword",
+  "protocol keywords are not offered",
+  "xj"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "xj-org1@local.test",
+   "password": "xj-org1@local.test",
+   "as": "xj",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "xj",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "A very long tag name that a person might type when they treat tags like notes to themselves about next week",
+   "text": "green"
+  },
+  {
+   "op": "reading",
+   "id": "createTag",
+   "name": "Feina urgent",
+   "text": "blue"
+  },
+  {
+   "op": "wait",
+   "until": "settingsOpenerReady"
+  },
+  {
+   "op": "reading",
+   "id": "settingsTab",
+   "tab": "tags"
+  },
+  {
+   "op": "wait",
+   "until": "window:settings"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "settings-tags",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "accounts",
+   "id": "click",
+   "window": "settings",
+   "text": "863,434"
+  },
+  {
+   "op": "reading",
+   "id": "waitFor",
+   "name": "tagNames",
+   "text": "A very long tag name that a person might type when they treat tags like notes to themselves about next week,Feina urgent,xjServerTag",
+   "timeoutMs": 8000
+  },
+  {
+   "op": "capture",
+   "name": "after-adopting-the-only-offered-keyword",
+   "windows": [
+    "settings"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "settings",
+   "rules": [
+    "nonBlank",
+    "fitsScreen"
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

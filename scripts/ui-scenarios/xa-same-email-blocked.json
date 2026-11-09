@@ -1,0 +1,161 @@
+{
+ "schema": 1,
+ "name": "xa-same-email-blocked",
+ "covers": [
+  "Adding the exact same address a second time: Sync is disabled, Cancel leaves one account"
+ ],
+ "requires": {
+  "greenmail": true,
+  "personas": false
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 180000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "resizeWindow",
+   "window": "main",
+   "contentSize": [
+    1200,
+    690
+   ]
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "addAccount",
+   "email": "xa-one@local.test",
+   "password": "xa-one@local.test",
+   "as": "one",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "openSheet",
+   "target": "addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "sheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "xa-one@local.test"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "imapHost"
+   },
+   "text": "127.0.0.1"
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "password"
+   },
+   "text": "xa-one@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "capture",
+   "name": "01-same-email",
+   "windows": [
+    "sheet:addAccount"
+   ]
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": false
+    }
+   ]
+  },
+  {
+   "op": "setText",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "email"
+   },
+   "text": "xa-two@local.test"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "window": "sheet:addAccount",
+   "expect": [
+    {
+     "find": {
+      "identifier": "sync"
+     },
+     "enabled": true
+    }
+   ]
+  },
+  {
+   "op": "press",
+   "window": "sheet:addAccount",
+   "find": {
+    "identifier": "cancel"
+   }
+  },
+  {
+   "op": "wait",
+   "until": "noSheet:addAccount"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "accountCount",
+     "equals": "1"
+    },
+    {
+     "model": "accounts:dotState:one",
+     "equals": "ok"
+    }
+   ]
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}

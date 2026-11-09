@@ -1,0 +1,136 @@
+{
+ "schema": 1,
+ "name": "cm2-move-to",
+ "covers": [
+  "N/A",
+  "context-menu slice 2 (Move to)"
+ ],
+ "requires": {
+  "greenmail": true
+ },
+ "screen": {
+  "width": 1280,
+  "height": 768,
+  "menuBar": 25
+ },
+ "timeoutMs": 300000,
+ "steps": [
+  {
+   "op": "wait",
+   "until": "accountsLoaded"
+  },
+  {
+   "op": "addAccount",
+   "email": "cm-a@local.test",
+   "password": "cm-a@local.test",
+   "as": "a",
+   "waitFor": "synced",
+   "timeoutMs": 90000
+  },
+  {
+   "op": "ext",
+   "id": "enableWrites",
+   "email": "cm-a@local.test"
+  },
+  {
+   "op": "reading",
+   "id": "selectMailbox",
+   "accountRef": "a",
+   "text": "inbox"
+  },
+  {
+   "op": "wait",
+   "until": "idle"
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "1500"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuHas:Move to",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuHas:Projects",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuHas:Other…",
+     "equals": "true"
+    },
+    {
+     "model": "ext:rowMenuHas:Inbox",
+     "equals": "false"
+    },
+    {
+     "model": "ext:rowMenuHas:Junk",
+     "equals": "false"
+    }
+   ],
+   "label": "Move to lists the seeded folder, never the mailbox the message is in, and never Junk"
+  },
+  {
+   "op": "capture",
+   "name": "move-to-menu"
+  },
+  {
+   "op": "ext",
+   "id": "rowMenuInvoke",
+   "text": "moveTo:Projects",
+   "allowServerWrites": true
+  },
+  {
+   "op": "accounts",
+   "id": "settle",
+   "text": "800"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "reading:messageCount",
+     "equals": "4"
+    },
+    {
+     "model": "reading:hasSubject:CM a msg 5",
+     "equals": "false"
+    }
+   ],
+   "label": "the row left at once"
+  },
+  {
+   "op": "ext",
+   "id": "waitExt",
+   "name": "pendingCount",
+   "text": "0",
+   "timeoutMs": 40000
+  },
+  {
+   "op": "ext",
+   "id": "rowMenu",
+   "text": "0"
+  },
+  {
+   "op": "assert",
+   "expect": [
+    {
+     "model": "ext:rowMenuHas:Projects",
+     "equals": "true"
+    }
+   ],
+   "label": "Projects is now a recent destination"
+  },
+  {
+   "op": "quit"
+  }
+ ]
+}
