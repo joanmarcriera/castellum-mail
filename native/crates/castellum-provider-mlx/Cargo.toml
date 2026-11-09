@@ -34,5 +34,5 @@ castellum-providers = { path = "../castellum-providers" }
 # no hand-rolled WordPiece implementation. Target-gated alongside mlx-rs
 # since it is only used by the real (Apple-Silicon) embedding path.
 [target.'cfg(all(target_os = "macos", target_arch = "aarch64"))'.dependencies]
-mlx-rs = "0.32"
+mlx-rs = "0.34"
 tokenizers = "0.23"

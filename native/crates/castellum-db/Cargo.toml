@@ -12,7 +12,7 @@ publish.workspace = true
 castellum-models = { path = "../castellum-models" }
 # Bundled SQLite: compiles a vendored sqlite3 so we don't depend on the system
 # library (portable, reproducible across dev/CI/distribution).
-rusqlite = { version = "0.40", features = ["bundled", "functions"] }
+rusqlite = { version = "0.41", features = ["bundled", "functions"] }
 # Building operation payloads (JSON) safely, without hand-rolled escaping.
 serde_json = "1"
 # Derive macros for enrichment row serialization.
