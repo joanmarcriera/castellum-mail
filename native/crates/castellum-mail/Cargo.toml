@@ -12,7 +12,7 @@ publish.workspace = true
 ammonia = "4"
 castellum-models = { path = "../castellum-models" }
 idna = "1"
-mail-parser = { version = "0.11", features = ["full_encoding"] }
+mail-parser = { version = "1.0", features = ["full_encoding"] }
 serde = { version = "1", features = ["derive"] }
 url = "2"
 pulldown-cmark = "0.13.0"
